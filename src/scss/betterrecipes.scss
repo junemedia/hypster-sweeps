@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+
+@import "shell/betterrecipes";
+
+@import "sweeps";
+
+#jds.betterrecipes {
+    input[type="submit"],
+    .btn {
+        // background-color: #606;
+        background-color: #7a2279;
+    }
+    .carousel {
+        .dow {
+            color: #fff;
+            background: #7a2279;
+        }
+    }
+    #calendar {
+        h2.banner {
+            background: #7a2279;
+        }
+    }
+    #cal li:hover {
+        background-color: #7a2279;
+    }
+    h1 {
+        font-size: 1.8em;
+        color: #83af1b;
+        font-weight: normal;
+    }
+}
+
+#main-footer .nav .copyrightFooterContainer {
+    float: none;
+    text-align: center;
+}

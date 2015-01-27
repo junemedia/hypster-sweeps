@@ -1,0 +1,31 @@
+@media all and (max-width: 460px) {
+    #jds {
+        .prize.col2 > *,
+        .prize.col2 > *:first-child,
+        .winners > .col2 > * {
+            width: 100%;
+            display: block;
+        }
+
+        .prize.col3 {
+            > img,
+            > .info,
+            > .newsletters {
+                width: 100%;
+                display: block;
+                margin: 0;
+            }
+            .submit {
+                text-align: center;
+                padding-left: 0;
+            }
+        }
+
+        form.signup,
+        form.login {
+            width: auto;
+            display: block;
+            margin: 1em 5% 0;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "main":
+    {
+        "js/jds-TIMESTAMP.min.js":
+        [
+            ":async=true",
+            "js/jds.js"
+        ]
+    },
+    "admin":
+    {
+        "css/admin-TIMESTAMP.min.css":
+        [
+            "css/admin.css"
+        ],
+        "js/admin-TIMESTAMP.min.js":
+        [
+            ":async=true",
+            "js/admin.js"
+        ]
+    },
+    "betterrecipes":
+    {
+        "css/betterrecipes-TIMESTAMP.min.css":
+        [
+            "css/betterrecipes.css"
+        ]
+    }
+}
