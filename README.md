@@ -1,4 +1,4 @@
-# June Daily Sweeps
+# June Media Daily Sweeps
 
 ## Running on your virtual machine (VM)
 
