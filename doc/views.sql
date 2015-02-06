@@ -53,4 +53,5 @@ FROM
 LEFT JOIN
     `user`   `u` ON (`vp`.`winner_user_id` = `u`.`id`)
 LEFT JOIN
-    `site`   `s` ON (`vp`.`winner_site_id` = `s`.`id`);
+    `site`   `s` ON (`vp`.`winner_site_id` = `s`.`id`)
+WHERE `vp`.`winner_user_id` IS NOT NULL;

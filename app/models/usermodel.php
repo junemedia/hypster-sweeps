@@ -28,8 +28,8 @@ class UserModel extends CI_Model
         if (@$user['email']) {
             // THIS NEEDS TO BE DONE IN MYSQL OR WE NEED TO CHECK TO SEE IF WE
             // ARE CHANGING EMAIL ADDRESSES BEFORE UNVERIFYING IT.
-            $user['verified'] = 0;
-            $user['date_verified'] = NULL;
+            $user['verified']      = 0;
+            $user['date_verified'] = null;
 // NEED TO CREATE/SEND A VERIFICATION TOKEN/EMAIL
         }
         if (@$user['id'] > 0) {
@@ -72,10 +72,11 @@ class UserModel extends CI_Model
      * Verify a users email address
      *
      * @param  string   $token
+     * @param  string   $ttl (optional; default 1 day)
      *
      * @return boolean
      */
-    public function verify($token)
+    public function verify($token, $ttl = 86400)
     {
         $result = $this->db
                        ->select('email')
@@ -87,13 +88,14 @@ class UserModel extends CI_Model
         if (!$result || !$result['email']) {
             return false;
         }
+        $email = $result['email'];
         $user = array(
             'verified'      => 1,
             'date_verified' => date('Y-m-d H:i:s'),
         );
         $this->db
-             ->update('user', $user)
-             ->where('email', $email);
+             ->where('email', $email)
+             ->update('user', $user);
         $success = ($this->db->affected_rows() >= 1) ? true : false;
         // remove verification token
         $this->db
@@ -119,7 +121,7 @@ class UserModel extends CI_Model
         // delete any pre-existing reset tokens for this email address
         $this->db
              ->where('email', $email)
-             ->where('type', 'reset')
+             // ->where('type', 'reset') // delete everything
              ->delete('reset');
         // insert this reset token
         $this->db
@@ -129,6 +131,42 @@ class UserModel extends CI_Model
             return false;
         }
         return $reset['token'];
+    }
+
+    /**
+     * Generate a password reset token
+     *
+     * @param  int      $user_id
+     *
+     * @return string   $token
+     */
+    public function getEmailVerificationToken($user_id)
+    {
+        $email = $this->db
+                      ->where('id', $user_id)
+                      ->get('user')
+                      ->row_array();
+        if (!$email) {
+            // no user record for this user_id
+            return array(false, false);
+        }
+        $email = $email['email'];
+        $reset = array(
+            'token' => mtRandStr(8),
+            'email' => $email,
+            'type'  => 'verify',
+        );
+        // delete any pre-existing reset tokens for this email address
+        $this->db
+             ->where('email', $email)
+             ->delete('reset');
+        // insert this reset token
+        $this->db
+             ->insert('reset', $reset);
+        if ($this->db->affected_rows() <= 0) {
+            return array(false, false);
+        }
+        return array($reset['token'], $email);
     }
 
     /**

@@ -58,7 +58,7 @@ class Api extends FrontendController
 
         // logged-in check
         if (!$user_id) {
-            $response['err']    = 1;
+            $response['err'] = 1;
             $response['msg'] = 'You must be logged-in in order to enter this contest.';
             return $this->json($response);
         }
@@ -76,7 +76,7 @@ class Api extends FrontendController
         );
 
         if (!$success) {
-            $response['err']    = 1;
+            $response['err'] = 1;
             $response['msg'] = 'We encountered an error while trying to enter you into this contest. Please try again later.';
             return $this->json($response);
         }
@@ -119,18 +119,15 @@ class Api extends FrontendController
             }
         }
 
-
 //////////////
-//////////////
-//////////////
-//////////////
-////////////// SEND A VERIFICATION EMAIL
-//////////////
-//////////////
-//////////////
-//////////////
-
-
+        //////////////
+        //////////////
+        //////////////
+        ////////////// SEND A VERIFICATION EMAIL
+        //////////////
+        //////////////
+        //////////////
+        //////////////
 
         if (!$this->form_validation->run()) {
             $response['err'] = 1;
@@ -150,16 +147,16 @@ class Api extends FrontendController
         }
 
         // Set the profile to be passed to Registration Services
-        $profile['id']         = $user_id;
-        $profile['firstname']  = $this->input->post('firstname');
-        $profile['lastname']   = $this->input->post('lastname');
-        $profile['address']    = $this->input->post('address');
-        $profile['city']       = @$geo['city'];
-        $profile['state']      = @$geo['state'];
-        $profile['zip']        = $this->input->post('zip');
-        $profile['email']      = $this->input->post('email');
-        $profile['password']   = $this->input->post('password');
-        $profile['ip']         = ip2long($this->input->ip_address());
+        $profile['id']        = $user_id;
+        $profile['firstname'] = $this->input->post('firstname');
+        $profile['lastname']  = $this->input->post('lastname');
+        $profile['address']   = $this->input->post('address');
+        $profile['city']      = @$geo['city'];
+        $profile['state']     = @$geo['state'];
+        $profile['zip']       = $this->input->post('zip');
+        $profile['email']     = $this->input->post('email');
+        $profile['password']  = $this->input->post('password');
+        $profile['ip']        = ip2long($this->input->ip_address());
 
         // remove empty/null/false values; CAREFUL: removes boolean false values
         $profile = array_filter($profile);
@@ -292,12 +289,46 @@ class Api extends FrontendController
     }
 
     /**
-     * Verify email address
+     * (Re)send a verificaiton email
      *
+     * Only used for logged in users.
      *
      */
-    public function verify($token)
+    public function verify()
     {
+        // load user_id from session
+        $user_id = $this->session->userdata('user_id');
+
+        // logged-in check
+        if (!$user_id) {
+            $response['err'] = 1;
+            $response['msg'] = 'You must be logged-in in order to send a verification email.';
+            return $this->json($response);
+        }
+
+        $this->load->model('userModel');
+
+        // create a new email verification token
+        list($token, $email) = $this->userModel->getEmailVerificationToken($user_id);
+        if (!$token) {
+            $response['err'] = 1;
+            $response['msg'] = 'We encountered an error. Please try again.';
+            return $this->json($response);
+        }
+
+        $this->load->library('email');
+        $this->load->library('parser');
+
+        $params = array('link' => 'http://' . $_SERVER['HTTP_HOST'] . '/verify/' . $token);
+        $this->email->clear();
+        $this->email->from(config_item('from_email'), config_item('from_name'));
+        $this->email->to($email);
+        $this->email->subject('Please Verify Your Email Address');
+        $this->email->message($this->parser->parse('../templates/verify', $params, true));
+        $this->email->send();
+
+        $response['success'] = 1;
+        return $this->json($response);
     }
 
     /**
@@ -334,8 +365,7 @@ class Api extends FrontendController
         $this->email->from(config_item('from_email'), config_item('from_name'));
         $this->email->to($email);
         $this->email->subject('Reset Your June Media Sweepstakes Password');
-        $body = $this->parser->parse('../templates/reset', $params, true);
-        $this->email->message($body);
+        $this->email->message($this->parser->parse('../templates/reset', $params, true));
         $this->email->send();
 
         $response['success'] = 1;

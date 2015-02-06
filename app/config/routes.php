@@ -51,7 +51,7 @@ $route['prize/(:any)']        = 'main/prize/$1';
 
 // Private User/Auth HTML Requests
 $route['profile']             = 'user/profile';
-$route['verify']              = 'user/verify/$1'; // anon OK
+$route['verify/(:any)']       = 'user/verify/$1'; // anon OK
 $route['reset']               = 'user/reset/$1';  // anon OK
 
 // Private JSON API Requests
@@ -59,7 +59,7 @@ $route['api/eligible']        = 'api/eligible';
 $route['api/enter']           = 'api/enter';
 $route['api/logout']          = 'api/logout';
 $route['api/password']        = 'api/password';
-$route['api/verify']          = 'api/verify'; // generate a verification email
+$route['api/verify']          = 'api/verify'; // must be logged in; generate a verification email
 
 // Public JSON API Requests
 $route['api/signup']          = 'api/signup';
