@@ -1,1 +1,1 @@
-<div id="rules"><? $this->load->view('partials/banner/home'); ?><p><a href="<?= $channel_url ?>">&lt; Back Home</a></p><? if (isset($grandprize['grandprize_rule_template_id'])): ?><? endif; ?><?= $body ?></div>
+<? extract($data); ?><div id="rules"><p><a href="/">&lt; Back Home</a></p><?= $body ?></div>

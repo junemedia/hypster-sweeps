@@ -74,7 +74,7 @@ class PrizeModel extends CI_Model
         }
         return $this->db
                     ->where(sprintf('`date` BETWEEN "%s" AND "%s"', $begin_date, $end_date), null, false)
-                    ->order_by('date ASC')
+                    ->order_by('date DESC')
                     ->get('view_winner')
                     ->result_array();
     }

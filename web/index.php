@@ -1,5 +1,9 @@
 <?php
 
+
+require_once('upload.inc.php');
+
+
 /*
  * ---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

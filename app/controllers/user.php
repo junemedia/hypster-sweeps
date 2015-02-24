@@ -23,25 +23,33 @@ class User extends FrontendController
      */
     public function profile()
     {
+        // if we're not an admin, bail
+        if (!$user_id = $this->session->userdata('user_id')) {
+            return redirect('/');
+        }
+
+        $this->load->model('userModel');
+        $data = $this->userModel->getProfile($user_id);
+
+        return $this->loadView('profile', $data);
     }
 
     /**
      * Verify email address
      *
-     * You cannot resend a verification email from here, because
-     * you don't know for certain what the email address is
-     * on failure.
+     * ANONYMOUS CONTROLLER: You cannot resend a verification
+     * email from here, because you don't know for certain
+     * what the email address is on failure.
      *
      */
     public function verify($token = null)
     {
-        $data['site_slug'] = $this->site_slug;
         $data['meta']['title'] = 'Email Verification';
 
         if (!$token) {
             $data['status'] = 2;
             $data['msg']    = 'Invalid or expired verification token.';
-            $this->load->view('verify', $data);
+            $this->loadView('verify', $data);
             return;
         }
 
@@ -50,19 +58,22 @@ class User extends FrontendController
         if (!$this->userModel->verify($token)) {
             $data['status'] = 2;
             $data['msg']    = 'Invalid or expired verification token.';
-            $this->load->view('verify', $data);
+            $this->loadView('verify', $data);
             return;
         }
 
         $data['status'] = 1;
-        $this->load->view('verify', $data);
+
+        return $this->loadView('verify', $data);
     }
 
     /**
      * Reset password
      */
-    public function reset()
+    public function reset($token = null)
     {
+        $data['token'] = $token;
+        return $this->loadView('reset', $data);
     }
 
 }

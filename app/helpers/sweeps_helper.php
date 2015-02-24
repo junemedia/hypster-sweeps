@@ -27,11 +27,12 @@ function articleAgreement($str, $include_str_in_return = true)
     return (in_array(mb_strtolower(mb_substr($str, 0, 1)), array('a', 'e', 'i', 'o', 'u', 'y')) ? 'an ' : 'a ') . $return_str;
 }
 
-function mtRandStr($l, $c = 'abcdefghijklmnopqrstuvwxyz1234567890')
-{
-    for ($s = '', $cl = strlen($c) - 1, $i = 0; $i < $l; $s .= $c[mt_rand(0, $cl)], ++$i);
-    return $s;
-}
+// // UNUSED in favor of SPROCs
+// function mtRandStr($l, $c = 'abcdefghijklmnopqrstuvwxyz1234567890')
+// {
+//     for ($s = '', $cl = strlen($c) - 1, $i = 0; $i < $l; $s .= $c[mt_rand(0, $cl)], ++$i);
+//     return $s;
+// }
 
 function safeHtml($str)
 {
@@ -45,4 +46,41 @@ function safeAttr($str)
     // prevent double encoding
     $str = str_replace('&quot;', '"', $str);
     return str_replace('"', '&quot;', $str);
+}
+
+function prizeByDateMap($prizes)
+{
+    $p = array();
+    foreach ($prizes as $prize) {
+        $p[$prize['date']] = $prize;
+    }
+    return $p;
+}
+
+function winner_tds_html($contest)
+{
+    if (!@$contest['user_id']) {
+        return '<td></td><td></td>';
+    }
+    extract($contest);
+    return sprintf('<td><a href="mailto:%s">%s %s</a></td><td>%s, %s</td>',
+        $user_email,
+        $user_firstname,
+        $user_lastname,
+        $user_city,
+        $user_state);
+
+}
+
+function sanitizeDate($str, $default_return = null)
+{
+    $ts = strtotime($str);
+    return $ts ? date('Y-m-d', $ts) : $default_return;
+}
+
+function firstNameLastInitial($firstname, $lastname)
+{
+    return (mb_strlen($lastname) > 0)
+    ? $firstname . ' ' . mb_substr($lastname, 0, 1) . '.'
+    : $firstname;
 }

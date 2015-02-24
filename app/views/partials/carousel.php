@@ -1,9 +1,10 @@
+<? extract($data); ?>
 <? if (@$prizes): ?>
     <div class="carousel"><!-- NO GAP
      --><div class="fade left"></div><!-- NO GAP
      --><div class="fade right"></div><!-- NO GAP
-     --><a class="prev"></a><!-- NO GAP
-     --><a class="next"></a><!-- NO GAP
+     --><b class="prev"></b><!-- NO GAP
+     --><b class="next"></b><!-- NO GAP
      --><div class="wrap"><!-- NO GAP
  --><!-- htmlmin:ignore --><?php foreach ($prizes as $c_prize):
         $timestamp = strtotime($c_prize['date']);
@@ -14,8 +15,8 @@
                 : date('l', $timestamp); // Weekday (i.e. Thursday)
         $div_close = '</div>' ?><!-- htmlmin:ignore --><!-- NO GAP
          --><?= $div_open ?><!-- NO GAP
-             --><b><?= $weekday ?></b><!-- NO GAP
-             --><b><?= date('j', $timestamp) ?></b><!-- NO GAP
+             --><i><?= $weekday ?></i><!-- NO GAP
+             --><i><?= date('j', $timestamp) ?></i><!-- NO GAP
              --><a href="/prize/<?=$c_prize['date']?>"><!-- NO GAP
                  --><img src="<?= trim($c_prize['img1']) ?>"/><!-- NO GAP
              --></a><!-- NO GAP

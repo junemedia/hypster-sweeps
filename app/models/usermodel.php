@@ -6,7 +6,7 @@ class UserModel extends CI_Model
     /**
      * Register a new user
      *
-     * @param  array    ($user object)
+     * @param   array    $user object)
      *                   email
      *                   password
      *                   ip
@@ -17,37 +17,64 @@ class UserModel extends CI_Model
      *                   state
      *                   zip
      *
-     * @return int      user_id on success, 0 on failure, -1 on duplicate email
+     * @return  integer user_id on success,
+     *                   0 on failure,
+     *                  -1 on duplicate email
      */
     public function register($user)
     {
-        if (@$user['password']) {
-            $user['salt']     = sha1(mktime(true) * mt_rand());
-            $user['password'] = sha1($user['salt'] . $user['password']);
-        }
-        if (@$user['email']) {
-            // THIS NEEDS TO BE DONE IN MYSQL OR WE NEED TO CHECK TO SEE IF WE
-            // ARE CHANGING EMAIL ADDRESSES BEFORE UNVERIFYING IT.
-            $user['verified']      = 0;
-            $user['date_verified'] = null;
-// NEED TO CREATE/SEND A VERIFICATION TOKEN/EMAIL
-        }
-        if (@$user['id'] > 0) {
-            $user_id = $user['id'];
-            unset($user['id']);
-            $this->db
-                 ->where('id', $user_id)
-                 ->update('user', $user);
-            // affected_rows() will be 0 if nothing was updated, but still successful
-            return $this->db->affected_rows() >= 0 ? $user_id : (($this->db->_error_number() === 1062) ? -1 : 0);
-        } else {
-            $this->db->insert('user', $user);
-            if ($user_id = $this->db->insert_id()) {
-                return $user_id;
-            } else {
-                return ($this->db->_error_number() === 1062) ? -1 : 0;
-            }
-        }
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL CREATE_USER(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+            $this->db->escape(@$user['email']),
+            $this->db->escape(@$user['password']),
+            $this->db->escape(@$user['ip']),
+            $this->db->escape(@$user['firstname']),
+            $this->db->escape(@$user['lastname']),
+            $this->db->escape(@$user['address']),
+            $this->db->escape(@$user['city']),
+            $this->db->escape(@$user['state']),
+            $this->db->escape(@$user['zip'])
+        );
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return (int) @$result['result'] ? (int) $result['result'] : 0;
+    }
+
+    /**
+     * Update a user profile
+     *
+     * @param   array   $user partial user object
+     *
+     * @return  integer -2 on user does not exist,
+     *                  -1 on duplicate email,
+     *                   0 on failure,
+     *                   1 on new email,
+     *                   2 on success with changes,
+     *                   3 on success without any changes
+     */
+    public function update($user)
+    {
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL UPDATE_USER(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+            $this->db->escape(@$user['id']),
+            $this->db->escape(@$user['email']),
+            $this->db->escape(@$user['password']),
+            $this->db->escape(@$user['firstname']),
+            $this->db->escape(@$user['lastname']),
+            $this->db->escape(@$user['address']),
+            $this->db->escape(@$user['city']),
+            $this->db->escape(@$user['state']),
+            $this->db->escape(@$user['zip'])
+        );
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return (int) @$result['result'] ? (int) $result['result'] : 0;
     }
 
     /**
@@ -60,166 +87,123 @@ class UserModel extends CI_Model
      */
     public function login($email, $password)
     {
-        return $this->db
-                    ->select('id, email, role, firstname, lastname, address, city, state, zip')
-                    ->where('email', $email)
-                    ->where(sprintf('`password`=SHA1(CONCAT(`salt`, "%s"))', $password), null, false)
-                    ->get('user')
-                    ->row_array();
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL LOGIN(%s,%s)',
+            $this->db->escape($email),
+            $this->db->escape($password)
+        );
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return (array) $result;
+    }
+
+    /**
+     * Reset password using reset token
+     *
+     * @param  string   $token
+     * @param  string   $password
+     * @param  integer  $ttl seconds (optional; default 1 day)
+     *
+     * @return boolean
+     */
+    public function reset($token, $password, $ttl = 86400)
+    {
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL RESET(%s,%s,%s)',
+            $this->db->escape($token),
+            $this->db->escape($password),
+            $this->db->escape($ttl)
+        );
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return @$result['result'] ? true : false;
     }
 
     /**
      * Verify a users email address
      *
      * @param  string   $token
-     * @param  string   $ttl (optional; default 1 day)
+     * @param  integer  $ttl seconds (optional; default 1 day)
      *
      * @return boolean
      */
     public function verify($token, $ttl = 86400)
     {
-        $result = $this->db
-                       ->select('email')
-                       ->where('token', $token)
-                       ->where('type', 'verify')
-                       ->where(sprintf('`timestamp` > FROM_UNIXTIME(%d)', time() - $ttl), null, false)
-                       ->get('reset')
-                       ->row_array();
-        if (!$result || !$result['email']) {
-            return false;
-        }
-        $email = $result['email'];
-        $user = array(
-            'verified'      => 1,
-            'date_verified' => date('Y-m-d H:i:s'),
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL VERIFY(%s,%s)',
+            $this->db->escape($token),
+            $this->db->escape($ttl)
         );
-        $this->db
-             ->where('email', $email)
-             ->update('user', $user);
-        $success = ($this->db->affected_rows() >= 1) ? true : false;
-        // remove verification token
-        $this->db
-             ->where('email', $email)
-             ->delete('reset');
-        return $success;
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return @$result['result'] ? true : false;
     }
 
     /**
      * Generate a password reset token
      *
-     * @param  string   $email
+     * @param   string  $email
      *
-     * @return string   $token
+     * @return  string  $token or boolean false if email does not exist
      */
     public function getPasswordResetToken($email)
     {
-        $reset = array(
-            'token' => mtRandStr(8),
-            'email' => $email,
-            'type'  => 'reset',
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL RESET_TOKEN(%s)',
+            $this->db->escape($email)
         );
-        // delete any pre-existing reset tokens for this email address
-        $this->db
-             ->where('email', $email)
-             // ->where('type', 'reset') // delete everything
-             ->delete('reset');
-        // insert this reset token
-        $this->db
-             ->insert('reset', $reset);
-// var_dump($this->db->last_query());
-        if ($this->db->affected_rows() <= 0) {
-            return false;
-        }
-        return $reset['token'];
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return @$result['token'] ? $result['token'] : false;
     }
 
     /**
      * Generate a password reset token
      *
-     * @param  int      $user_id
+     * @param   integer $user_id
      *
-     * @return string   $token
+     * @return  array   of (string) $token, (string) $email
+     *                  or (bool) false, (bool) false if email does not exist
      */
     public function getEmailVerificationToken($user_id)
     {
-        $email = $this->db
-                      ->where('id', $user_id)
-                      ->get('user')
-                      ->row_array();
-        if (!$email) {
-            // no user record for this user_id
-            return array(false, false);
-        }
-        $email = $email['email'];
-        $reset = array(
-            'token' => mtRandStr(8),
-            'email' => $email,
-            'type'  => 'verify',
+        // For SPROCs, you MUST use $query->free_result() to avoid
+        // getting the "2014 Commands out of sync" mysql error.
+        $sql = sprintf('CALL VERIFY_TOKEN(%s)',
+            $this->db->escape($user_id)
         );
-        // delete any pre-existing reset tokens for this email address
-        $this->db
-             ->where('email', $email)
-             ->delete('reset');
-        // insert this reset token
-        $this->db
-             ->insert('reset', $reset);
-        if ($this->db->affected_rows() <= 0) {
-            return array(false, false);
-        }
-        return array($reset['token'], $email);
+        $query  = $this->db->query($sql);
+        $result = $query->row_array();
+        $query->free_result();
+
+        return @$result['token'] ? array($result['token'], $result['email']) : array(false, false);
     }
 
     /**
-     * Change password with reset token or by user_id
+     * Retrieve a user's profile
      *
-     * @param  string   $token_or_user_id
-     * @param  string   $password
+     * @param   integer $user_id
      *
-     * @return boolean
+     * @return  array   user object
      */
-    public function password($token_or_user_id, $password, $ttl = 86400)
+    public function getProfile($user_id)
     {
-        if ($is_token = !is_numeric($token_or_user_id)) {
-            $token = $token_or_user_id;
-            $user  = $this->db
-                          ->select('user.id, user.email')
-                          ->join('user', 'user.email = reset.email')
-                          ->where('token', $token)
-                          ->where(sprintf('`timestamp` > FROM_UNIXTIME(%d)', time() - $ttl), null, false)
-                          ->get('reset')
-                          ->row_array();
-            if (!$user) {
-                return false; // token not found
-            }
-            $user_id = $user['id'];
-            $email   = $user['email'];
-        } else {
-            $user_id = (int) $token_or_user_id;
-        }
-
-        if (!$user_id > 0) {
-            return false;
-        }
-
-        $user             = array();
-        $user['salt']     = sha1(mktime(true) * mt_rand());
-        $user['password'] = sha1($user['salt'] . $password);
-
-        if ($is_token) {
-            // reset tokens verify email addresses
-            $user['verified']      = 1;
-            $user['date_verified'] = date('Y-m-d H:i:s');
-            // clear any reset tokens for this email address
-            $this->db
-                 ->where('email', $email)
-                 ->where('type', 'reset')
-                 ->delete('reset');
-        }
-        $this->db
-             ->where('id', $user_id)
-             ->update('user', $user);
-// echo $this->db->last_query();
-        return ($this->db->affected_rows() >= 1) ? true : false;
+        return $this->db
+                    ->where('id', $user_id)
+                    ->get('view_profile')
+                    ->row_array();
     }
 
 }

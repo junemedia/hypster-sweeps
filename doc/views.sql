@@ -4,11 +4,11 @@ SELECT
     `c`.`date`,
     `p`.`id`,
     `p`.`title`,
-    IF(`p`.`img1` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img1`)), '.jpg')) `img1`,
+    IF(`p`.`img1` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img1`)), '.jpg')) AS `img1`,
     `p`.`desc1`,
-    IF(`p`.`img2` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img2`)), '.jpg')) `img2`,
+    IF(`p`.`img2` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img2`)), '.jpg')) AS `img2`,
     `p`.`desc2`,
-    IF(`p`.`img3` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img3`)), '.jpg')) `img3`,
+    IF(`p`.`img3` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img3`)), '.jpg')) AS `img3`,
     `p`.`desc3`,
     `p`.`award`,
     `p`.`value`,
@@ -21,8 +21,8 @@ LEFT JOIN
     `prize` `p` ON (`c`.`prize_id` = `p`.`id`);
 
 
-DROP VIEW IF EXISTS`view_winner`;
-CREATE VIEW `view_winner` AS
+DROP VIEW IF EXISTS`view_contest`;
+CREATE VIEW `view_contest` AS
 SELECT
     `vp`.`date`,
     `vp`.`id`         AS `prize_id`,
@@ -53,5 +53,52 @@ FROM
 LEFT JOIN
     `user`   `u` ON (`vp`.`winner_user_id` = `u`.`id`)
 LEFT JOIN
-    `site`   `s` ON (`vp`.`winner_site_id` = `s`.`id`)
-WHERE `vp`.`winner_user_id` IS NOT NULL;
+    `site`   `s` ON (`vp`.`winner_site_id` = `s`.`id`);
+
+
+DROP VIEW IF EXISTS`view_winner`;
+CREATE VIEW `view_winner` AS
+SELECT *
+FROM `view_contest`
+WHERE `user_id` IS NOT NULL;
+
+
+DROP VIEW IF EXISTS `view_prize_admin`;
+CREATE VIEW `view_prize_admin` AS
+SELECT
+    `p`.`id`,
+    `p`.`title`,
+    LOWER(HEX(`p`.`img1`)) AS `img1`,
+    IF(`p`.`img1` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img1`)), '.jpg')) AS `img1_url`,
+    `p`.`desc1`,
+    LOWER(HEX(`p`.`img2`)) AS `img2`,
+    IF(`p`.`img2` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img2`)), '.jpg')) AS `img2_url`,
+    `p`.`desc2`,
+    LOWER(HEX(`p`.`img3`)) AS `img3`,
+    IF(`p`.`img3` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img3`)), '.jpg')) AS `img3_url`,
+    `p`.`desc3`,
+    `p`.`award`,
+    `p`.`value`,
+    `p`.`type`,
+    IF(MIN(`c`.`date`) <= DATE(NOW()), 1, 0) AS `immutable`
+FROM
+    `prize` `p`
+LEFT JOIN
+    `contest` `c` ON (`c`.`prize_id` = `p`.`id`)
+GROUP BY `p`.`id`;
+
+
+DROP VIEW IF EXISTS `view_profile`;
+CREATE VIEW `view_profile` AS
+SELECT
+    `id`,
+    `email`,
+    `verified`,
+    `firstname`,
+    `lastname`,
+    `address`,
+    `city`,
+    `state`,
+    `zip`
+FROM
+    `user`;

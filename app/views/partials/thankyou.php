@@ -1,3 +1,4 @@
+<? extract($data); ?>
 <div id="thanks" class="frame">
 
     <h2>Thank you for entering!</h2>

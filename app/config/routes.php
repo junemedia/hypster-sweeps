@@ -40,40 +40,48 @@
 */
 
 // Cronjob Tasks
-$route['cron/(:any)']         = 'cron/$1';
-$route['cron/(:any)/(:any)']  = 'cron/$1/$2';
+$route['cron/(:any)']            = 'cron/$1';
+$route['cron/(:any)/(:any)']     = 'cron/$1/$2';
 
 // Public/Cacheable HTML Requests
-$route['winners']             = 'main/winners';
-$route['calendar']            = 'main/calendar';
-$route['rules']               = 'main/rules';
-$route['prize/(:any)']        = 'main/prize/$1';
+$route['winners']                = 'main/winners';
+$route['calendar']               = 'main/calendar';
+$route['rules']                  = 'main/rules';
+$route['prize/(:any)']           = 'main/prize/$1';
 
 // Private User/Auth HTML Requests
-$route['profile']             = 'user/profile';
-$route['verify/(:any)']       = 'user/verify/$1'; // anon OK
-$route['reset']               = 'user/reset/$1';  // anon OK
+$route['profile']                = 'user/profile';
+$route['verify/(:any)']          = 'user/verify/$1'; // anon OK
+$route['reset/(:any)']           = 'user/reset/$1';  // reset password (anon OK)
 
 // Private JSON API Requests
-$route['api/eligible']        = 'api/eligible';
-$route['api/enter']           = 'api/enter';
-$route['api/logout']          = 'api/logout';
-$route['api/password']        = 'api/password';
-$route['api/verify']          = 'api/verify'; // must be logged in; generate a verification email
+$route['api/eligible']           = 'api/eligible';
+$route['api/enter']              = 'api/enter';
+$route['api/logout']             = 'api/logout';
+$route['api/reset']              = 'api/reset';     // reset password (anonymous)
+$route['api/verify']             = 'api/verify';    // generate a new verification email (logged in)
 
 // Public JSON API Requests
-$route['api/signup']          = 'api/signup';
-$route['api/login']           = 'api/login';
-$route['api/forgot']          = 'api/forgot';
+$route['api/signup']             = 'api/signup';
+$route['api/login']              = 'api/login';
+$route['api/forgot']             = 'api/forgot';
 
 // Admin Area
-$route['admin']               = 'admin/index';
-$route['admin/sweepstakes']   = 'admin/sweepstakes';
-$route['admin/prize/(:num)']  = 'admin/prize';     // GET for HTML; POST for JSON (update/create)
-$route['admin/prizes/(:any)'] = 'admin/prizes/$1'; // JSON (accepts sorting)
+$route['admin']                  = 'admin/index';           // dashboard
+$route['admin/sweepstakes']      = 'admin/contests';        // list view
+$route['admin/prize/(:num)']     = 'admin/prize/$1';        // GET/HTML of prize detail or 0 for new
+
+// Admin JSON API Requests
+// $route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/JSON list flight date prizes accepts sorting
+// $route['admin/prizes/(:any)']    = 'admin/prizes/$1';       // GET/JSON (accepts sorting/filtering)
+$route['admin/prize']            = 'admin/upsert';          // POST/JSON get or create/update a prize
+$route['admin/contest/add']      = 'admin/addContest';      // POST/JSON add a contest (flight date) to a prize
+$route['admin/contest/del']      = 'admin/delContest';      // POST/JSON remove a future contest (flight date) from a prize
+$route['admin/contest/alt']      = 'admin/altContest';      // POST/JSON pick an alternate winner for a contest
+$route['admin/similar']          = 'admin/similar';         // POST/JSON: return prizes with similar title or images
 
 // Public General/Specific Channel HTML Requests
-$route['default_controller']  = 'main';
+$route['default_controller']     = 'main';
 
 
 /* End of file routes.php */

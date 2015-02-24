@@ -7,12 +7,15 @@
             "js/jds.js"
         ]
     },
-    "admin":
+    "admincss":
     {
         "css/admin-TIMESTAMP.min.css":
         [
             "css/admin.css"
-        ],
+        ]
+    },
+    "adminjs":
+    {
         "js/admin-TIMESTAMP.min.js":
         [
             ":async=true",

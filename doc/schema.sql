@@ -11,7 +11,7 @@ CREATE TABLE `site` (
 
 
 CREATE TABLE `prize` (
-    -- non-editable if it has a contest date is in the past
+    -- immutable if it has a contest date is in the past
     `id`    SMALLINT(5)  UNSIGNED NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(255)                   DEFAULT NULL,
     `img1`  BINARY(16)                     DEFAULT NULL COMMENT 'JPG MD5',
@@ -28,12 +28,12 @@ CREATE TABLE `prize` (
 
 
 CREATE TABLE `contest` (
-    -- non-editable if date is in the past
+    -- immutable if date is in the past
     `date`           DATE                  NOT NULL,
     `prize_id`       SMALLINT(5)  UNSIGNED NOT NULL,
     `winner_user_id` MEDIUMINT(8) UNSIGNED          DEFAULT NULL,
     `winner_site_id` TINYINT(3)   UNSIGNED          DEFAULT NULL,
-    `entries`        MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT  '0'  COMMENT '1=user, 2=admin',
+    `entries`        MEDIUMINT(8) UNSIGNED NOT NULL DEFAULT  '0',
     PRIMARY KEY        (`date`),
     KEY     `prize_id` (`prize_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -50,15 +50,14 @@ CREATE TABLE `entry` (
 
 CREATE TABLE `user` (
     `id`              MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT,
-    `email`           VARCHAR(70)                    DEFAULT NULL              COMMENT 'unique key; on change remove reset/verify tokens and set verified to 0',
-    `role`            TINYINT(1)   UNSIGNED NOT NULL DEFAULT  '1'              COMMENT '1=user, 2=admin',
-    `verified`        TINYINT(1)   UNSIGNED NOT NULL DEFAULT  '0'              COMMENT '1 if email address is verified',
-    `password`        CHAR(40)                       DEFAULT NULL              COMMENT 'sha1 password+salt',
-    `salt`            CHAR(40)                       DEFAULT NULL              COMMENT 'sha1 salt',
-    `ip`              INT(11)      UNSIGNED NOT NULL                           COMMENT 'INET_ATON() of IP address during registration',
-    `date_registered` TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'registration timestamp',
-    `date_verified`   TIMESTAMP                 NULL DEFAULT NULL              COMMENT 'latest timestamp email address verified',
-    `date_updated`    TIMESTAMP                 NULL DEFAULT NULL              COMMENT 'latest timestamp of update to profile fields',
+    `email`           VARCHAR(70)                    DEFAULT NULL                               COMMENT 'unique key; on change remove reset/verify tokens and set verified to 0',
+    `role`            TINYINT(1)   UNSIGNED NOT NULL DEFAULT  '1'                               COMMENT '1=user, 2=admin',
+    `verified`        TINYINT(1)   UNSIGNED NOT NULL DEFAULT  '0'                               COMMENT '1 if email address is verified',
+    `password`        BINARY(20)                     DEFAULT NULL                               COMMENT 'sha1 of password+salt (stored in SPROC)',
+    `ip`              INT(11)      UNSIGNED NOT NULL                                            COMMENT 'INET_ATON() of IP address during registration',
+    `date_registered` TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP                  COMMENT 'registration timestamp',
+    `date_verified`   TIMESTAMP                 NULL DEFAULT NULL                               COMMENT 'latest timestamp email address verified',
+    `date_updated`    TIMESTAMP                 NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP   COMMENT 'latest timestamp of update to profile fields',
     `firstname`       VARCHAR(255)                   DEFAULT NULL,
     `lastname`        VARCHAR(255)                   DEFAULT NULL,
     `address`         VARCHAR(255)                   DEFAULT NULL,

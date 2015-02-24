@@ -1,10 +1,5 @@
+<? extract($data); ?>
 <div id="calendar"><!-- NO GAP
- --><h2 class="banner"><!-- NO GAP
-     --><? if ($banner): ?><!-- NO GAP
-         --><a href="<?= $channel_url ?>"><img class="banner" src="<?= $banner['image_url'] ?>"/></a><!-- NO GAP
-     --><? endif; ?><!-- NO GAP
-     --><?= date('F')?><!-- NO GAP
- --></h2><!-- NO GAP
  --><div id="cal"><!-- htmlmin:ignore --><?
                 $today = strtotime(date('Y-m-d'));
                 $i = 0;
@@ -20,13 +15,13 @@
                 ?><!-- htmlmin:ignore --><!-- NO GAP
              --><?= $li_open ?><!-- NO GAP
          --><? if ($prize): ?><!-- NO GAP
-                 --><img src="<?= $prize['image']?>"/><!-- NO GAP
+                 --><img src="<?= $prize['img1']?>"/><!-- NO GAP
                  --><!-- Hover Prize Info --><!-- NO GAP
                  --><h4><?=$prize['title']?></h4><!-- NO GAP
              --><? if ($is_today): ?><!-- NO GAP
-                 --><a href="<?= $channel_url ?>">Enter Now</a><!-- NO GAP
+                 --><a href="/">Enter Now</a><!-- NO GAP
              --><? else: ?><!-- NO GAP
-                 --><a href="<?= $channel_url ?>prize/<?= $prize['date'] ?>">View Details</a><!-- NO GAP
+                 --><a href="/prize/<?= $prize['date'] ?>">View Details</a><!-- NO GAP
              --><? endif; ?><!-- NO GAP
                  --><span><?= $dom ?></span><!-- NO GAP
          --><? else: ?><!-- NO GAP
@@ -36,5 +31,5 @@
          --><?
         endforeach;
     ?></div><!-- NO GAP
- --><p><a href="<?= $channel_url ?>prize/<?= date('Y-m-01', strtotime($prize['date'].' +1 month'))?>">Check out next month’s daily prizes!</a></p><!-- NO GAP
+ --><p><a href="/prize/<?= date('Y-m-01', strtotime($prize['date'].' +1 month'))?>">Check out next month’s daily prizes!</a></p><!-- NO GAP
  --></div>

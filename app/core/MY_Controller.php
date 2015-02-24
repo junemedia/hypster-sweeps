@@ -103,6 +103,27 @@ class FrontendController extends SweepsController
             $this->{$key} = $value;
         }
     }
+    /**
+     * Wrap the load->view() CI method
+     *
+     * @param   mixed   string or array of views to load in order
+     * @param   mixed   data to pass to view
+     *
+     * @return  void
+     */
+    public function loadView($view, $data)
+    {
+        // load some basics for all views
+        $data['site_id']     = $this->site_id;
+        $data['site_slug']   = $this->site_slug;
+        $data['site_name']   = $this->site_name;
+        $data['site_domain'] = $this->site_domain;
+
+        // assign the views
+        $data['view'] = is_array($view) ? $view : array($view);
+
+        return $this->load->view('shell/' . $this->site_slug . '.php', compact('data'));
+    }
 }
 
 class AdminController extends SweepsController
@@ -121,5 +142,21 @@ class AdminController extends SweepsController
         if (!$this->session->userdata('is_admin')) {
             show_404();
         }
+    }
+
+    /**
+     * Wrap the load->view() CI method
+     *
+     * @param   mixed   string or array of views to load in order
+     * @param   mixed   data to pass to view
+     *
+     * @return  void
+     */
+    public function loadView($view, $data)
+    {
+        // assign the views
+        $data['view'] = is_array($view) ? $view : array($view);
+
+        return $this->load->view('admin/index', compact('data'));
     }
 }

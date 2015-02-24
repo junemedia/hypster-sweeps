@@ -1,3 +1,4 @@
+<? extract($data); ?>
 <div id="signup" class="frame"><!-- NO GAP
 
  --><form id="signup_form" class="signup" method="post" action="/api/signup">
@@ -18,7 +19,7 @@
 
         <fieldset class="submit"><!-- NO GAP
          --><input type="submit" value="Next"/><!-- NO GAP
-         --><span class="ajax-loader"></span><!-- NO GAP
+         --><span class="loader"></span><!-- NO GAP
      --></fieldset>
 
     </form><!-- NO GAP
@@ -34,7 +35,7 @@
         <div class="alert"></div>
         <fieldset class="submit"><!-- NO GAP
          --><input type="submit" value="Enter Now"/><!-- NO GAP
-         --><span class="ajax-loader"></span><!-- NO GAP
+         --><span class="loader"></span><!-- NO GAP
      --></fieldset>
     </form><!-- NO GAP
  --><form id="forgot_form" class="login" method="post" action="/api/forgot">
@@ -47,7 +48,7 @@
         <div class="alert"></div>
         <fieldset class="submit"><!-- NO GAP
          --><input type="submit" value="Submit"/><!-- NO GAP
-         --><span class="ajax-loader"></span><!-- NO GAP
+         --><span class="loader"></span><!-- NO GAP
          --><a class="forgot_close">Cancel</a><!-- NO GAP
      --></fieldset>
     </form><!-- NO GAP

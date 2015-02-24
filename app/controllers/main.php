@@ -32,14 +32,12 @@ class Main extends FrontendController
 
         $this->load->library('SolveMedia');
 
-        $data['site_slug'] = $this->site_slug;
-
-        $data['prizes'] = $this->prizeModel->getPrizesByDateRange(date('Y-m-d', strtotime('15 days ago')), date('Y-m-d', strtotime('+15 days'))); // returns +4 days and -4 days from today
+        $data['prizes'] = $this->prizeModel->getPrizesByDateRange(date('Y-m-d', strtotime('15 days ago')), date('Y-m-d', strtotime('+15 days')));
         // find today's prize
         $todays_date = date('Y-m-d');
         while ($p = current($data['prizes'])) {
             if ($p['date'] == $todays_date) {
-                $data['today']    = &$p;
+                $data['prize']    = &$p;
                 $data['tomorrow'] = &next($data['prizes']);
                 break;
             }
@@ -50,15 +48,21 @@ class Main extends FrontendController
         $data['solvemedia'] = $this->solvemedia->getHtml($this->site_slug);
 
         // <title> & <meta> tags
-        if (@$data['today']['title']) {
-            $data['meta']['title']       = 'Win ' . articleAgreement($data['today']['title']);
-            $data['meta']['description'] = $data['today']['desc1'];
-            $data['meta']['image']       = 'http://' . $_SERVER['HTTP_HOST'] . $data['today']['img1'];
+        if (@$data['prize']['title']) {
+            $data['meta']['title']       = 'Win ' . articleAgreement($data['prize']['title']);
+            $data['meta']['description'] = $data['prize']['desc1'];
+            $data['meta']['image']       = 'http://' . $_SERVER['HTTP_HOST'] . $data['prize']['img1'];
             $data['meta']['domain']      = $this->site_domain;
             $data['meta']['url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         }
 
-        $this->load->view('homepage', $data);
+        return $this->loadView(array(
+            'partials/prize',
+            'partials/signup',
+            'partials/thankyou',
+            'partials/carousel',
+            'partials/winners',
+        ), $data);
     }
 
     /**
@@ -66,48 +70,17 @@ class Main extends FrontendController
      */
     public function calendar()
     {
-        $this->load->model('banner_model');
-        $this->load->model('prize_model');
+        $this->load->model('prizeModel');
 
-        $this->load->helper('url');
+        // get prizes
+        $data['prizes'] = $this->prizeModel->getPrizesByDateRange(date('Y-m-1'), date('Y-m-t'));
 
-        $data['banner'] = $this->banner_model->getPromoCalendarBanner($this->channel_id);
+        // <title> & <meta> tags
+        $data['meta']['title']  = $this->site_name . ' Daily Sweepstakes Calendar';
+        $data['meta']['domain'] = $this->site_domain;
+        $data['meta']['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
 
-        // Omniture
-        $data['omniture'] = array(
-            'site_slug'    => $this->site_slug,
-            'site_name'    => $this->site_name,
-            'channel_slug' => $this->channel_slug,
-            'channel_name' => $this->channel_name,
-            'reg_source'   => $this->reg_source_id,
-            '_evt'         => 'home', // optional, but allows us to fire this event immediately after setup
-        );
-
-        // Promo calendar
-        $data['prizes'] = $this->prize_model->getPrizeCalendar($this->site_id);
-        // $data['promo_big_box'] = array(1, 7, 10, 12, 13, 19, 22, 24, 25, 30, 31);
-
-        // Channel Info for View
-        $data['channel_name'] = $this->channel_name;
-        $data['channel_url']  = $this->channel_url;
-
-        $data['gtm'] = $this->config->item($this->site_slug, 'gtm');
-
-        $data['tos_link'] = $this->config->item($this->site_slug, 'tos_link');
-
-        // Load all view data
-        $template_data['sf_content'] = '<div id="mds" class="' . $this->site_slug . '">' .
-        $this->load->view('/partials/script', $data, true) .
-        $this->load->view('calendar', $data, true) .
-        '</div>';
-
-        // <Title> & <Meta> tags
-        $meta['title']         = $this->site_name . ' Daily Sweepstakes Calendar';
-        $meta['domain']        = $this->domain;
-        $meta['url']           = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
-        $template_data['meta'] = $this->load->view('/partials/meta', $meta, true);
-
-        $this->load->view('/shells/' . $this->site_slug, $template_data);
+        $this->loadView('calendar', $data);
     }
 
     /**
@@ -115,43 +88,29 @@ class Main extends FrontendController
      */
     public function winners()
     {
-        $this->load->model('banner_model');
-        $this->load->model('winners_model');
+        $this->load->model('prizeModel');
 
-        $data['channel_url'] = $this->channel_url;
-        $data['winners']     = $this->winners_model->getWinners(45);
-        $data['site_name']   = $this->site_name;
-        $data['mobile']      = is_mobile() ? 1 : 0;
-        $data['banner']      = $this->banner_model->getTodaysBanners(array(1, 2, 3, 4), $this->channel_id);
+        // get winners
+        $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('45 days ago')));
 
-        // Omniture
-        $data['omniture'] = array(
-            'site_slug'    => $this->site_slug,
-            'site_name'    => $this->site_name,
-            'channel_slug' => $this->channel_slug,
-            'channel_name' => $this->channel_name,
-            'reg_source'   => $this->reg_source_id,
-            '_evt'         => 'home', // optional, but allows us to fire this event immediately after setup
-        );
+        // <title> & <meta> tags
+        $data['meta']['title']  = $this->site_name . ' Daily Sweepstakes Calendar';
+        $data['meta']['domain'] = $this->site_domain;
+        $data['meta']['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
 
-        // <Title> & <Meta> tags
+        // <title> & <meta> tags
         $meta['title']  = $this->site_name . ' Daily Sweepstakes Winners';
-        $meta['domain'] = $this->domain;
+        $meta['domain'] = $this->site_domain;
         $meta['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/winners';
+
         if (@$data['winners'][0]) {
             $latest_winner       = $data['winners'][0];
-            $meta['image']       = $latest_winner['prize_image'];
-            $meta['description'] = $latest_winner['name'] . ' from ' . $latest_winner['location'] . ' won '
-            . articleAgreement($latest_winner['prize_title']) . ' from ' . $latest_winner['property'];
+            $meta['image']       = $latest_winner['prize_img1'];
+            $meta['description'] = $latest_winner['user_firstname'] . ' from ' . $latest_winner['user_city'] . ' won '
+            . articleAgreement($latest_winner['prize_title']);
         }
-        $template_data['meta'] = $this->load->view('/partials/meta', $meta, true);
 
-        $template_data['sf_content'] = '<div id="mds" class="' . $this->site_slug . '">' .
-        $this->load->view('/partials/script', $data, true) .
-        $this->load->view('winners', $data, true) .
-        '</div>';
-
-        $this->load->view('/shells/' . $this->site_slug, $template_data);
+        $this->loadView('partials/winners', $data);
     }
 
     /**
@@ -159,62 +118,40 @@ class Main extends FrontendController
      */
     public function prize($date = null)
     {
-        $this->load->model('banner_model');
-        $this->load->model('prize_model');
 
         $time = strtotime($date);
 
         // issue 302 redirect for today’s prize
         if (!$time || $date == date('Y-m-d')) {
-            redirect($this->channel_url, '302');
+            redirect('/', '302');
         }
 
-        $date = date('Y-m-d', $time);
+        $date      = date('Y-m-d', $time);
+        $yesterday = date('Y-m-d', $time - 86400);
+        $tomorrow  = date('Y-m-d', $time + 86400);
 
-        $prizes = $this->prize_model->getPrizeByDateRange($this->channel_id, 1, $date);
+        $this->load->model('prizeModel');
+        $prizes        = prizeByDateMap($this->prizeModel->getPrizesByDateRange($yesterday, $tomorrow));
+        $data['prize'] = @$prizes[$date];
+        $data['prev']  = @$prizes[$yesterday];
+        $data['next']  = @$prizes[$tomorrow];
+        $prize         = $data['prize'];
 
-        if (!@$prizes[$date]) {
+        if (!@$prize) {
             show_404();
         }
 
-        // Omniture
-        $data['omniture'] = array(
-            'site_slug'    => $this->site_slug,
-            'site_name'    => $this->site_name,
-            'channel_slug' => $this->channel_slug,
-            'channel_name' => $this->channel_name,
-            'reg_source'   => $this->reg_source_id,
-            '_evt'         => 'home', // optional, but allows us to fire this event immediately after setup
-        );
-
-        $data['channel_url'] = $this->channel_url;
-        $data['prize']       = $prizes[$date];
-        $data['prev']        = @$prizes[date('Y-m-d', strtotime($date) - 86400)];
-        $data['next']        = @$prizes[date('Y-m-d', strtotime($date) + 86400)];
-        $data['banner']      = $this->banner_model->getTodaysBanners(array(1, 2, 3, 4), $this->channel_id);
-        // it's possible the prize_model doesn't bring back prize for day after or before
-
-        $data['gtm'] = $this->config->item($this->site_slug, 'gtm');
-
-        $data['tos_link'] = $this->config->item($this->site_slug, 'tos_link');
-
-        $template_data['sf_content'] = '<div id="mds" class="' . $this->site_slug . '">' .
-        $this->load->view('/partials/script', $data, true) .
-        $this->load->view('/prize', $data, true) .
-        '</div>';
-
-        // <Title> & <Meta> tags
+        // <title> & <meta> tags
         $prize = $data['prize'];
         if ($prize['date'] && $prize['title']) {
-            $meta['title']         = 'Win ' . articleAgreement($prize['title']);
-            $meta['description']   = trim($prize['description']);
-            $meta['image']         = (strpos(trim($prize['image']), 'http') !== 0 ? 'http:' : '') . trim($prize['image']);
-            $meta['domain']        = $this->domain;
-            $meta['url']           = 'http://' . $_SERVER['HTTP_HOST'] . $this->channel_url . 'prize/' . $prize['date'];
-            $template_data['meta'] = $this->load->view('/partials/meta', $meta, true);
+            $data['meta']['title']       = 'Win ' . articleAgreement($prize['title']);
+            $data['meta']['description'] = trim($prize['desc1']);
+            $data['meta']['image']       = (strpos(trim($prize['img1']), 'http') !== 0 ? 'http:' : '') . trim($prize['img1']);
+            $data['meta']['domain']      = $this->site_domain;
+            $data['meta']['url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/prize/' . $prize['date'];
         }
 
-        $this->load->view('/shells/' . $this->site_slug, $template_data);
+        $this->loadView('partials/prize', $data);
     }
 
     /**

@@ -20,6 +20,9 @@ class Api extends FrontendController
 
     /**
      *
+     * Must return "midnight" in successful JSON response so that
+     * localStorage can expire at the correct time: EST midnight
+     *
      */
     public function eligible()
     {
@@ -41,6 +44,7 @@ class Api extends FrontendController
         $response['eligible'] = $this->prizeModel->isEligible(
             $user_id,
             $this->site_id);
+        $response['midnight'] = strtotime('tomorrow');
 
         return $this->json($response);
 
@@ -48,6 +52,10 @@ class Api extends FrontendController
 
     /**
      * Enter user into the contest
+     *
+     * Must return "midnight" in successful JSON response so that
+     * localStorage can expire at the correct time: EST midnight
+     *
      */
     public function enter()
     {
@@ -81,7 +89,8 @@ class Api extends FrontendController
             return $this->json($response);
         }
 
-        $response['success'] = 1;
+        $response['success']  = 1;
+        $response['midnight'] = strtotime('tomorrow');
 
         return $this->json($response);
     }
@@ -100,6 +109,7 @@ class Api extends FrontendController
         $this->load->library('form_validation');
 
         if (!($user_id = $this->session->userdata('user_id'))) {
+            $is_new_reg = true;
             // New Users
             $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_properEmail');
             $this->form_validation->set_rules('password', 'Password', 'callback_checkPassword');
@@ -108,6 +118,7 @@ class Api extends FrontendController
             $this->form_validation->set_rules('address', 'Address', 'trim|required|callback_properAddress');
             $this->form_validation->set_rules('zip', 'Zip Code', 'trim|required|is_natural|min_length[5]');
         } else {
+            $is_new_reg = false;
             // Profile Updates
             $this->form_validation->set_rules('email', 'Email', 'trim|valid_email|callback_properEmail');
             $this->form_validation->set_rules('firstname', 'First Name', 'trim|callback_properName');
@@ -118,16 +129,6 @@ class Api extends FrontendController
                 $this->form_validation->set_rules('password', 'Password', 'callback_checkPassword');
             }
         }
-
-//////////////
-        //////////////
-        //////////////
-        //////////////
-        ////////////// SEND A VERIFICATION EMAIL
-        //////////////
-        //////////////
-        //////////////
-        //////////////
 
         if (!$this->form_validation->run()) {
             $response['err'] = 1;
@@ -156,29 +157,45 @@ class Api extends FrontendController
         $profile['zip']       = $this->input->post('zip');
         $profile['email']     = $this->input->post('email');
         $profile['password']  = $this->input->post('password');
-        $profile['ip']        = ip2long($this->input->ip_address());
+        $profile['ip']        = $this->input->ip_address();
 
         // remove empty/null/false values; CAREFUL: removes boolean false values
         $profile = array_filter($profile);
 
         // save in DB
         $this->load->model('userModel');
-        $user_id = $this->userModel->register($profile);
+        $result = $is_new_reg ? $this->userModel->register($profile) : $this->userModel->update($profile);
+
+        $response = array();
 
         switch (true) {
-            case ($user_id == -1):
-                $response['err'] = 2;     // duplicate user
-                $response['msg'] = "This email address has already been registered.";
+            case ($result == -2):
+                $response['err'] = 1;     // user does not exist
+                $response['msg'] = "This user does not exist.";
                 break;
-            case ($user_id > 0):
-                $response['user_id'] = $user_id;
-                // authentication successful, save this in the session
-                // effectively "logging in the user"
-                $this->session->set_userdata('user_id', $user_id);
+            case ($result == -1):
+                $response['err'] = 2;     // duplicate user
+                $response['msg'] = "This email address is already registered.";
                 break;
             default:
                 $response['err'] = 1;     // general error
                 $response['msg'] = "We encountered a server error. Please try again.";
+                break;
+            case ($result > 0):
+                if ($is_new_reg) {
+                    // authentication successful, save this in the session
+                    // effectively "logging in the user" during registrations
+                    $this->session->set_userdata('user_id', $result);
+                }
+                if ($is_new_reg || (!$is_new_reg && $result == 1)) {
+                    // send a verification email for new registrations
+                    // and updates where email address is updated
+                    $this->verify();
+                }
+                if (@$profile['firstname']) {
+                    // send back first name
+                    $response['name'] = $profile['firstname'];
+                }
                 break;
         }
 
@@ -189,6 +206,9 @@ class Api extends FrontendController
      * Authenticate user
      *
      * Accept email/password; return JSON of eligible: true/false
+     *
+     * Must return "midnight" in successful JSON response so that
+     * localStorage can expire at the correct time: EST midnight
      *
      */
     public function login()
@@ -227,7 +247,8 @@ class Api extends FrontendController
         $response['eligible'] = $this->prizeModel->isEligible(
             $user['id'],
             $this->site_id);
-
+        $response['midnight'] = strtotime('tomorrow');
+        $response['name']     = $user['firstname'];
         return $this->json($response);
     }
 
@@ -241,17 +262,16 @@ class Api extends FrontendController
     }
 
     /**
-     * Execute password update with either 1) a token or 2) an authenticated session
+     * Reset password using a token
      *
+     * Authenticated users can change their password in /profile
      *
      */
-    public function password()
+    public function reset()
     {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('password', 'Password', 'callback_checkPassword');
-        if ($this->input->post('token')) {
-            $this->form_validation->set_rules('token', 'Password Reset Token', 'trim|required|min_length[8]');
-        }
+        $this->form_validation->set_rules('token', 'Password Reset Token', 'trim|required|min_length[8]');
 
         if (!$this->form_validation->run()) {
             $response['err'] = 1;
@@ -260,28 +280,14 @@ class Api extends FrontendController
         }
 
         $password = $this->input->post('password');
+        $token = $this->input->post('token');
 
         $this->load->model('userModel');
 
-        if ($token = $this->input->post('token')) {
-            // 1) Token method
-            if (!$this->userModel->password($token, $password, config_item('token_ttl'))) {
-                $response['err'] = 1;
-                $response['msg'] = 'Your reset token has expired or is invalid. Please try again.';
-                return $this->json($response);
-            }
-        } else {
-            // 2) Existing authenticated session method
-            if (!($user_id = $this->session->userdata('user_id'))) {
-                $response['err'] = 1;
-                $response['msg'] = 'Unable to change your password. Please log in and try again.';
-                return $this->json($response);
-            }
-            if (!$this->userModel->password($user_id, $password)) {
-                $response['err'] = 1;
-                $response['msg'] = 'We encountered an error trying to change your password. Please try again.';
-                return $this->json($response);
-            }
+        if (!$this->userModel->reset($token, $password, config_item('token_ttl'))) {
+            $response['err'] = 1;
+            $response['msg'] = 'Your reset token has expired or is invalid. Please reset your password again on the <a href="/">signup page</a>.';
+            return $this->json($response);
         }
 
         $response['success'] = 1;
@@ -353,7 +359,7 @@ class Api extends FrontendController
 
         if (!$token = $this->userModel->getPasswordResetToken($email)) {
             $response['err'] = 1;
-            $response['msg'] = 'We encountered an error. Please try again.';
+            $response['msg'] = 'We cannot find that email address.';
             return $this->json($response);
         }
 
@@ -368,6 +374,7 @@ class Api extends FrontendController
         $this->email->message($this->parser->parse('../templates/reset', $params, true));
         $this->email->send();
 
+        $response['msg'] = 'We’ve sent you an email with password reset instructions.';
         $response['success'] = 1;
         return $this->json($response);
     }

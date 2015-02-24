@@ -1,3 +1,4 @@
+<? extract($data); ?>
 <!-- Solve Media Captcha -->
 <div id="solvemedia">
     <div class="screen"></div>
