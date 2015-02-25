@@ -31,6 +31,11 @@ class User extends FrontendController
         $this->load->model('userModel');
         $data = $this->userModel->getProfile($user_id);
 
+        // having 'solvemedia' defined will cause the auto load of partials/captcha
+        // in the footer of each shell--directly following the <script> line
+        $this->load->library('SolveMedia');
+        $data['solvemedia'] = $this->solvemedia->invoke();
+
         return $this->loadView('profile', $data);
     }
 

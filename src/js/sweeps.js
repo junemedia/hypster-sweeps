@@ -6,8 +6,6 @@
 // it is defined.
 (function(w, $, m, l, t, i) {
 
-
-
     /**
      * Utility Functions (thank you Underscore.js)
      */
@@ -54,6 +52,11 @@
         };
     }
 
+    function scrollTop(i) {
+        // defer this so that iOS will close the keyboard
+        $(w).scrollTop(i || 0);
+    }
+
 
 
     /**
@@ -62,7 +65,18 @@
     var ROADUNBLOCKED, // holds whether or not the captcha (Solve Media or Selectable Media) has been passed
         ONE_YEAR = 1000 * 60 * 60 * 24 * 365,
         GENERIC_AJAX_ERROR = 'An unexpected error has occurred. Please try again.',
-        // user variables
+
+        // XHR "status" response codes (see app/config/constants.php)
+        XHR_OK = 1,
+        XHR_ERROR = 2,
+        XHR_AUTH = 3,
+        XHR_INVALID = 4,
+        XHR_DUPLICATE = 5,
+        XHR_EXPIRED = 6,
+        XHR_NOT_FOUND = 7,
+        XHR_INCOMPLETE = 8,
+        XHR_HUMAN = 9,
+
         // UI elements
         $name, // inside the $profile_bar
         $profile_bar,
@@ -118,7 +132,7 @@
             url: '/api/eligible',
             dataType: 'json'
         }).done(function(data) {
-            if (!data) {
+            if (!data || !data.status || data.status != XHR_OK) {
                 // logout, but do not change any state
                 return logout();
             }
@@ -324,61 +338,140 @@
     function SolveMedia(opts) {
         // load Solve Media tag
         if (!opts || !opts.key) {
-            rd.warn('Could not initialize solvemedia roadblock. No key provided.');
+            rd.warn('Could not initialize SolveMedia roadblock. No key provided.');
             return false;
         }
-        // assign the challenge/public key
-        var key = opts && opts.key;
+        var
+            key = opts.key, // assign the challenge/public key
+            // src = '//api' + (location.protocol == 'https:' ? '-secure' : '') + '.solvemedia.com/papi/challenge.ajax', // invocation JS
+            src = '//api.solvemedia.com/papi/_puzzle.js', // invocation JS
+            acp, // placeholder for window.ACPuzzle after /papi/_puzzle.js loads
+            $solvemedia = $('#solvemedia');
 
-        // set the invocation JS source
-        var js_source = 'http://api.solvemedia.com/papi/challenge.ajax?k=' + key;
+
+        // needed by /papi/_puzzle.js
+        w['ACPuzzleInfo'] = {
+            protocol: !window.location.protocol.match(/^https?:$/) ? 'http:' : '',
+            apiserver: '//api.solvemedia.com',
+            mediaserver: '//api.solvemedia.com',
+            magic: 'L.Q1tHYw9Y0fbE6WdjD1jQ',
+            chalapi: 'ajax',
+            chalstamp: 1424826183,
+            lang: 'en',
+            size: 'standard',
+            theme: 'custom',
+            type: 'img',
+            onload: null
+        }
+        // w['ACPuzzleOptions'] = {
+        //     theme: 'custom'
+        // };
+
         // load the Solve Media JavaScript
         $.ajax({
-            url: js_source,
+            url: src,
             dataType: 'script',
-            cache: true,
-            success: function() {
-                // nothing to do here
-                // we'll load the puzzle once the user clicks
-            },
-            error: function() {
-                rd.error('Failed to load SolveMedia JS: ' + js_source);
-            }
-        });
+            cache: true // prevent appending ?<timstamp> bullsh
+        }).fail(function() {
+            rd.error('Failed to load SolveMedia JS: ' + src);
+        })
+            .done(function() {
+                acp = w['ACPuzzle'];
+                acp.create(key);
+            });
 
-        function fire() {
-            var ACPuzzle = w['ACPuzzle'];
+        function fire(callback) {
+            SolveMedia.callback = callback;
+            // acp = w['ACPuzzle'];
+            // acp.create(key);
+
+            // console.log(acp, w['ACPuzzle']);
             if (!ACPuzzle) {
+                // this is unfortunate, the roadblock has been called,
+                // but SolveMedia's invocation JS has not loaded yet.
                 ROADUNBLOCKED = true;
                 rd.error('SolveMedia.fire executed, but ACPuzzle not ready :(');
                 return false;
             }
-            ACPuzzle.create(key, "solvemedia_widget", {});
-            $("#solvemedia form").on('submit', function(evt) {
-                // don't even bother authenticating this response
-                evt.preventDefault();
-                // drop the gate until tomorrow (or logout or login as another user)
-                ROADUNBLOCKED = true;
-                $('#prize_form').submit();
-                $("#solvemedia").hide();
-                // not needed since we don't actually submit this captcha
-                // $("#captcha-error").remove();
-            });
-            $("#solvemedia .close").on('click', collapse);
             $(document).on('keyup', escape);
-            $('#solvemedia').show();
-
+            $solvemedia.show();
+            // iOS won't let you focus on a field that was hidden when the event fired
+            // LOSING BATTLE ON IOS:
+            focus();
             return false;
         }
 
         function escape(e) {
-            (e.keyCode == 27) && collapse();
+            if (e.which == 27) {
+                collapse();
+                return false;
+            }
+            return true;
+        }
+
+        function focus() {
+            var $txtbox = $solvemedia.find('input[type="text"]');
+            // assist mobile safari
+            $txtbox.on('focus', function(evt) {
+                console.log(evt);
+                // evt.preventDefault();
+                scrollTop(0);
+            });
+            $txtbox.trigger('focus');
         }
 
         function collapse() {
             $(document).off('keyup', escape);
             $("#solvemedia").hide();
         }
+
+        function tap(evt) {
+            var $target = $(evt.target);
+            switch ($target.attr('id') || $target[0].nodeName) {
+                case 'adcopy-link-refresh':
+                    acp.reload();
+                    focus();
+                    break;
+                case 'adcopy-link-audio':
+                    acp.change2audio();
+                    focus();
+                    break;
+                case 'adcopy-link-image':
+                    acp.change2image();
+                    focus();
+                    break;
+                case 'adcopy-link-info':
+                case 'I': // solve media logo
+                    acp.moreinfo();
+                    break;
+                case 'solvemedia':
+                case 'B': // close button
+                    collapse();
+                    break;
+                default:
+                    return true;
+            }
+            return false;
+
+        }
+
+        // don't use touchstart or selectstart here, iOS will flip out:
+        $solvemedia.on('click', tap);
+
+        $solvemedia.find('form').on('submit', {
+            success: function(response) {
+                ROADUNBLOCKED = true;
+                collapse();
+                if ($.type(SolveMedia.callback) == 'function') {
+                    SolveMedia.callback();
+                }
+            },
+            fail: function(response) {
+                acp.reload();
+                return false;
+            }
+        }, xhr);
+
         // expose this "fire" method
         SolveMedia['fire'] = fire;
     }
@@ -446,8 +539,8 @@
         scrollback();
 
 
-        $prev_arrow.on('click', throttle(goPrev, 450));
-        $next_arrow.on('click', throttle(goNext, 450));
+        $prev_arrow.on('selectstart touchstart', throttle(goPrev, 450));
+        $next_arrow.on('selectstart touchstart', throttle(goNext, 450));
 
         function goPrev(evt) {
             var x = $scroller.scrollLeft() - width_carousel * .63;
@@ -651,13 +744,15 @@
         submitEvent.preventDefault();
         var
             callback = submitEvent.data && submitEvent.data.success || function() {},
+            callbackFail = submitEvent.data && submitEvent.data.fail || function() {},
             prereq = submitEvent.data && submitEvent.data.prereq || function() {
                 return true;
             },
-            $form = xhr.$form = $(this),
+            $form = xhr.$form = $(this).addClass('loading'),
             $submit = xhr.$submit = $form.find('input[type="submit"]').attr('disabled', 'disabled'),
-            $loader = $form.find('.ajax-loader').addClass('on'),
+            $loader = $form.find('loader').addClass('on'),
             $alert = xhr.$alert = $form.find('.alert').empty().hide();
+
         // return false if a pre requirement is not met
         if (!prereq(submitEvent)) {
             restore();
@@ -666,22 +761,43 @@
 
         function restore() {
             $loader.removeClass('on');
+            $form.removeClass('loading');
             $submit.attr('disabled', null);
         }
 
         function done(data, textStatus, jqXHR) {
             restore();
-            // if (!data || (('err' in data) && parseInt(data['err']) === 1)) {
-            if (!data || 'err' in data) {
-                $alert.html(data['msg'] || GENERIC_AJAX_ERROR).show();
-                return;
+
+            // blur() focus in order to pull down the keyboard on mobile devices
+            $('.logo').trigger('focus');
+
+            if (!data || !'status' in data || data['status'] !== XHR_OK) {
+                switch (data['status']) {
+                    case XHR_AUTH:
+                        // If we get an error of XHR_AUTH, then make sure we are logged out
+                        logout();
+                        break;
+                    case XHR_HUMAN:
+                        // Captcha has expired in our session, pop it up, and pass the callback
+                        jds.roadblock(function() {
+                            $form.trigger('submit')
+                        });
+                        break;
+                }
+                $alert.html(data['message'] || GENERIC_AJAX_ERROR).show();
+                return callbackFail(data);
             }
             return callback(data);
         }
 
         function fail(jqXHR, textStatus, errorThrown) {
             restore();
+
+            // blur() focus in order to pull down the keyboard on mobile devices
+            $('.logo').trigger('focus');
+
             $alert.html(GENERIC_AJAX_ERROR).show();
+            return callbackFail();
         }
         $.ajax({
             type: 'POST',
@@ -703,22 +819,7 @@
 
         $('#login_form').on('submit', {
             success: function(response) {
-                // if (parseInt(response.code) === 2) {
-                //     // hide the login form
-                //     xhr.$form.hide();
-                //     // switch to and populate the registration form
-                //     xhr.$form = $('#signup_form');
-                //     if (response.prefill) {
-                //         for (var key in response.prefill) {
-                //             var val = response.prefill[key];
-                //             xhr.$form.find('[name="'+key+'"]').val(val);
-                //         }
-                //     }
-                //     xhr.$form.find('.hide_on_update').hide();
-                //     // instruct the user to complete his/her profile
-                //     response.msg && xhr.$form.find('.alert').html(response.msg).show();
-                //     return false;
-                // }
+                scrollTop(0);
                 // remove any previous roads being unblocked
                 ROADUNBLOCKED = null;
                 // set environment variables
@@ -740,6 +841,7 @@
 
         $('#signup_form').on('submit', {
             success: function(response) {
+                scrollTop(0);
                 // remove any previous roads being unblocked
                 ROADUNBLOCKED = null;
                 // set environment variables
@@ -752,7 +854,7 @@
                 xhr.$form.trigger('reset');
 
                 if (xhr.$form.hasClass('profile')) {
-                    // issue reload on /profile page
+                    // hanlde the reload on /profile page
                     window.location.href = window.location.href;
                 } else {
                     // show the #prize_form
@@ -776,6 +878,7 @@
 
         $('#reset_form').on('submit', {
             success: function(response) {
+                scrollTop(0);
                 xhr.$alert.show().html(response.msg);
                 xhr.$form.trigger('reset');
                 xhr.$form.find('fieldset, input').hide();
@@ -785,18 +888,42 @@
         }, xhr);
 
         $('#prize_form').on('submit', {
-            prereq: function(response) {
+            // prereq: function() {
+            //     if (isLoggedIn()) {
+            //         if (!rd.db('ineligible')) {
+            //             // eligible
+            //             if (!ROADUNBLOCKED) {
+            //                 // Check for roadblock completion (Solve Media)
+            //                 jds.roadblock && jds.roadblock(function() {
+            //                     $('#prize_form').trigger('submit');
+            //                 });
+            //                 return false;
+            //             }
+            //         } else {
+            //             // ineligible
+            //             enter();
+            //             return false;
+            //         }
+            //         return true;
+            //     }
+            //     enter();
+            //     return false;
+            // },
+            prereq: function() {
                 if (isLoggedIn()) {
                     if (!rd.db('ineligible')) {
                         // eligible
-                        if (!ROADUNBLOCKED) {
-                            // Check for roadblock completion (Solve Media)
-                            jds.roadblock && jds.roadblock();
-                            return false;
-                        }
+                        return true;
+                        // if (!ROADUNBLOCKED) {
+                        //     // Check for roadblock completion (Solve Media)
+                        //     jds.roadblock && jds.roadblock(function() {
+                        //         $('#prize_form').trigger('submit');
+                        //     });
+                        //     return false;
+                        // }
                     } else {
                         // ineligible
-                        enter();
+                        enter(true);
                         return false;
                     }
                     return true;
@@ -805,6 +932,7 @@
                 return false;
             },
             success: function(response) {
+                scrollTop(0);
                 // destroy this now that we won't be needing it anymore
                 ROADUNBLOCKED = null;
                 // we cannot enter this contest until tomorrow
@@ -871,6 +999,14 @@
             }
         }
 
+        /**
+         * BetterRecipes
+         * hamburger opener/closer on mobile devices
+         */
+        $('body>header .menu').on('touchstart selectstart click', debounce(function(evt) {
+            evt.preventDefault();
+            $(this).closest('header').toggleClass('open');
+        }, 100, true));
 
     } // end ready()
 
@@ -881,12 +1017,6 @@
      */
     jds['gtm'] = GTM;
     jds['solvemedia'] = SolveMedia;
-    // jds['carousel']         = Carousel; // not needed
-    // // CANNOT export ROADUNBLOCKED since it is a primitive
-    // // Only Objects (arrays, functions, …) can be exported
-    // // since JavaScript won't pass a primitive as a refernece:
-    // // http://stackoverflow.com/a/6605700
-    // jds['roadunblocked']    = ROADUNBLOCKED;
 
 
 

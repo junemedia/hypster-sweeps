@@ -9,6 +9,7 @@
 <meta name="<?= safeAttr($key) ?>" content="<?= safeAttr($val) ?>"/>
 <?php endforeach; ?>
 <?php
+    /* SHELL-TIMESTAMP.min.css */
     $minify_config['noout'] = true;
     require_once('minify.inc.php');
     $minify_config['group'] = 'betterrecipes';
@@ -22,6 +23,7 @@
         <div class="ad-728x90">
             <img src="http://placehold.it/728x90"/>
         </div>
+        <a class="menu"></a>
     </div>
     <nav><!-- NO GAP
      --><div class="wrap"><!-- NO GAP
@@ -60,14 +62,18 @@
 <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
 <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')</script>
 <?php
+
+    /* jds-TIMESTAMP.min.js */
     $minify_config['noout'] = true;
     require_once('minify.inc.php');
-    $minify_config['group'] = 'main';
+    $minify_config['group'] = 'mainjs';
     new Minify($minify_config);
+
+    /* SolveMedia */
+    if (@$solvemedia) {
+        $this->load->view('partials/captcha');
+        echo $solvemedia;
+    }
 ?>
-<?php if (@$solvemedia): ?>
-<?php $this->load->view('partials/captcha'); ?>
-<?= $solvemedia ?>
-<?php endif; ?>
 </body>
 </html>

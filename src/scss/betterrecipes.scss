@@ -57,7 +57,11 @@
         }
         @media all and (max-width: 640px) {
             background-size: 90% auto;
-            background-position: .8rem 0;
+            background-position: 1rem 17%;
+            padding-top: 18%;
+            span {
+                padding: .4rem 1rem;
+            }
         }
     }
 }

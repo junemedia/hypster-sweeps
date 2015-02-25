@@ -63,10 +63,8 @@ class Admin extends AdminController
     {
         $this->load->model('adminModel');
         $data['nav_sweepstakes'] = true;
-        $data['contests'] = $this->adminModel->getContestsByDateRange(date('Y-m-d', strtotime('15 days ago')), date('Y-m-d', strtotime('+90 days')));
-        $data['stats']    = $this->adminModel->getPrizeStats();
-        // return $this->json($response);
-        // for now, just return HTML
+        $data['contests']        = $this->adminModel->getContestsByDateRange(date('Y-m-d', strtotime('15 days ago')), date('Y-m-d', strtotime('+90 days')));
+        $data['stats']           = $this->adminModel->getPrizeStats();
         return $this->loadView(array('admin/sweepstakes'), $data);
     }
 
@@ -142,9 +140,7 @@ class Admin extends AdminController
         $this->form_validation->set_message('required', '%s');
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = validation_errors();
-            return $this->json($response);
+            return $this->json(XHR_INVALID, validation_errors());
         }
 
         $prize['title'] = $this->input->post('title');
@@ -163,13 +159,10 @@ class Admin extends AdminController
         $result = $this->adminModel->createPrize($prize);
 
         if (!$result) {
-            return $this->json(array(
-                'err' => 1,
-                'msg' => 'We encountered a server error. Please try again.',
-            ));
+            return $this->json(XHR_ERROR);
         }
 
-        return $this->json(array('success' => true, 'prize_id' => $result));
+        return $this->json(XHR_OK, array('prize_id' => $result));
     }
 
     /**
@@ -202,9 +195,7 @@ class Admin extends AdminController
         $this->form_validation->set_message('required', '%s');
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = validation_errors();
-            return $this->json($response);
+            return $this->json(XHR_INVALID, validation_errors());
         }
 
         $prize['title'] = $this->input->post('title');
@@ -224,13 +215,10 @@ class Admin extends AdminController
         $result = $this->adminModel->updatePrize($prize_id, $prize);
 
         if (!$result) {
-            return $this->json(array(
-                'err' => 1,
-                'msg' => 'We encountered a server error. Please try again.',
-            ));
+            return $this->json(XHR_ERROR);
         }
 
-        return $this->json(array('success' => true));
+        return $this->json(XHR_OK);
     }
 
     /**
@@ -247,12 +235,8 @@ class Admin extends AdminController
         $prize_id = (int) $this->input->post('prize_id');
         $date     = sanitizeDate($this->input->post('date'));
 
-        $response = array();
-
         if (!$prize_id || !$date) {
-            $response['err'] = 1;
-            $response['msg'] = 'Invalid prize_id or date';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'Invalid prize_id or date');
         }
 
         $this->load->model('adminModel');
@@ -261,13 +245,11 @@ class Admin extends AdminController
         if (!$success) {
             $c = array_shift($this->adminModel->getContestsByDateRange($date, $date));
             // this contest date already exists for another prize (or this prize)
-            $response['err'] = 1;
-            $response['msg'] = sprintf('<a href="/admin/prize/%s" target="_blank">%s</a> is already scheduled for %s', $c['prize_id'], $c['prize_title'], $date);
+            return $this->json(XHR_DUPLICATE, sprintf('<a href="/admin/prize/%s" target="_blank">%s</a> is already scheduled for %s', $c['prize_id'], $c['prize_title'], $date));
         } else {
-            $response['success'] = true;
+            return $this->json(XHR_OK);
         }
 
-        return $this->json($response);
     }
 
     /**
@@ -286,29 +268,20 @@ class Admin extends AdminController
         $response = array();
 
         if (!$prize_id || !$date) {
-            $response['err'] = 1;
-            $response['msg'] = 'Invalid prize_id or date';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'Invalid prize_id or date');
         }
 
         if (strtotime(date('Y-m-d')) >= strtotime($date)) {
-            $response['err'] = 1;
-            $response['msg'] = 'Unable to delete a past or present flight date.';
-            return $this->json($response);
+            return $this->json(XHR_ERROR, 'Unable to delete a past or present flight date.');
         }
 
         $this->load->model('adminModel');
 
         $success = $this->adminModel->delContest($prize_id, $date);
-        if (!$success) {
-            // this flight date was not assigned
-            $response['err'] = 1;
-            $response['msg'] = $date . ' was not a flight date (contest) for this prize. It was most likely removed since you’ve loaded this page. It’s recommended that you <a onclick="window.location.reload()">refresh</a> this page.';
-        } else {
-            $response['success'] = true;
-        }
 
-        return $this->json($response);
+        return $success
+        ? $this->json(XHR_OK)
+        : $this->json(XHR_NOT_FOUND, $date . ' was not a flight date (contest) for this prize. It was most likely removed since you’ve loaded this page. It’s recommended that you <a onclick="window.location.reload()">refresh</a> this page.');
     }
 
     /**
@@ -328,15 +301,11 @@ class Admin extends AdminController
         $response = array();
 
         if (!$prize_id || !$date) {
-            $response['err'] = 1;
-            $response['msg'] = 'Invalid prize_id or date';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'Invalid prize_id or date');
         }
 
         if (strtotime($date) >= strtotime(date('Y-m-d'))) {
-            $response['err'] = 1;
-            $response['msg'] = 'This contest is still running. You must wait until after midnight tonight to select an alternate winner.';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'This contest is still running. You must wait until after midnight tonight to select an alternate winner.');
         }
 
         $this->load->model('adminModel');
@@ -345,24 +314,14 @@ class Admin extends AdminController
 
         switch (true) {
             case $user == -1:
-                $response['err'] = 1;
-                $response['msg'] = 'No contest exists on ' . $date . '.';
-                break;
+                return $this->json(XHR_NOT_FOUND, 'No contest exists on ' . $date . '.');
             case $user == -2:
-                $response['err'] = 1;
-                $response['msg'] = 'We do not have any other entries on ' . $date . '.';
-                break;
+                return $this->json(XHR_NOT_FOUND, 'We do not have any other entries on ' . $date . '.');
             case @$user['id'] >= 1:
-                $response['success'] = true;
-                $response['winner']  = $user;
-                break;
+                return $this->json(XHR_OK, array('winner' => $user));
             default:
-                $response['err'] = 1;
-                $response['msg'] = 'Something bad happened; please try again or contact RD support.' . print_r($success, true);
-                break;
+                return $this->json(XHR_ERROR);
         }
-
-        return $this->json($response);
     }
 
     /**
@@ -373,31 +332,24 @@ class Admin extends AdminController
      */
     public function upload()
     {
-        $successful = array();
-        $response   = array();
+        $r = array();
 
         // process $_FILES['img']
         if (!@$_FILES['img']) {
-            $response['err'] = 1;
-            $response['msg'] = 'bad request';
-            return $this->json($response);
+            return $this->json(XHR_ERROR, 'bad request');
         }
 
         $file = $_FILES['img'];
 
         if ((int) $file['size'] == 0) {
-            $response['err'] = 1;
-            $response['msg'] = 'zero byte file upload';
-            return $this->json($response);
+            return $this->json(XHR_ERROR, 'zero byte file upload');
         }
 
         $save_to = rtrim(config_item('prize_image_dir'), '/') . '/' . $file['md5'] . '.jpg';
 
         if (!file_exists($save_to)) {
             if (!@rename($file['tmp_name'], $save_to)) {
-                $response['err'] = 1;
-                $response['msg'] = 'failed to rename file, check upload path file permissions';
-                return $this->json($response);
+                return $this->json(XHR_ERROR, 'failed to rename file, check upload path file permissions');
             }
             @chmod($save_to, 0666);
         } else {
@@ -405,8 +357,8 @@ class Admin extends AdminController
             @unlink($file['tmp_name']);
         }
 
-        $response['md5'] = $file['md5'];
-        $response['url'] = sprintf('%s/%s.jpg', rtrim(config_item('prize_image_uri'), '/'), $file['md5']);
+        $r['md5'] = $file['md5'];
+        $r['url'] = sprintf('%s/%s.jpg', rtrim(config_item('prize_image_uri'), '/'), $file['md5']);
 
         // return similar prizes with same prize image in img1, img2, img3
         // return similar prizes with same prize image in img1, img2, img3
@@ -416,13 +368,7 @@ class Admin extends AdminController
         // return similar prizes with same prize image in img1, img2, img3
         // return similar prizes with same prize image in img1, img2, img3
 
-        // $this->load->model('adminModel');
-        // $this->adminModel->setPrizeImage($prize_id, $successful);
-
-// header('Content-Type: text/plain');
-        // var_dump($_FILES);
-        // var_dump($this->input->post('prize_id'));
-        return $this->json($response);
+        return $this->json(XHR_OK, $r);
     }
 
     /**

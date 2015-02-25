@@ -1,75 +1,154 @@
 // SolveMedia’s widget is 308 x 197 px by default, but we strip the border and padding to make it 300 x 189 px
-#solvemedia,
-#solvemedia .screen {
+#solvemedia {
+    display: none;
+    text-align: center;
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
     z-index: 10000;
-}
-
-#solvemedia {
+    background: rgba(0, 0, 0, 0.7);
     * {
-        @include box-sizing(border-box);
+        box-sizing: border-box;
     }
-    display: none;
-    .screen {
-        z-index: 9999;
-        background: #000;
-        opacity: .7;
+    u {
+        display: none;
     }
     form {
         position: relative;
-        z-index: 10001;
-        display: block;
-        margin: 4em auto 0;
-        @include box-sizing(content-box);
-        width: 300px;
+        display: inline-block;
+        width: auto;
+        // margin-top: 10rem;
+        top: 30%;
+        padding: 1rem;
         background: #fff;
         border: 2px solid #666;
-        @include border-radius(.4rem);
-        padding: 1rem;
-        #solvemedia_widget {
-            padding: 1rem 0;
-        }
+        border-radius: 0.4rem;
         text-align: center;
-        .close {
-            position: absolute;
-            text-align: center;
-            vertical-align: middle;
-            top: -.7rem;
-            right: -.7rem;
-            width: 1.8rem;
-            height: 1.8rem;
-            background: #fff;
-            border: 2px solid #666;
-            cursor: pointer;
-            color: #666;
-            padding: .3rem;
-            text-decoration: none;
-            font-weight: inherit;
-            font-style: none;
-            font-variant: none;
-            @include border-radius(.9rem);
-            &:after {
-                line-height: 0;
-                content: 'X';
-                font-size: 1rem;
-            }
-            &:hover {
-                color: #666;
-                text-decoration: none;
-                font-weight: none;
-                font-variant: none;
-            }
+        font-size: 0;
+        line-height: 0;
+    }
+    b {
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        position: absolute;
+        top: -14px;
+        right: -14px;
+        width: 28px;
+        height: 28px;
+        font-size: 22px;
+        font-weight: bold;
+        line-height: 19px;
+        background: #fff;
+        color: #666;
+        border: 2px solid #666;
+        border-radius: 16px;
+    }
+    #adcopy-puzzle-audio,
+    #adcopy-puzzle-image {
+        margin-bottom: .8rem;
+    }
+    input, select {
+        -webkit-appearance: inherit;
+    }
+    input, select {
+        font: inherit;
+        font-size: 20px;
+        line-height: normal;
+        display: inline-block;
+        height: 32px;
+        border: 2px solid #ccc;
+        border-radius: 0;
+        background: #fff;
+        padding: 0;
+        outline: 0;
+    }
+    input[type="submit"],
+    a:after {
+        margin-left: 4px;
+        border: 2px solid #ccc;
+        border-radius: 6px;
+        box-sizing: border-box;
+        background-size: 85% 85%;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+    }
+    input[type="text"], select {
+        // width = 300 - (32 * 4 + 4 * 4)
+        width: 156px;
+        border-radius: 6px;
+        padding-left: .5em;
+    }
+    input[type="submit"] {
+        color: transparent;
+        cursor: pointer;
+        width: 32px;
+        background-image: inline-image("solvemedia/chevron-right.svg");
+        background-color: #ccc;
+    }
+    form.loading input[type="submit"] {
+        background-image: url(data:image/gif;base64,R0lGODlhEAALAPQAAObm5tjY2E5OTiIiIvT09Dg4OO7u7mRkZAQEBL6+viYmJoqKisrKyra2ttzc3Orq6vLy8qCgoAAAAAYGBi4uLtDQ0Nra2mBgYLq6ukpKSoKCgv///wAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCwAAACwAAAAAEAALAEAFLSAgjmQJVGglWqy1ttXzqKdMx3PrAvrL4jebCGgqGo8rYW02tBGXwdlzqkSSQgAh+QQJCwAAACwAAAAABAALAAAFEeAkSSJFjSZ6Sim7tvB7imQIACH5BAkLAAAALAAAAAAKAAsAAAUrICCOgyQN2nVpopRl0oVhV/vGcw24sEzbvRwQ99vdfDoeMXlLrYYjkmkQAgAh+QQJCwAAACwGAAAACgALAAAEJxDIqRBS65wlkRDIkSRH94VjCXigSJptCqPveroqS+dnts0TikURAQAh+QQJCwAGACwGAAEACgAJAAADIGi6NVMgBKCGECMQEurNW2dYmMZ5ZYiC5/hF07owTpEAACH5BAULAAAALAAAAgAQAAcAAAUt4OM4DwCIpNlEUeNAkGO+sRkxTETLwG7jOhjPB7jliERjsNYT/nKo0mkkXbVCACH5BAUWAAIALAAAAgAQAAcAAAMgCBEgosxBZUxwoV6Rbd8fpoWcJnpmaZ1LSn6TtDTPnAAAOw==);
+        background-size: 16px 11px;
+    }
+    a:after {
+        content: " ";
+        vertical-align: bottom;
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+    }
+    .alert {
+        font-size: .9rem;
+        line-height: normal;
+        margin-top: 1.4rem;
+        color: #933;
+        max-width: 300px;
+    }
+    // solve media logo
+    i {
+        width: 90px;
+        height: 13px;
+        // naturally 90 x 13
+        background-image: inline-image("solvemedia/logo.png");
+        position: absolute;
+        top: 202px;
+        right: 1rem;
+        margin-top: 1rem;
+        cursor: pointer;
+    }
+    @media all and (max-width: 640px) {
+        form {
+            top: 1rem;
+            margin-top: 0;
+            padding: 8px;
+            width: 320px;
+            overflow: hidden;
         }
-        #adcopy-outer {
-            border: 0;
-            padding: 0;
-            border-radius: 0;
-            background-color: transparent;
-            margin: 0 auto;
+        b {
+            top: 8px;
+            right: 8px;
+        }
+        i {
+            margin-top: 8px;
         }
     }
+
+}
+
+#adcopy-link-refresh:after {
+    background-image: inline-image("solvemedia/refresh.svg");
+}
+
+#adcopy-link-audio:after {
+    background-image: inline-image("solvemedia/audio.svg");
+}
+
+#adcopy-link-image:after {
+    background-image: inline-image("solvemedia/image.svg");
+}
+
+#adcopy-link-info:after {
+    background-image: inline-image("solvemedia/info.svg");
 }

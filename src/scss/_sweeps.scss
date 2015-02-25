@@ -214,9 +214,9 @@
     }
     .carousel a:before,
     .loader {
+        background: url(data:image/gif;base64,R0lGODlhEAALAPQAAObm5tjY2E5OTiIiIvT09Dg4OO7u7mRkZAQEBL6+viYmJoqKisrKyra2ttzc3Orq6vLy8qCgoAAAAAYGBi4uLtDQ0Nra2mBgYLq6ukpKSoKCgv///wAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCwAAACwAAAAAEAALAEAFLSAgjmQJVGglWqy1ttXzqKdMx3PrAvrL4jebCGgqGo8rYW02tBGXwdlzqkSSQgAh+QQJCwAAACwAAAAABAALAAAFEeAkSSJFjSZ6Sim7tvB7imQIACH5BAkLAAAALAAAAAAKAAsAAAUrICCOgyQN2nVpopRl0oVhV/vGcw24sEzbvRwQ99vdfDoeMXlLrYYjkmkQAgAh+QQJCwAAACwGAAAACgALAAAEJxDIqRBS65wlkRDIkSRH94VjCXigSJptCqPveroqS+dnts0TikURAQAh+QQJCwAGACwGAAEACgAJAAADIGi6NVMgBKCGECMQEurNW2dYmMZ5ZYiC5/hF07owTpEAACH5BAULAAAALAAAAgAQAAcAAAUt4OM4DwCIpNlEUeNAkGO+sRkxTETLwG7jOhjPB7jliERjsNYT/nKo0mkkXbVCACH5BAUWAAIALAAAAgAQAAcAAAMgCBEgosxBZUxwoV6Rbd8fpoWcJnpmaZ1LSn6TtDTPnAAAOw==) no-repeat;
         display: inline-block;
         margin: 0 0 0 5px;
-        background: url(data:;base64,R0lGODlhEAALAPQAAObm5tjY2E5OTiIiIvT09Dg4OO7u7mRkZAQEBL6+viYmJoqKisrKyra2ttzc3Orq6vLy8qCgoAAAAAYGBi4uLtDQ0Nra2mBgYLq6ukpKSoKCgv///wAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCwAAACwAAAAAEAALAEAFLSAgjmQJVGglWqy1ttXzqKdMx3PrAvrL4jebCGgqGo8rYW02tBGXwdlzqkSSQgAh+QQJCwAAACwAAAAABAALAAAFEeAkSSJFjSZ6Sim7tvB7imQIACH5BAkLAAAALAAAAAAKAAsAAAUrICCOgyQN2nVpopRl0oVhV/vGcw24sEzbvRwQ99vdfDoeMXlLrYYjkmkQAgAh+QQJCwAAACwGAAAACgALAAAEJxDIqRBS65wlkRDIkSRH94VjCXigSJptCqPveroqS+dnts0TikURAQAh+QQJCwAGACwGAAEACgAJAAADIGi6NVMgBKCGECMQEurNW2dYmMZ5ZYiC5/hF07owTpEAACH5BAULAAAALAAAAgAQAAcAAAUt4OM4DwCIpNlEUeNAkGO+sRkxTETLwG7jOhjPB7jliERjsNYT/nKo0mkkXbVCACH5BAUWAAIALAAAAgAQAAcAAAMgCBEgosxBZUxwoV6Rbd8fpoWcJnpmaZ1LSn6TtDTPnAAAOw==) no-repeat;
         width: 16px;
         height: 11px;
         opacity: 0;
@@ -291,6 +291,7 @@
     .slideshow {
         // prev/next arrows
         b {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             display: none;
             cursor: pointer;
             font-size: 5em;
@@ -485,7 +486,7 @@
         // a.next:after {
         //     content: ">";
         // }
-
+   
     }
     /**
      * Prize

@@ -23,11 +23,20 @@ class SweepsController extends CI_Controller
     /**
      * Output a JSON response with the correct Content-Type header
      *
-     * @param mixed $data
+     * @param   integer $code   status code
+     * @param   mixed   $data   array, string, or object to be encoded
      * @return void
      */
-    protected function json($data)
+    protected function json($code = 1, $data = null)
     {
+        if (is_array($data)) {
+            $data['status'] = $code;
+        } else if (is_object($data)) {
+            $data->status = $code;
+        } else {
+            $data = array('status' => $code, 'message' => $data);
+        }
+
         // do not do an array_filter here, because code=0’s will be removed.
         $this->output
              ->set_content_type('application/json; charset=UTF-8')

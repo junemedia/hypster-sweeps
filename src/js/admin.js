@@ -167,8 +167,8 @@
 
             function done(r, textStatus, jqXHR) {
                 reset();
-                if (r.err || !r.success) {
-                    return fail(r.msg);
+                if (r.status !== 1) {
+                    return fail(r.message);
                 }
                 if (r.prize_id) {
                     Prize.id = parseInt(r.prize_id, 10);
@@ -426,12 +426,12 @@
                 type: 'POST'
             })
                 .done(function done(r, textStatus, jqXHR) {
-                    if (r.success) {
+                    if (r.status === 1) {
                         if ($.type(callback) == 'function') {
                             callback(r);
                         }
                     } else {
-                        contestError(r.msg);
+                        contestError(r.message);
                     }
 
                 })
@@ -535,17 +535,6 @@
             Prize();
             Contest();
         }
-        // $.ajax({
-        //     url: '/admin/prize/1',
-        //     dataType: 'json',
-        //     cache: true
-        // })
-        //     .done(function(r, textStatus, jqXHR) {
-        //         $('.prize').show();
-        //         Prize(r);
-        //     })
-        //     .fail(function(jqXHR, textStatus, errorThrown) {});
-
 
     } // end ready()
 

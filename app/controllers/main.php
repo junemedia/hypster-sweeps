@@ -45,7 +45,9 @@ class Main extends FrontendController
         }
         $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('15 days ago')));
 
-        $data['solvemedia'] = $this->solvemedia->getHtml($this->site_slug);
+        // having 'solvemedia' defined will cause the auto load of partials/captcha
+        // in the footer of each shell--directly following the <script> line
+        $data['solvemedia'] = $this->solvemedia->invoke();
 
         // <title> & <meta> tags
         if (@$data['prize']['title']) {

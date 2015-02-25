@@ -2,6 +2,24 @@
 
 /*
 |--------------------------------------------------------------------------
+| XHR/JSON Reponse "status" Codes
+|--------------------------------------------------------------------------
+|
+| *** Make sure you update any JS files with this mapping ***
+|
+*/
+define('XHR_OK',              1);
+define('XHR_ERROR',           2);
+define('XHR_AUTH',            3);
+define('XHR_INVALID',         4);
+define('XHR_DUPLICATE',       5);
+define('XHR_EXPIRED',         6);
+define('XHR_NOT_FOUND',       7);
+define('XHR_INCOMPLETE',      8);
+define('XHR_HUMAN',           9);
+
+/*
+|--------------------------------------------------------------------------
 | File and Directory Modes
 |--------------------------------------------------------------------------
 |

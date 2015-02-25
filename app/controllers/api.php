@@ -19,6 +19,50 @@ class Api extends FrontendController
     }
 
     /**
+     * Evaluate user's response to Solve Media's captcha
+     *
+     * Anonymous is OK, so it is safe to use this before a login/signup form.  Session
+     * will only be created if user's response is valid.
+     *
+     * @return  json
+     */
+    public function captcha()
+    {
+
+        // foregoing CI validation on the two fields
+        $challenge = $this->input->post('adcopy_challenge');
+        $answer    = $this->input->post('adcopy_response');
+
+        // blank response?
+        if (!$answer) {
+            return $this->json(XHR_INVALID, 'Please provide a response, or click on the reload button to load different puzzles.');
+        }
+
+        // this should never happen, but the challenge wasn't provided
+        if (!$challenge) {
+            return $this->json(XHR_ERROR, 'Something bad happened. Please reload this page and try again.');
+        }
+
+        $ip = $this->input->ip_address();
+
+        $this->load->library('solvemedia');
+        $solve = $this->solvemedia->solve($ip, $challenge, $answer);
+
+        if (!$solve['valid']) {
+            return $this->json(
+                XHR_INVALID,
+                'Incorrect. Please try again or click on the reload button to load different puzzles.'
+            );
+        }
+
+        // store the fact that this is a human in the session
+        $this->session->set_userdata('human', true);
+
+        return $this->json(XHR_OK);
+
+    }
+
+    /**
      *
      * Must return "midnight" in successful JSON response so that
      * localStorage can expire at the correct time: EST midnight
@@ -26,27 +70,25 @@ class Api extends FrontendController
      */
     public function eligible()
     {
-        $response['eligible'] = false;
+        $r['eligible'] = false;
 
         // load user_id from session
         $user_id = $this->session->userdata('user_id');
 
         // logged-in check
         if (!$user_id) {
-            $response['err'] = 1;
-            $response['msg'] = 'You must be logged-in in order to check contest eligibility.';
-            return $this->json($response);
+            return $this->json(XHR_AUTH, 'You must be logged-in in order to check contest eligibility.');
         }
 
         $this->load->model('prizeModel');
 
         // eligible for today?
-        $response['eligible'] = $this->prizeModel->isEligible(
+        $r['eligible'] = $this->prizeModel->isEligible(
             $user_id,
             $this->site_id);
-        $response['midnight'] = strtotime('tomorrow');
+        $r['midnight'] = strtotime('tomorrow');
 
-        return $this->json($response);
+        return $this->json(XHR_OK, $r);
 
     }
 
@@ -59,16 +101,19 @@ class Api extends FrontendController
      */
     public function enter()
     {
-        $response = array();
+        $r = array();
 
         // load user_id from session
         $user_id = $this->session->userdata('user_id');
 
         // logged-in check
         if (!$user_id) {
-            $response['err'] = 1;
-            $response['msg'] = 'You must be logged-in in order to enter this contest.';
-            return $this->json($response);
+            return $this->json(XHR_AUTH, 'You must be logged-in in order to enter this contest.');
+        }
+
+        // human check
+        if (!$this->session->userdata('human')) {
+            return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
         }
 
         // Enter the user into the contest
@@ -84,15 +129,12 @@ class Api extends FrontendController
         );
 
         if (!$success) {
-            $response['err'] = 1;
-            $response['msg'] = 'We encountered an error while trying to enter you into this contest. Please try again later.';
-            return $this->json($response);
+            return $this->json(XHR_ERROR, 'We encountered an error while trying to enter you into this contest. Please try again later.');
         }
 
-        $response['success']  = 1;
-        $response['midnight'] = strtotime('tomorrow');
+        $r['midnight'] = strtotime('tomorrow');
 
-        return $this->json($response);
+        return $this->json(XHR_OK, $r);
     }
 
     /**
@@ -104,6 +146,7 @@ class Api extends FrontendController
      */
     public function signup()
     {
+
         $profile = array();
 
         $this->load->library('form_validation');
@@ -131,9 +174,12 @@ class Api extends FrontendController
         }
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = validation_errors();
-            return $this->json($response);
+            return $this->json(XHR_INVALID, validation_errors());
+        }
+
+        // human check
+        if (!$this->session->userdata('human')) {
+            return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
         }
 
         // Lookup city/state
@@ -141,9 +187,7 @@ class Api extends FrontendController
             $this->load->library('RDGeo');
             $geo = $this->rdgeo->lookup($this->input->post('zip'));
             if (!@$geo || !@$geo['city'] || !@$geo['state']) {
-                $response['err'] = 1;
-                $response['msg'] = "Invalid Zip Code";
-                return $this->json($response);
+                return $this->json(XHR_INVALID, 'Invalid Zip Code');
             }
         }
 
@@ -166,20 +210,17 @@ class Api extends FrontendController
         $this->load->model('userModel');
         $result = $is_new_reg ? $this->userModel->register($profile) : $this->userModel->update($profile);
 
-        $response = array();
+        $r = array();
 
         switch (true) {
             case ($result == -2):
-                $response['err'] = 1;     // user does not exist
-                $response['msg'] = "This user does not exist.";
+                return $this->json(XHR_NOT_FOUND, 'This user does not exist.');
                 break;
             case ($result == -1):
-                $response['err'] = 2;     // duplicate user
-                $response['msg'] = "This email address is already registered.";
+                return $this->json(XHR_DUPLICATE, 'This email address is already registered.');
                 break;
             default:
-                $response['err'] = 1;     // general error
-                $response['msg'] = "We encountered a server error. Please try again.";
+                return $this->json(XHR_ERROR);
                 break;
             case ($result > 0):
                 if ($is_new_reg) {
@@ -194,12 +235,12 @@ class Api extends FrontendController
                 }
                 if (@$profile['firstname']) {
                     // send back first name
-                    $response['name'] = $profile['firstname'];
+                    $r['name'] = $profile['firstname'];
                 }
                 break;
         }
 
-        return $this->json($response);
+        return $this->json(XHR_OK, $r);
     }
 
     /**
@@ -213,17 +254,16 @@ class Api extends FrontendController
      */
     public function login()
     {
+
         $this->load->library('form_validation');
 
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_properEmail');
         $this->form_validation->set_rules('password', 'Password', 'required');
 
-        $response = array();
+        $r = array();
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = validation_errors();
-            return $this->json($response);
+            return $this->json(XHR_INVALID, validation_errors());
         }
 
         $this->load->model('userModel');
@@ -231,9 +271,7 @@ class Api extends FrontendController
         $user = $this->userModel->login($this->input->post('email'), $this->input->post('password'));
 
         if (!$user) {
-            $response['err'] = 1;
-            $response['msg'] = 'Invalid email or password';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'Invalid email or password.');
         }
 
         // authentication successful, save this in the session
@@ -244,12 +282,12 @@ class Api extends FrontendController
 
         // eligible for today?
         $this->load->model('prizeModel');
-        $response['eligible'] = $this->prizeModel->isEligible(
+        $r['eligible'] = $this->prizeModel->isEligible(
             $user['id'],
             $this->site_id);
-        $response['midnight'] = strtotime('tomorrow');
-        $response['name']     = $user['firstname'];
-        return $this->json($response);
+        $r['midnight'] = strtotime('tomorrow');
+        $r['name']     = $user['firstname'];
+        return $this->json(XHR_OK, $r);
     }
 
     /**
@@ -258,7 +296,7 @@ class Api extends FrontendController
     public function logout()
     {
         $this->session->sess_destroy();
-        $this->json(array('success' => 1));
+        $this->json(XHR_OK);
     }
 
     /**
@@ -274,24 +312,19 @@ class Api extends FrontendController
         $this->form_validation->set_rules('token', 'Password Reset Token', 'trim|required|min_length[8]');
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = validation_errors();
-            return $this->json($response);
+            return $this->json(XHR_INVALID, validation_errors());
         }
 
         $password = $this->input->post('password');
-        $token = $this->input->post('token');
+        $token    = $this->input->post('token');
 
         $this->load->model('userModel');
 
         if (!$this->userModel->reset($token, $password, config_item('token_ttl'))) {
-            $response['err'] = 1;
-            $response['msg'] = 'Your reset token has expired or is invalid. Please reset your password again on the <a href="/">signup page</a>.';
-            return $this->json($response);
+            return $this->json(XHR_EXPIRED, 'Your reset token has expired or is invalid. Please reset your password again on the <a href="/">signup page</a>.');
         }
 
-        $response['success'] = 1;
-        return $this->json($response);
+        return $this->json(XHR_OK);
     }
 
     /**
@@ -307,9 +340,7 @@ class Api extends FrontendController
 
         // logged-in check
         if (!$user_id) {
-            $response['err'] = 1;
-            $response['msg'] = 'You must be logged-in in order to send a verification email.';
-            return $this->json($response);
+            return $this->json(XHR_AUTH, 'You must be logged-in in order to send a verification email.');
         }
 
         $this->load->model('userModel');
@@ -317,9 +348,7 @@ class Api extends FrontendController
         // create a new email verification token
         list($token, $email) = $this->userModel->getEmailVerificationToken($user_id);
         if (!$token) {
-            $response['err'] = 1;
-            $response['msg'] = 'We encountered an error. Please try again.';
-            return $this->json($response);
+            return $this->json(XHR_ERROR);
         }
 
         $this->load->library('email');
@@ -333,8 +362,7 @@ class Api extends FrontendController
         $this->email->message($this->parser->parse('../templates/verify', $params, true));
         $this->email->send();
 
-        $response['success'] = 1;
-        return $this->json($response);
+        return $this->json(XHR_OK);
     }
 
     /**
@@ -348,9 +376,7 @@ class Api extends FrontendController
         $this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email|callback_properEmail');
 
         if (!$this->form_validation->run()) {
-            $response['err'] = 1;
-            $response['msg'] = 'Please double check your email address';
-            return $this->json($response);
+            return $this->json(XHR_INVALID, 'Please double check your email address');
         }
 
         $email = $this->input->post('email');
@@ -358,9 +384,7 @@ class Api extends FrontendController
         $this->load->model('userModel');
 
         if (!$token = $this->userModel->getPasswordResetToken($email)) {
-            $response['err'] = 1;
-            $response['msg'] = 'We cannot find that email address.';
-            return $this->json($response);
+            return $this->json(XHR_NOT_FOUND, 'We cannot find that email address.');
         }
 
         $this->load->library('email');
@@ -374,9 +398,7 @@ class Api extends FrontendController
         $this->email->message($this->parser->parse('../templates/reset', $params, true));
         $this->email->send();
 
-        $response['msg'] = 'We’ve sent you an email with password reset instructions.';
-        $response['success'] = 1;
-        return $this->json($response);
+        return $this->json(XHR_OK, 'We’ve sent you an email with password reset instructions.');
     }
 
     /**
@@ -424,6 +446,17 @@ class Api extends FrontendController
     }
 
     /**
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
+     * TODO
      * TODO
      * Proper street address
      *

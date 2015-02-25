@@ -58,12 +58,13 @@ $route['reset/(:any)']           = 'user/reset/$1';  // reset password (anon OK)
 $route['api/eligible']           = 'api/eligible';
 $route['api/enter']              = 'api/enter';
 $route['api/logout']             = 'api/logout';
-$route['api/reset']              = 'api/reset';     // reset password (anonymous)
 $route['api/verify']             = 'api/verify';    // generate a new verification email (logged in)
 
 // Public JSON API Requests
+$route['api/captcha']            = 'api/captcha';   // prove your human
 $route['api/signup']             = 'api/signup';
 $route['api/login']              = 'api/login';
+$route['api/reset']              = 'api/reset';     // reset password (anonymous, with token)
 $route['api/forgot']             = 'api/forgot';
 
 // Admin Area
