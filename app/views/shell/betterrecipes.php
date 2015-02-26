@@ -14,6 +14,7 @@
     $minify_config['group'] = 'betterrecipes';
     new Minify($minify_config);
 ?>
+<link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
 </head>
 <body>
 <header>
