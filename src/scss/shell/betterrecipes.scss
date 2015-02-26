@@ -59,7 +59,8 @@ button::-moz-focus-inner {
 header {
     text-align: center;
     .logo,
-    .ad-728x90 {
+    .ad-728x90,
+    iframe {
         height: 90px;
     }
     .logo {
@@ -73,7 +74,8 @@ header {
         background-position: 1em 55%;
         background-repeat: no-repeat;
     }
-    .ad-728x90 {
+    .ad-728x90,
+    iframe {
         position: absolute;
         top: 0;
         right: 0;
@@ -84,7 +86,8 @@ header {
     }
     @media all and (max-width: 1000px) {
         .logo,
-        .ad-728x90 {
+        .ad-728x90,
+        iframe {
             display: block;
             position: relative;
             margin: 0 auto;
@@ -95,7 +98,8 @@ header {
         }
     }
     @media all and (max-width: 727px) {
-        .ad-728x90 {
+        .ad-728x90,
+        iframe {
             display: none;
         }
     }
@@ -319,4 +323,15 @@ footer {
     background: rgba(205, 181, 205, 0.5);
     padding: 1em;
     text-align: center;
+    .ad-728x90,
+    iframe {
+        display: block;
+        margin: 0 auto 1em;
+    }
+    @media all and (max-width: 727px) {
+        .ad-728x90,
+        iframe {
+            display: none;
+        }
+    }
 }

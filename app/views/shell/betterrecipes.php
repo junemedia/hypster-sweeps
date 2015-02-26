@@ -20,8 +20,8 @@
 <header>
     <div class="wrap">
         <a href="http://www.betterrecipes.com/" class="logo">BetterRecipes</a>
-        <div class="ad-728x90">
-            <img src="http://placehold.it/728x90"/>
+        <div id="537278266_728x90_ATF" class="ad-728x90">
+            <!-- <img src="http://placehold.it/728x90"/> -->
         </div>
         <a class="menu"></a>
     </div>
@@ -51,13 +51,12 @@
     </div><!-- NO GAP
     --><div class="rail">
     <!-- Right Rail Ad Units -->
-        <img src="http://placehold.it/300x250"/>
-        <img src="http://placehold.it/300x250"/>
-        <img src="http://placehold.it/300x250"/>
-        <img src="http://placehold.it/300x250"/>
+        <div id="537278268_300x250_ATF"></div>
+        <div id="537278269_300x250_BTF"></div>
+        <!-- <img src="http://placehold.it/300x250"/> -->
     </div>
 </div><!-- /.wrap -->
-<footer><div class="wrap">©<?= ' '.date('Y').' ' ?>June Media Inc</div></footer>
+<footer><div class="wrap"><div id="537278267_728x90_BTF" class="ad-728x90"></div>©<?= ' '.date('Y').' ' ?>June Media Inc</div></footer>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
 <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')</script>

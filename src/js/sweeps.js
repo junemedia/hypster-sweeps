@@ -999,14 +999,81 @@
             }
         }
 
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+
         /**
          * BetterRecipes
+         *
          * hamburger opener/closer on mobile devices
          */
         $('body>header .menu').on('touchstart selectstart click', debounce(function(evt) {
             evt.preventDefault();
             $(this).closest('header').toggleClass('open');
         }, 100, true));
+
+        /**
+         * BetterRecipes
+         *
+         * Ad Units
+         */
+        w['OX_ads'] = [{
+            // Header - 728x90
+            'slot_id': '537278266_728x90_ATF',
+            'auid': '537278266'
+        }, {
+            // Right Rail Above the fold - 300x250
+            'slot_id': '537278268_300x250_ATF',
+            'auid': '537278268'
+        }, {
+            // Right Rail Below the Fold 300x250
+            'slot_id': '537278269_300x250_BTF',
+            'auid': '537278269'
+        }, {
+            // Footer - 728x90
+            'slot_id': '537278267_728x90_BTF',
+            'auid': '537278267'
+        }];
+        $.ajax({
+            url: '//ox-d.junemedia.com/w/1.0/jstag',
+            dataType: 'script',
+            cache: true
+        })
+            // .done(function(data, textStatus, jqXHR) {
+            //     rd.log('OpenX JavaScript Loaded');
+            // })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                rd.error('OpenX JavaScript failed to load');
+            });
+
+
+
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
+        // BREAK OUT INTO a betterrecipes.js
 
     } // end ready()
 

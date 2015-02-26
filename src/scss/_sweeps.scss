@@ -5,9 +5,6 @@
 @import "solvemedia";
 
 #jds {
-    /**************************************************************************
-     * Begin NEW Styles
-     */
     /**
      * Generic Styles
      */
@@ -358,8 +355,9 @@
         font-size: 90%;
         -webkit-overflow-scrolling: touch;
         position: relative;
-        overflow-y: hidden;
+        overflow: hidden;
         .wrap {
+            overflow-y: hidden;
             overflow-x: scroll;
             white-space: nowrap;
             margin-bottom: -100px;
@@ -367,13 +365,11 @@
                 margin-bottom: 101px;
                 display: inline-block;
                 vertical-align: top;
-                border-bottom: 1px solid #bbb;
-                border-right: 1px solid #bbb;
-                // looks nicer without any background color:
-                // background: #f3f3f3;
+                border: 1px solid #ccc;
+                border-left-width: 0;
                 position: relative;
                 &:first-child {
-                    border-left: 1px solid #bbb;
+                    border-left-width: 1px;
                 }
                 i {
                     font-style: normal;
@@ -383,7 +379,7 @@
                         // day of week (Sunday, Monday...)
                         display: block;
                         font-weight: bold;
-                        background: #ccc;
+                        background-color: #ccc;
                         text-align: center;
                     }
                     &:nth-child(2) {
@@ -396,7 +392,7 @@
                 }
                 &.today i:nth-child(2) {
                     background: #f00;
-                    @include border-radius(0.8em);
+                    border-radius: 0.8em;
                     color: #fff;
                     top: .4em;
                     left: .4em;
@@ -442,51 +438,6 @@
                 }
             }
         }
-        // a:hover {
-        //     text-decoration: none;
-        // }
-        // &:hover > a.prev,
-        // &:hover > a.next {
-        //     opacity: 1;
-        // }
-        // a.prev,
-        // a.next {
-        //     z-index: 2;
-        //     @include transition-property(opacity);
-        //     @include transition-duration(0.25s);
-        //     @include transition-timing-function(ease-out);
-        //     opacity: 0;
-        //     position: absolute;
-        //     top: 50%;
-        //     line-height: 1;
-        //     font-family: Verdana, sans-serif;
-        //     font-size: 1.2rem;
-        //     padding: .4rem;
-        //     width: 2rem;
-        //     height: 2rem;
-        //     @include border-radius(1rem);
-        //     // normally, we'd raise-up half our height to align middle, but this is good:
-        //     margin-top: -.5rem;
-        //     background: #fff;
-        //     @include box-shadow(#bbbbbb 1px 1px 4px);
-        //     color: #bbb;
-        //     text-decoration: none;
-        //     text-align: center;
-        //     vertical-align: middle;
-        // }
-        // a.prev {
-        //     left: .3rem;
-        // }
-        // a.prev:after {
-        //     content: "<";
-        // }
-        // a.next {
-        //     right: .3rem;
-        // }
-        // a.next:after {
-        //     content: ">";
-        // }
-   
     }
     /**
      * Prize
