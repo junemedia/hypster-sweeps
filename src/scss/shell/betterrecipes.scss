@@ -59,8 +59,8 @@ button::-moz-focus-inner {
 header {
     text-align: center;
     > .wrap {
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
     .logo,
     .ad-728x90,
@@ -258,18 +258,18 @@ nav {
 }
 
 .wrap > .main {
-    margin-top: 1em;
-    margin-left: 1em;
+    margin-top: 1rem;
+    margin-left: 1rem;
     margin-right: 300px;
     // account for the margin around .rail
-    border-right: 2em solid transparent;
+    border-right: 2rem solid transparent;
     @media all and (min-width: 728px) {
         // (250px x 4) + (16 (1em) x 4)
         min-height: 1048px;
     }
     box-sizing: content-box;
     @media all and (max-width: 727px) {
-        margin-right: 1em;
+        margin-right: 1rem;
         border-right: none;
     }
     @media all and (max-width: 640px) {
@@ -283,9 +283,9 @@ nav {
     height: 100%;
     overflow: auto;
     top: 0;
-    right: 1em;
+    right: 1rem;
     > * {
-        margin-top: 1em;
+        margin-top: 1rem;
         display: block;
     }
     > *:first-child {
@@ -300,16 +300,16 @@ nav {
             display: inline-block;
             width: 300px;
             vertical-align: top;
-            margin-left: 1em;
+            margin-left: 1rem;
         }
         & > *:first-child {
-            margin-top: 1em;
+            margin-top: 1rem;
         }
     }
     @media all and (max-width: 600px) {
         & > * {
             display: block;
-            margin: 1em auto;
+            margin: 1rem auto;
         }
     }
 }
@@ -332,8 +332,13 @@ footer {
     // b1 = (230 - 255 + 255*.5)/.5 ~= 205
     //
     background: rgba(205, 181, 205, 0.5);
-    padding: 1em;
+    padding: 1rem;
     text-align: center;
+    font-size: .85em;
+    a, a:visited, a:hover {
+        color: inherit;
+        margin-left: 1em;
+    }
     .ad-728x90,
     iframe {
         display: block;

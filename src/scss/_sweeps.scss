@@ -272,13 +272,7 @@
         h6,
         p {
             margin: 0;
-        }
-        h5 {
-            margin-bottom: 0;
-            font-weight: normal;
-        }
-        p {
-            margin-top: 0;
+            font: inherit;
         }
     }
     /**
