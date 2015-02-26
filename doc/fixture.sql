@@ -5,9 +5,9 @@ TRUNCATE TABLE `contest`;
 TRUNCATE TABLE `entry`;
 
 
-INSERT INTO `site` (`id`, `slug`, `name`, `domain`, `rss`)
+INSERT INTO `site` (`id`, `slug`, `name`, `domain`)
 VALUES
-    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com', 'http://www.betterrecipes.com/popular.json');
+    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com');
 
 
 INSERT INTO `prize` (`id`, `title`, `img1`, `desc1`, `img2`, `desc2`, `img3`, `desc3`, `award`, `value`, `type`)
@@ -21,25 +21,32 @@ VALUES
     (7, 'Trudeau Fondue Set',     X'00000000000000000000000000000007', 'This electric fondue set alleviates the hassle of using sterno for heating your cheeses and chocolates, and even has variable temperature control to maintain proper consistency and heat.', NULL, '', NULL, '', '100', 100, 'prize'),
     (8, 'Cuisinart SmartPower Deluxe Blender',     X'00000000000000000000000000000008', 'This blender is strong enough for all blending tasks, including tough jobs like crushing ice or chopping delicate herbs.', NULL, '', NULL, '', '100', 100, 'prize'),
     (9, 'Cuisinart 6.5-Qt. Slow Cooker',     X'00000000000000000000000000000009', 'This slow cooker features a 24-hour programmable countdown timer, three cooking modes-and it automatically shifts to warm when it’s done cooking!', NULL, '', NULL, '', '100', 100, 'prize');
-    -- (9, '',     X'00000000000000000000000000000009', '', NULL, '', NULL, '', '100', 100, 'prize');
 
 
-INSERT INTO `user` (`id`, `email`, `role`, `verified`, `password`, `salt`, `ip`, `date_registered`, `date_verified`, `firstname`, `lastname`, `address`, `city`, `state`, `zip`)
+INSERT INTO `user` (`id`, `email`, `role`, `verified`, `password`, `ip`, `date_registered`, `date_verified`, `firstname`, `lastname`, `address`, `city`, `state`, `zip`)
 VALUES
-    (1,    'achalemian@resolute.com', 2, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Adam', 'Chalemian', '123 Fake St', 'Schenectady', 'NY', 12345),
-    (NULL, 'achalemian+1@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'John', 'Doe', '123 Fake St', 'Wayne', 'PA', 19087),
-    (NULL, 'achalemian+2@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'George', 'Washington', '123 Fake St', 'Franklin Lakes', 'NJ', 07417),
-    (NULL, 'achalemian+3@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Homer', 'Simpson', '123 Fake St', 'Springfield', 'OH', 45501),
-    (NULL, 'achalemian+4@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Bart', 'Simpson', '123 Fake St', 'Springfield', 'OH', 45501),
-    (NULL, 'achalemian+5@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Cosmo', 'Kramer', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+6@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Elaine', 'Benes', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+7@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Bob', 'Sacamano', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+8@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Frank', 'Costanza', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+9@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'David', 'Putty', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+10@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Kenny', 'Bania', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+11@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Joe', 'Davola', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+12@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Jackie', 'Chiles', '123 Fake St', 'New York', 'NY', 10024),
-    (NULL, 'achalemian+13@resolute.com', 1, 1, '8048bf4ca29ed27f536f7363efe1c4af3ab7c883', '9fbd24255928757a7dd970cbd33c3145286aef9b', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Jack', 'Klompis', '123 Fake St', 'New York', 'NY', 10024);
+    -- 1: Adam123
+    -- 2: Aconforti123
+    (1,    'achalemian@resolute.com', 2, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Adam', 'Chalemian', '137 W 25th St', 'New York', 'NY', 10001),
+    (2,    'aconforti@resolute.com', 2, 1, X'95B798497FA6C7752EED3E16EED8CC9904BC5BD2', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Angela', 'Conforti','137 W 25th St', 'New York', 'NY', 10001),
+    (NULL, 'achalemian+1@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Yuri', 'Testikov','7231 Silent Quay', 'Arkansas', 'IL', 62956),
+    (NULL, 'achalemian+2@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Joel', 'Rifkin', '4055 Noble Elk Bay', 'Cat Square', 'CT', 06162),
+    (NULL, 'achalemian+3@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Justin', 'Pitt','8695 Shady Gate Road', 'Mike Horse', 'NH', 03879),
+    (NULL, 'achalemian+4@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Art', 'Vandelay','6297 Quiet Park', 'Ipe', 'DC', 20018),
+    (NULL, 'achalemian+5@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Cosmo', 'Kramer', '2092 Honey Pine Woods', 'Whitebreast', 'OH', 44924),
+    (NULL, 'achalemian+6@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Elaine', 'Benes', '729 Velvet Forest', 'Tar Heel', 'OK', 74952),
+    (NULL, 'achalemian+7@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Bob', 'Sacamano', '442 Harvest Landing', 'Donerail', 'NY', 14054),
+    (NULL, 'achalemian+8@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Frank', 'Costanza', '650 Red Branch Highlands', 'Newfolden', 'WV', 26157),
+    (NULL, 'achalemian+9@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'David', 'Putty', '346 Hazy Impasse', 'Oliver', 'TN', 37353),
+    (NULL, 'achalemian+10@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Kenny', 'Bania', '8951 Foggy Highway', 'Ironsides', 'NY', 10311),
+    (NULL, 'achalemian+11@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Joe', 'Davola', '4325 Pleasant Limits', 'Sesachacha', 'DC', 20090),
+    (NULL, 'achalemian+12@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Jackie', 'Chiles', '7785 Thunder Crest', 'Red Hot', 'TN', 38101),
+    (NULL, 'achalemian+13@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Jack', 'Klompis', '8248 Hidden Grove', 'Cheektowasa', 'IA', 52694),
+    (NULL, 'achalemian+14@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Golden', 'Boy', '3110 Round Butterfly Walk', 'Yell', 'NY', 11096),
+    (NULL, 'achalemian+15@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Russell', 'Dalrymple', '7382 Cotton Rabbit Pointe', 'Brown Jug Corner', 'WI', 54352),
+    (NULL, 'achalemian+16@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Russell', 'Dalrymple', '632 Bright Bluff Drive', 'Quackenkill', 'RI', 02835);
+
+
 
 
 INSERT INTO `contest` (`date`, `prize_id`, `winner_user_id`, `winner_site_id`)
@@ -113,12 +120,15 @@ DELIMITER $$
 CREATE PROCEDURE `RANDOM_ENTRIES` ()
 BEGIN
     DECLARE x INT DEFAULT 1;
-    WHILE x  <= 1000 DO
-        INSERT IGNORE INTO `entry` (`date`, `user_id`, `site_id`)
+    DECLARE y DATE;
+    WHILE x  <= 10000 DO
+        SELECT `date` INTO y FROM `contest` WHERE `date` <= DATE(NOW()) ORDER BY RAND() LIMIT 1;
+        INSERT IGNORE INTO `entry` (`date`, `user_id`, `site_id`, `time`)
         VALUES (
-            (SELECT `date` FROM `contest` WHERE `date` <= DATE(NOW()) ORDER BY RAND() LIMIT 1),
+            y,
             CEIL(RAND()*(SELECT COUNT(1) FROM `user`)),
-            1
+            1,
+            DATE_ADD(DATE_ADD(DATE_ADD(y, INTERVAL (23*RAND()) HOUR), INTERVAL 59*RAND() MINUTE), INTERVAL 60*RAND() SECOND)
         );
        SET  x = x + 1;
    END WHILE;

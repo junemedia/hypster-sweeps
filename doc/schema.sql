@@ -3,7 +3,6 @@ CREATE TABLE `site` (
     `slug`   VARCHAR(30)                    DEFAULT NULL,
     `name`   VARCHAR(70)                    DEFAULT NULL,
     `domain` VARCHAR(255)                   DEFAULT NULL,
-    `rss`    VARCHAR(512)                   DEFAULT NULL  COMMENT 'confirmation page slideshow feed',
     PRIMARY KEY      (`id`),
     KEY     `slug`   (`slug`),
     KEY     `domain` (`domain`)
