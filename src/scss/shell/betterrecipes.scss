@@ -58,6 +58,10 @@ button::-moz-focus-inner {
 
 header {
     text-align: center;
+    > .wrap {
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
     .logo,
     .ad-728x90,
     iframe {
@@ -70,7 +74,7 @@ header {
         width: 272px;
         color: transparent;
         background-image: inline-image("betterrecipes/logo.svg");
-        background-size: auto 55%;
+        background-size: auto 50%;
         background-position: 1em 55%;
         background-repeat: no-repeat;
     }
@@ -78,13 +82,16 @@ header {
     iframe {
         position: absolute;
         top: 0;
-        right: 0;
+        right: 1em;
         width: 728px;
     }
     .menu {
         display: none;
     }
     @media all and (max-width: 1000px) {
+        > .wrap {
+            margin-top: 0;
+        }
         .logo,
         .ad-728x90,
         iframe {
@@ -98,6 +105,9 @@ header {
         }
     }
     @media all and (max-width: 727px) {
+        > .wrap {
+            margin: 0;
+        }
         .ad-728x90,
         iframe {
             display: none;
@@ -251,7 +261,8 @@ nav {
     margin-top: 1em;
     margin-left: 1em;
     margin-right: 300px;
-    border-right: 1em solid transparent;
+    // account for the margin around .rail
+    border-right: 2em solid transparent;
     @media all and (min-width: 728px) {
         // (250px x 4) + (16 (1em) x 4)
         min-height: 1048px;
@@ -272,7 +283,7 @@ nav {
     height: 100%;
     overflow: auto;
     top: 0;
-    right: 0;
+    right: 1em;
     > * {
         margin-top: 1em;
         display: block;
@@ -326,7 +337,7 @@ footer {
     .ad-728x90,
     iframe {
         display: block;
-        margin: 0 auto 1em;
+        margin: 0 auto 1rem;
     }
     @media all and (max-width: 727px) {
         .ad-728x90,
