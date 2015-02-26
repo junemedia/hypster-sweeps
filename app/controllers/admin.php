@@ -21,14 +21,18 @@ class Admin extends AdminController
     {
         $this->load->model('adminModel');
 
-        $begin_date = $this->closestModXDate(strtotime('8 days ago'), 7);
-        $end_date   = date('Y-m-t', strtotime('+2 months'));
+        // // Align the dates so that month will end flush to a 7-day calendar  row
+        // $begin_date = $this->closestModXDate(strtotime('8 days ago'), 7);
+        $begin_date = date('Y-m-d', strtotime('2 Sundays ago'));
+        $end_date   = date('Y-m-d', strtotime('2 Sundays ago') + 86400*7*9 - 86400); // 9 weeks
+        // $end_date   = date('Y-m-t', strtotime('+2 months'));
 
         $contests = $this->adminModel->getContestsByDateRange($begin_date, $end_date);
 
         $dates   = array();
         $d       = new DateTime($begin_date);
-        $one_day = new DateInterval('P1D');
+        $one_day = new DateInterval('P1D'); // 24 hour interval
+        // start the loop, but rewind one day first
         $d->sub($one_day);
         $infinite_loop_protection = 0;
         do {

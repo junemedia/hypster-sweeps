@@ -354,9 +354,9 @@
             protocol: !window.location.protocol.match(/^https?:$/) ? 'http:' : '',
             apiserver: '//api.solvemedia.com',
             mediaserver: '//api.solvemedia.com',
-            magic: 'L.Q1tHYw9Y0fbE6WdjD1jQ',
+            magic: 'u7WpnzA6KVaLL0XYMDopVg',
             chalapi: 'ajax',
-            chalstamp: 1424826183,
+            chalstamp: 1424984044,
             lang: 'en',
             size: 'standard',
             theme: 'custom',
@@ -385,8 +385,7 @@
             // acp = w['ACPuzzle'];
             // acp.create(key);
 
-            // console.log(acp, w['ACPuzzle']);
-            if (!ACPuzzle) {
+            if (!acp) {
                 // this is unfortunate, the roadblock has been called,
                 // but SolveMedia's invocation JS has not loaded yet.
                 ROADUNBLOCKED = true;
@@ -410,14 +409,13 @@
         }
 
         function focus() {
-            var $txtbox = $solvemedia.find('input[type="text"]');
-            // assist mobile safari
-            $txtbox.on('focus', function(evt) {
-                console.log(evt);
-                // evt.preventDefault();
-                scrollTop(0);
-            });
-            $txtbox.trigger('focus');
+            acp.focus_response_field();
+            // var $txtbox = $solvemedia.find('input[type="text"]');
+            // // assist mobile safari
+            // $txtbox.on('focus', function(evt) {
+            //     scrollTop(0);
+            // });
+            // $txtbox.trigger('focus');
         }
 
         function collapse() {
@@ -769,7 +767,7 @@
             restore();
 
             // blur() focus in order to pull down the keyboard on mobile devices
-            $('.logo').trigger('focus');
+            $('.logo').trigger('focus').trigger('blur');
 
             if (!data || !'status' in data || data['status'] !== XHR_OK) {
                 switch (data['status']) {

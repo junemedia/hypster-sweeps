@@ -1,5 +1,6 @@
 <?php extract($data); ?>
-<div id="dashboard"><!-- htmlmin:ignore --><?php
+<div id="dashboard">
+<div class="cal"><!-- htmlmin:ignore --><?php
 
     $today = date('Y-m-d');
     $previous_month = null;
@@ -19,11 +20,13 @@
         }
         $li_open = '<div' . ( $li_class_list ? ' class="'.implode(' ', $li_class_list).'"' : '' ) .'>';
         $li_close = '</div>';
+        $u_tag = '';
         if ($month != $previous_month) {
-            echo sprintf('%s<h3>%s</h3><div class="cal">',
-                $previous_month !== null ? '</div>' : '',
-                $month
-            );
+            // echo sprintf('%s<h3>%s</h3><div class="cal">',
+            //     $previous_month !== null ? '</div>' : '',
+            //     $month
+            // );
+            $u_tag = '<u>' . substr($month, 0, -6) . '</u>';
             $previous_month = $month;
         }
 
@@ -46,5 +49,6 @@
 <? else: ?>
     <a>–</a>
 <? endif; ?>
+    <?php if ($u_tag) { echo $u_tag; } ?>
     <em><?= $dom ?></em>
-<?= $li_close ?><?php endforeach; ?></div>
+<?= $li_close ?><?php endforeach; ?></div></div>

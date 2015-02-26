@@ -28,7 +28,7 @@
     }
     .btn, input[type="submit"] {
         font-family: inherit;
-        font-size: 1.3em;
+        font-size: inherit;
         line-height: 1;
         white-space: nowrap;
         border-width: 0;
@@ -95,6 +95,7 @@
         margin-bottom: 2rem;
     }
     // .legal,
+    .list,
     .carousel {
         margin-bottom: 1rem;
     }
@@ -463,6 +464,9 @@
                     color: #f00;
                 }
             }
+        }
+        input[type="submit"] {
+            font-size: 1.5em;
         }
     }
     /**
