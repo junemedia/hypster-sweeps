@@ -1,10 +1,9 @@
 <? extract($data); ?>
 <!DOCTYPE html>
 <head>
-<?php if (@$meta['title']): ?>
-<title><?= safeHtml($meta['title']) ?></title>
-<?php endif; ?>
+<title><?= safeHtml(@$meta['title'] ? $meta['title'] : @$meta['og:title']) ?></title>
 <meta name="viewport" content="width=device-width"/>
+<meta name="description" content="<?= safeAttr(@$meta['description'] ? $meta['description'] : @$meta['og:description']) ?>"/>
 <?php if (@is_array($meta)) foreach ($meta as $key => $val): ?>
 <meta name="<?= safeAttr($key) ?>" content="<?= safeAttr($val) ?>"/>
 <?php endforeach; ?>

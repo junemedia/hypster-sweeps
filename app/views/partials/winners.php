@@ -8,7 +8,7 @@
             ?><div class="winner col2"><img
             src="<?= trim($winner['prize_img1']) ?>"/><div>
                     <h6 class="day"><?= date("F j", strtotime($winner['date'])); ?></h6>
-                    <h5><a><?= trim($winner['prize_title']) ?></a></h5>
+                    <h5><a href="/prize/<?= $winner['date'] ?>"><?= $winner['prize_title'] ?></a></h5>
                     <?= firstNameLastInitial($winner['user_firstname'], $winner['user_lastname']) ?><br/><?= $winner['user_city'] . ', ' . $winner['user_state'] ?></p>
                 </div
             ></div><?

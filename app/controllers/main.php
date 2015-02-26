@@ -51,11 +51,11 @@ class Main extends FrontendController
 
         // <title> & <meta> tags
         if (@$data['prize']['title']) {
-            $data['meta']['title']       = 'Win ' . articleAgreement($data['prize']['title']);
-            $data['meta']['description'] = $data['prize']['desc1'];
-            $data['meta']['image']       = 'http://' . $_SERVER['HTTP_HOST'] . $data['prize']['img1'];
-            $data['meta']['domain']      = $this->site_domain;
-            $data['meta']['url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/';
+            $data['meta']['og:title']       = 'Win ' . articleAgreement($data['prize']['title']);
+            $data['meta']['og:description'] = $data['prize']['desc1'];
+            $data['meta']['og:image']       = 'http://' . $_SERVER['HTTP_HOST'] . $data['prize']['img1'];
+            $data['meta']['og:domain']      = $this->site_domain;
+            $data['meta']['og:url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         }
 
         return $this->loadView(array(
@@ -78,9 +78,9 @@ class Main extends FrontendController
         $data['prizes'] = $this->prizeModel->getPrizesByDateRange(date('Y-m-1'), date('Y-m-t'));
 
         // <title> & <meta> tags
-        $data['meta']['title']  = $this->site_name . ' Daily Sweepstakes Calendar';
-        $data['meta']['domain'] = $this->site_domain;
-        $data['meta']['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
+        $data['meta']['og:title']  = $this->site_name . ' Daily Sweepstakes Calendar';
+        $data['meta']['og:domain'] = $this->site_domain;
+        $data['meta']['og:url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
 
         $this->loadView('calendar', $data);
     }
@@ -96,19 +96,13 @@ class Main extends FrontendController
         $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('45 days ago')));
 
         // <title> & <meta> tags
-        $data['meta']['title']  = $this->site_name . ' Daily Sweepstakes Calendar';
-        $data['meta']['domain'] = $this->site_domain;
-        $data['meta']['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/calendar';
-
-        // <title> & <meta> tags
-        $meta['title']  = $this->site_name . ' Daily Sweepstakes Winners';
-        $meta['domain'] = $this->site_domain;
-        $meta['url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/winners';
-
+        $data['meta']['og:title']  = 'Recent ' . $this->site_name . ' Daily Sweepstakes Winners';
+        $data['meta']['og:domain'] = $this->site_domain;
+        $data['meta']['og:url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/winners';
         if (@$data['winners'][0]) {
-            $latest_winner       = $data['winners'][0];
-            $meta['image']       = $latest_winner['prize_img1'];
-            $meta['description'] = $latest_winner['user_firstname'] . ' from ' . $latest_winner['user_city'] . ' won '
+            $latest_winner                  = $data['winners'][0];
+            $data['meta']['og:image']       = $latest_winner['prize_img1'];
+            $data['meta']['og:description'] = firstNameLastInitial($latest_winner['user_firstname'], $latest_winner['user_lastname']) . ' from ' . $latest_winner['user_city'] . ', ' . $latest_winner['user_state'] . ' won '
             . articleAgreement($latest_winner['prize_title']);
         }
 
@@ -146,11 +140,11 @@ class Main extends FrontendController
         // <title> & <meta> tags
         $prize = $data['prize'];
         if ($prize['date'] && $prize['title']) {
-            $data['meta']['title']       = 'Win ' . articleAgreement($prize['title']);
-            $data['meta']['description'] = trim($prize['desc1']);
-            $data['meta']['image']       = (strpos(trim($prize['img1']), 'http') !== 0 ? 'http:' : '') . trim($prize['img1']);
-            $data['meta']['domain']      = $this->site_domain;
-            $data['meta']['url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/prize/' . $prize['date'];
+            $data['meta']['og:title']       = 'Win ' . articleAgreement($prize['title']);
+            $data['meta']['og:description'] = trim($prize['desc1']);
+            $data['meta']['og:image']       = (strpos(trim($prize['img1']), 'http') !== 0 ? 'http:' : '') . trim($prize['img1']);
+            $data['meta']['og:domain']      = $this->site_domain;
+            $data['meta']['og:url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/prize/' . $prize['date'];
         }
 
         $this->loadView('partials/prize', $data);
