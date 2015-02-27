@@ -93,7 +93,7 @@ class Main extends FrontendController
         $this->load->model('prizeModel');
 
         // get winners
-        $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('45 days ago')));
+        $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('44 days ago')));
 
         // <title> & <meta> tags
         $data['meta']['og:title']  = 'Recent ' . $this->site_name . ' Daily Sweepstakes Winners';
