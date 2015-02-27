@@ -147,6 +147,22 @@ class AdminModel extends CI_Model
     }
 
     /**
+     * Get only contest dates for a given prize; used for purging cache
+     *
+     * @param   integer $prize_id
+     *
+     * @return  array   array of contest dates for the prize
+     */
+    public function getContestDatesByPrizeId($prize_id)
+    {
+        return $this->db
+                    ->select('date')
+                    ->where('prize_id', $prize_id)
+                    ->get('contest')
+                    ->result_array();
+    }
+
+    /**
      * Add a contest (flight date) to a given prize
      *
      * @param   integer $prize_id

@@ -13,7 +13,7 @@ class Admin extends AdminController
     }
 
     /**
-     * index (dashboard)
+     * GET/html: index (dashboard)
      *
      * @return HTML
      */
@@ -57,7 +57,7 @@ class Admin extends AdminController
     }
 
     /**
-     * contests (aka sweepstakes)
+     * GET/html: contests (aka sweepstakes)
      *
      * @param   string  $params CSV of sort/limit/offset options
      *
@@ -170,7 +170,7 @@ class Admin extends AdminController
     }
 
     /**
-     * Update a prize
+     * POST/json: Update a prize
      *
      * @param   array   $prize
      *
@@ -222,11 +222,30 @@ class Admin extends AdminController
             return $this->json(XHR_ERROR);
         }
 
+        // Purge the cache of every URL that could possibly exist for this prize
+
+        // get a list of all dates/contests for this prize
+        $dates = $this->adminModel->getContestDatesByPrizeId($prize_id);
+
+        $this->load->library('rdpurge');
+        if ($dates) {
+            foreach ($dates as $date) {
+                // issue RDPurge requests for each /prize/YYYY-MM-DD url
+                $this->rdpurge->purge('/prize/' . $date['date']);
+            }
+        }
+
+        // also purge /winners
+        $this->rdpurge->purge('/winners');
+
+        // also purge the homepage
+        $this->rdpurge->purge('/');
+
         return $this->json(XHR_OK);
     }
 
     /**
-     * addContest
+     * POST/json: addContest
      *
      * add a flight date to a prize
      * - flight date must be in the future
@@ -251,13 +270,14 @@ class Admin extends AdminController
             // this contest date already exists for another prize (or this prize)
             return $this->json(XHR_DUPLICATE, sprintf('<a href="/admin/prize/%s" target="_blank">%s</a> is already scheduled for %s', $c['prize_id'], $c['prize_title'], $date));
         } else {
+            // no need to purge here since it doesn't exist yet
             return $this->json(XHR_OK);
         }
 
     }
 
     /**
-     * delContest
+     * POST/json: delContest
      *
      * remove a flight date from a prize
      * - flight date must be in the future
@@ -283,13 +303,18 @@ class Admin extends AdminController
 
         $success = $this->adminModel->delContest($prize_id, $date);
 
-        return $success
-        ? $this->json(XHR_OK)
-        : $this->json(XHR_NOT_FOUND, $date . ' was not a flight date (contest) for this prize. It was most likely removed since you’ve loaded this page. It’s recommended that you <a onclick="window.location.reload()">refresh</a> this page.');
+        if ($success) {
+            // Purge the cache for 1) the homepage and 2) /winners
+            $this->load->library('rdpurge');
+            $this->rdpurge->purge('/prize/' . $date);
+            return $this->json(XHR_OK);
+        } else {
+            return $this->json(XHR_NOT_FOUND, $date . ' was not a flight date (contest) for this prize. It was most likely removed since you’ve loaded this page. It’s recommended that you <a onclick="window.location.reload()">refresh</a> this page.');
+        }
     }
 
     /**
-     * altContest
+     * POST/json: altContest
      *
      * pick an alternate winner (runner-up) for a contest
      * - flight date must be in the past
@@ -322,6 +347,11 @@ class Admin extends AdminController
             case $user == -2:
                 return $this->json(XHR_NOT_FOUND, 'We do not have any other entries on ' . $date . '.');
             case @$user['id'] >= 1:
+                // Purge the cache for 1) the homepage and 2) /winners
+                $this->load->library('rdpurge');
+                $this->rdpurge->purge('/winners');
+                // also purge the homepage
+                $this->rdpurge->purge('/');
                 return $this->json(XHR_OK, array('winner' => $user));
             default:
                 return $this->json(XHR_ERROR);
@@ -329,7 +359,7 @@ class Admin extends AdminController
     }
 
     /**
-     * Upload JPG prize image(s)
+     * POST/json: Upload JPG prize image(s)
      *
      * These are stored in the DB and filesystem as a MD5
      *
