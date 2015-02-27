@@ -17,6 +17,6 @@ Please allow 6-10 weeks for prize delivery.
 Sincerely,
 
 
-Meredith Corporation
+June Media
 {domain}
-win@meredith.com
+win@junemedia.com

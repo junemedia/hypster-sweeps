@@ -75,7 +75,7 @@ module.exports = function(grunt) {
         compass: {
             dist: {
                 options: {
-                    outputStyle: 'compressed'
+                    // defined in config.rb
                 }
             }
         },

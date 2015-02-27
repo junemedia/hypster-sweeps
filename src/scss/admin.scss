@@ -190,7 +190,7 @@ nav {
     margin-left: 1em;
     margin-right: 300px;
     border-right: 1em solid transparent;
-    @include box-sizing(content-box);
+    box-sizing: content-box;
     @media all and (max-width: 727px) {
         margin-right: 1em;
         border-right: none;

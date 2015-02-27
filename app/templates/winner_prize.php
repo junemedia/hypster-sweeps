@@ -15,6 +15,6 @@ Thank you for your participation in our sweepstakes. We hope you enjoy your priz
 Sincerely,
 
 
-Meredith Corporation
+June Media
 {domain}
-win@meredith.com
+win@junemedia.com

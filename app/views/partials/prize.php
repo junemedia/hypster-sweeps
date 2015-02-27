@@ -23,7 +23,7 @@
          --><?php else: ?><!-- NO GAP
          --><a href="/">Back to today’s prize</a><!--
          --><?php endif ?><!-- NO GAP
-         --><p class="legal">Prizes are shared across June Media sites. <span>See <a href="/rules" target="_blank">Official Rules</a>.</span></p><!-- NO GAP
+         --><p class="legal">Prizes are shared across June Media sites. <span>See <a href="/rules">Official Rules</a>.</span></p><!-- NO GAP
      --></div><!-- NO GAP
  --></div>
 <? else: ?>

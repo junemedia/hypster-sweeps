@@ -50,35 +50,41 @@ button::-moz-focus-inner {
 
 // globally used to maintain elements within max-width
 // CAREFUL: you should not need to alter this anywhere else in the SCSS
-.wrap {
+// THERE ARE FOUR (4) WRAP SELECTORS:
+// wrap element:
+body > header > div,
+body > header > nav > div,
+body > div,
+body > footer > div {
     max-width: 1000px;
     margin: 0 auto;
     position: relative;
 }
 
-header {
+body > header {
     text-align: center;
-    > .wrap {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
+    // wrap element:
+    @media all and (min-width: 1000px) {
+        > div {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
     }
     .logo,
-    .ad-728x90,
+    .ad,
     iframe {
         height: 90px;
     }
     .logo {
         // I'D PREFER THIS HEIGHT TO BE A PADDING-BOTTOM: XX%
-        // IT WOULD LOOK BETTER WHEN SNAPPING TO RESPONSIVE SIZES
+        // IT COULD LOOK BETTER WHEN SNAPPING TO RESPONSIVE SIZES
         display: block;
-        width: 272px;
+        width: 256px;
         color: transparent;
-        background-image: inline-image("betterrecipes/logo.svg");
+        background: inline-image("betterrecipes/logo.svg") no-repeat 1em 55%;
         background-size: auto 50%;
-        background-position: 1em 55%;
-        background-repeat: no-repeat;
     }
-    .ad-728x90,
+    .ad,
     iframe {
         position: absolute;
         top: 0;
@@ -89,11 +95,11 @@ header {
         display: none;
     }
     @media all and (max-width: 1000px) {
-        > .wrap {
-            margin-top: 0;
-        }
+        // > .brwrap {
+        //     margin-top: 0;
+        // }
         .logo,
-        .ad-728x90,
+        .ad,
         iframe {
             display: block;
             position: relative;
@@ -105,15 +111,98 @@ header {
         }
     }
     @media all and (max-width: 727px) {
-        > .wrap {
-            margin: 0;
-        }
-        .ad-728x90,
+        // > .brwrap {
+        //     margin: 0;
+        // }
+        .ad,
         iframe {
             display: none;
         }
     }
-    // Requires this JavaScript:
+    nav {
+        // or #863686
+        // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
+        // r1 = (r3 - r2 + r2*a1)/a1
+        // g1 = (g3 - g2 + g2*a1)/a1
+        // b1 = (b3 - b2 + b2*a1)/a1
+        //
+        // RGB3 (the final desired color)
+        // RGB2 (the background color)
+        // A1 (how much opacity you want)
+        //
+        // Let's find the right rgba for .79 opacity*:
+        // r1 = (134 - 255 + 255*.79)/.79 ~= 102
+        // g1 = ( 54 - 255 + 255*.79)/.79 ~= 0
+        // b1 = (134 - 255 + 255*.79)/.79 ~= 102
+        //
+        // *.79 is the most translucent we can get without making g1 < 0
+        // which, would be out of range
+        //
+        background: rgba(102, 0, 102, 0.79);
+        font-size: 1.3em;
+        line-height: 100%;
+        letter-spacing: 1px;
+        padding: .25em 0;
+        a,
+        form {
+            display: inline-block;
+            vertical-align: middle;
+            margin: .25em 2%;
+        }
+        a {
+            color: #fff;
+            text-transform: uppercase;
+            &:hover,
+            &:visited {
+                color: #fff;
+            }
+            &.on {
+                text-decoration: underline;
+            }
+        }
+        input {
+            display: block;
+            outline: 0;
+            height: 100%;
+        }
+        form {
+            display: inline-block;
+            width: 10em;
+            // height: 100%;
+            // height: 1.3em;
+            overflow: hidden;
+            position: relative;
+            padding-right: 1em;
+        }
+        input[type="text"] {
+            border: 0;
+            width: 100%;
+            margin-right: 1em;
+            border-radius: .3em 0 0 .3em;
+            font-size: 75%;
+            padding: .2em .3em;
+        }
+        input[type="submit"] {
+            background: #ebebeb;
+            border: 0;
+            border-radius: 0 .3em .3em 0;
+            // border-radius: 0;
+            // border-top-right-radius: .3rem;
+            // border-bottom-right-radius: .3rem;
+            position: absolute;
+            top: 0;
+            right: 0;
+            text-transform: uppercase;
+            color: #863686;
+            letter-spacing: 0;
+            font-weight: 600;
+            -webkit-appearance: button;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+    }
+    // *** also requires some JS, found in sweeps.js ***
     // hamburger menu opener/closer on mobile
     @media all and (max-width: 640px) {
         .logo {
@@ -152,11 +241,13 @@ header {
                 background-image: inline-image("close.svg");
             }
         }
-        nav .wrap {
+        // wrap element:
+        > nav > div {
             display: none;
         }
         &.open {
-            nav .wrap {
+            // wrap element:
+            > nav > div {
                 display: block;
             }
         }
@@ -171,96 +262,8 @@ header {
     }
 }
 
-nav {
-    background: rgb(134, 54, 134);
-    // or #863686
-    // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
-    // r1 = (r3 - r2 + r2*a1)/a1
-    // g1 = (g3 - g2 + g2*a1)/a1
-    // b1 = (b3 - b2 + b2*a1)/a1
-    //
-    // RGB3 (the final desired color)
-    // RGB2 (the background color)
-    // A1 (how much opacity you want)
-    //
-    // Let's find the right rgba for .79 opacity*:
-    // r1 = (134 - 255 + 255*.79)/.79 ~= 102
-    // g1 = ( 54 - 255 + 255*.79)/.79 ~= 0
-    // b1 = (134 - 255 + 255*.79)/.79 ~= 102
-    //
-    // *.79 is the most translucent we can get without making g1 < 0
-    // which, would be out of range
-    //
-    background: rgba(102, 0, 102, 0.79);
-    font-size: 1.3em;
-    line-height: 100%;
-    letter-spacing: 1px;
-    padding: .25em 0;
-    a,
-    form {
-        display: inline-block;
-        vertical-align: middle;
-        margin: .25em 2%;
-    }
-    a {
-        color: #fff;
-        text-transform: uppercase;
-        &:hover,
-        &:visited {
-            color: #fff;
-        }
-        &.on {
-            text-decoration: underline;
-        }
-    }
-    input {
-        display: block;
-        outline: 0;
-        height: 100%;
-    }
-    form {
-        display: inline-block;
-        width: 10em;
-        // height: 100%;
-        // height: 1.3em;
-        overflow: hidden;
-        position: relative;
-        padding-right: 1em;
-    }
-    input[type="text"] {
-        border-radius: 0;
-        border: 0;
-        width: 100%;
-        margin-right: 1em;
-        border-top-left-radius: .3rem;
-        border-bottom-left-radius: .3rem;
-        font-size: 75%;
-        padding: .2em .3em;
-    }
-    input[type="submit"] {
-        background: #ebebeb;
-        border: 0;
-        border-radius: 0;
-        border-top-right-radius: .3rem;
-        border-bottom-right-radius: .3rem;
-        position: absolute;
-        top: 0;
-        right: 0;
-        text-transform: uppercase;
-        color: #863686;
-        letter-spacing: 0;
-        font-weight: 600;
-        -webkit-appearance: button;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-    }
-}
-
-.wrap > .main {
-    margin-top: 1rem;
-    margin-left: 1rem;
-    margin-right: 300px;
+body > div > .main {
+    margin: 1rem 300px 0 1rem;
     // account for the margin around .rail
     border-right: 2rem solid transparent;
     @media all and (min-width: 728px) {
@@ -277,7 +280,7 @@ nav {
     }
 }
 
-.wrap > .rail {
+body > div > .rail {
     position: absolute;
     width: 300px;
     height: 100%;
@@ -339,13 +342,13 @@ footer {
         color: inherit;
         margin-left: 1em;
     }
-    .ad-728x90,
+    .ad,
     iframe {
         display: block;
         margin: 0 auto 1rem;
     }
     @media all and (max-width: 727px) {
-        .ad-728x90,
+        .ad,
         iframe {
             display: none;
         }

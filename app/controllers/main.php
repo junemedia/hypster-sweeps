@@ -155,76 +155,10 @@ class Main extends FrontendController
      */
     public function rules()
     {
-        $grandprize_template_body = '';
-        $template_body            = '';
-
-        $this->load->model('banner_model');
-        $this->load->model('prize_model');
-        $this->load->model('template_model');
-
-        $this->load->library('parser');
-
-        $data['banner'] = $this->banner_model->getTodaysBanners(array(1, 2, 3, 4), $this->channel_id);
-
-        $data['prize'] = $this->prize_model->getPrizeByDate($this->channel_id);
-
-        if (!$data['prize']) {
-            show_404();
-        }
-
-        $data['grandprize'] = $this->prize_model->getGrandPrizeByDate($this->channel_id);
-
-        if (isset($data['grandprize']['grandprize_rule_template_id'])) {
-            $grandprize_rule_template = $this->template_model->getGrandprizeTemplateById($data['grandprize']['grandprize_rule_template_id']);
-            $grandprize_template_body = $this->load->view('/partials/grandprize_rules', array('body' => $this->parser->parse_string($grandprize_rule_template['rules'], $data['grandprize'], true), 'banner' => $data['banner']), true);
-        }
-
-        $rule_template = $this->template_model->getTemplateById($data['prize']['daily_rule_template_id']);
-
-        $json = array();
-
-        $template_body = preg_replace_callback('~{([\w]+):([-$\w\s]+)}~', function ($match) use (&$json) {
-            $json[$match[1]] = $match[2];
-            return '{' . $match[1] . '}';
-        }, $rule_template['rules']);
-
-        $data['prize']['domain']         = '<a href="' . $this->channel_url . '">' . $this->site_name . '</a>';
-        $data['prize']['domain_winners'] = '<a href="/winners' . '">' . $this->site_name . ' Winners</a>';
-        $data['prize']['channel_url']    = $this->channel_url;
-
-        $data['gtm'] = $this->config->item($this->site_slug, 'gtm');
-
-        $data['tos_link'] = $this->config->item($this->site_slug, 'tos_link');
-
-        $template_data = array(
-            'body'        => $this->parser->parse_string($template_body, $data['prize'], true),
-            'grandprize'  => $data['grandprize'],
-            'banner'      => $data['banner'],
-            'channel_url' => $this->channel_url);
-        $template_body = $this->load->view('rules', $template_data, true);
-
-        // Omniture
-        $data['omniture'] = array(
-            'site_slug'    => $this->site_slug,
-            'site_name'    => $this->site_name,
-            'channel_slug' => $this->channel_slug,
-            'channel_name' => $this->channel_name,
-            'reg_source'   => $this->reg_source_id,
-            '_evt'         => 'home', // optional, but allows us to fire this event immediately after setup
-        );
-
-        // <Title> & <Meta> tags
-        $meta['title']         = 'Daily Sweepstakes Rules for ' . $this->site_name . ($this->channel_id != $this->site_id ? ' / ' . $this->channel_name : '');
-        $meta['domain']        = $this->domain;
-        $meta['url']           = 'http://' . $_SERVER['HTTP_HOST'] . $this->channel_url . 'rules';
-        $template_data['meta'] = $this->load->view('/partials/meta', $meta, true);
-
-        $template_data['sf_content'] = '<div id="mds" class="' . $this->site_slug . '">' .
-        $this->load->view('/partials/script', $data, true) .
-        $template_body . $grandprize_template_body .
-        '</div>';
-
-        $this->load->view('/shells/' . $this->site_slug, $template_data);
+        $data['meta']['og:title']       = $this->site_name . ' Daily Sweepstakes Rules';
+        $data['meta']['og:domain']      = $this->site_domain;
+        $data['meta']['og:url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/rules';
+        $this->loadView('rules', $data);
     }
 
 }
