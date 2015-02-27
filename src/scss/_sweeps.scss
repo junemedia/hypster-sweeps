@@ -326,7 +326,7 @@
         z-index: 1;
         position: absolute;
         height: 100%;
-        width: .8rem;
+        width: 1rem;
         background: transparent;
         @include background-image(linear-gradient(left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0)));
         &.left {
