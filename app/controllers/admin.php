@@ -227,7 +227,7 @@ class Admin extends AdminController
         // get a list of all dates/contests for this prize
         $dates = $this->adminModel->getContestDatesByPrizeId($prize_id);
 
-        $this->load->library('rdpurge');
+        $this->load->library('RDPurge');
         if ($dates) {
             foreach ($dates as $date) {
                 // issue RDPurge requests for each /prize/YYYY-MM-DD url
@@ -305,7 +305,7 @@ class Admin extends AdminController
 
         if ($success) {
             // Purge the cache for 1) the homepage and 2) /winners
-            $this->load->library('rdpurge');
+            $this->load->library('RDPurge');
             $this->rdpurge->purge('/prize/' . $date);
             return $this->json(XHR_OK);
         } else {
@@ -348,7 +348,7 @@ class Admin extends AdminController
                 return $this->json(XHR_NOT_FOUND, 'We do not have any other entries on ' . $date . '.');
             case @$user['id'] >= 1:
                 // Purge the cache for 1) the homepage and 2) /winners
-                $this->load->library('rdpurge');
+                $this->load->library('RDPurge');
                 $this->rdpurge->purge('/winners');
                 // also purge the homepage
                 $this->rdpurge->purge('/');
