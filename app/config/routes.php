@@ -40,8 +40,7 @@
 */
 
 // Cronjob Tasks
-$route['cron/(:any)']            = 'cron/$1';
-$route['cron/(:any)/(:any)']     = 'cron/$1/$2';
+$route['cron/daily']             = 'cron/daily';
 
 // Public/Cacheable HTML Requests
 $route['winners']                = 'main/winners';
