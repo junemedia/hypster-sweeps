@@ -26,9 +26,14 @@ class SolveMedia
         $this->verify  = $params['verify'];
     }
 
+    /**
+     * Generate JS method with correct public key
+     *
+     * @return  string  JavaScript method
+     */
     public function invoke()
     {
-        return sprintf('<script>jds("solvemedia",{key:"%s"})</script>', $this->public);
+        return sprintf('jds("solvemedia","%s")', $this->public);
     }
 
     /**

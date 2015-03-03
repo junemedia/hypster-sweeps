@@ -9,7 +9,7 @@
 // How long will password reset token and email verification tokens live?
 $config['token_ttl']       = 86400; // 1 day
 
-$config['from_name']       = 'June Media';
+$config['from_name']       = 'June Media Daily Sweepstakes';
 $config['from_email']      = 'win@junemedia.com';
 $config['admin_emails'][]  = 'achalemian@resolute.com';
 // $config['admin_emails'][]  = 'aconforti@resolute.com';

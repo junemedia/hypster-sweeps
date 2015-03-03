@@ -61,9 +61,31 @@
             <a href="http://www.betterrecipes.com/terms">Terms of Service</a>
         </div>
     </footer>
+<?php
+    if (@$solvemedia) {
+        $this->load->view('partials/captcha');
+    }
+?>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
-    <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')</script>
+    <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')<?php
+
+        $js_script_arr = array();
+
+        /* SolveMedia */
+        if (@$solvemedia) {
+            $js_script_arr[] = $solvemedia;
+        }
+
+        /* GTM */
+        if (@$site_gtm) {
+            $js_script_arr[] = 'jds("gtm","' . $site_gtm . '")';
+        }
+
+        if ($js_script_arr) {
+            echo ';' . implode(';', $js_script_arr);
+        }
+ ?></script>
     <?php
 
         /* jds-TIMESTAMP.min.js */
@@ -71,12 +93,6 @@
         require_once('minify.inc.php');
         $minify_config['group'] = 'mainjs';
         new Minify($minify_config);
-
-        /* SolveMedia */
-        if (@$solvemedia) {
-            $this->load->view('partials/captcha');
-            echo $solvemedia;
-        }
     ?>
 </body>
 </html>

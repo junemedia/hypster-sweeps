@@ -73,7 +73,7 @@ class Api extends FrontendController
         $r['eligible'] = false;
 
         // load user_id from session
-        $user_id = $this->session->userdata('user_id');
+        $user_id = $r['user_id'] = $this->session->userdata('user_id');
 
         // logged-in check
         if (!$user_id) {
@@ -227,6 +227,9 @@ class Api extends FrontendController
                     // authentication successful, save this in the session
                     // effectively "logging in the user" during registrations
                     $this->session->set_userdata('user_id', $result);
+                    $r['user_id'] = $result;
+                } else {
+                    $r['user_id'] = $profile['id'];
                 }
                 if ($is_new_reg || (!$is_new_reg && $result == 1)) {
                     // send a verification email for new registrations
@@ -287,6 +290,7 @@ class Api extends FrontendController
             $this->site_id);
         $r['midnight'] = strtotime('tomorrow');
         $r['name']     = $user['firstname'];
+        $r['user_id']  = $user['id'];
         return $this->json(XHR_OK, $r);
     }
 

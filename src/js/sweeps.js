@@ -82,16 +82,21 @@
         $profile_bar,
         $verify;
 
-    function jds(key, val) {
-        if (key in jds) {
-            if ($.isFunction(jds[key])) {
-                return jds[key].call(this, val);
-            }
-            if ($.isPlainObject(val)) {
-                return $.extend(jds[key], val);
-            }
+    function jds() {
+        var args = [], method;
+
+        if (!arguments.length) {
+            return false;
         }
-        return jds[key] = val;
+
+        Array.prototype.push.apply(args, arguments);
+
+        method = args.shift();
+
+        if (!method || !method in jds || !$.isFunction(jds[method])) {
+            return false;
+        }
+        return jds[method].apply(this, args);
     }
 
     function enter(already_entered) {
@@ -112,7 +117,7 @@
             }
             $('.frame').hide();
             $('#thanks').show();
-            $('.carousel, .winners, .see_all_prizes').hide();
+            $('.carousel, #winners, .see_all_prizes').hide();
             // jds('omniture', 'exclusiveoffers');
         } else {
             $('.frame').hide();
@@ -138,6 +143,7 @@
             }
             $profile_bar.show();
             rd.db('lis', 1, ONE_YEAR);
+            rd.db('user_id', data.user_id, ONE_YEAR);
             rd.db('ineligible', !data.eligible, data.midnight * 1000);
         });
     }
@@ -150,6 +156,7 @@
         }).done(function(data) {
             $profile_bar.hide();
             rd.db('lis', null);
+            rd.db('user_id', null);
             rd.db('name', null);
             rd.db('ineligible', null);
             rd.cookie('sid', null);
@@ -201,86 +208,41 @@
      *      jds("gtm", "GTM-ABCDEF")
      *
      * Example sending a pageview/event
-     *      jds("gtm")
+     *      jds("gtm", "myGtmEvent", true)
      *
-     * GTM IDs are defined in app/config/project.php
-     *      BetterRecipes: GTM-XXXXXX
+     * GTM IDs are defined in the database `site`.`gtm`
+     *      BetterRecipes: GTM-5VTT4K
      *
      */
-    function GTM(opts) {
+
+    var dataLayerString = 'dataLayer',
+        dataLayer = w[dataLayerString];
+
+    function GTM(id_or_event, pass_user_id) {
         // initialize if passed a GTM id and we have not initialized yet
-        if (!GTM.initialized && $.type(opts) === "string") {
-            return init(opts);
-        }
-
-        // Assign dataLayer properties from Omniture
-        var s = w['s'],
-            d = (function(map) {
-                // assign GTM/dataLayer keys to corresponding Omniture s.*
-                var dataL = {};
-                for (var gtm_key in map) {
-                    var omniture_key = map[gtm_key];
-                    // loose comparision:
-                    // this works, because Pip does not want empty dataLayer params
-                    if (s[omniture_key]) {
-                        dataL[gtm_key] = s[omniture_key];
-                    }
-                }
-                return dataL;
-            })({
-                // GTM (dataLayer) :: Omniture (window.s)
-                "Page Name": "pageName",
-                "Channel": "channel",
-                "Category": "prop1",
-                "Subcategory": "prop2",
-                "Application": "prop5",
-                "Content ID": "prop9",
-                "Search Term": "eVar5",
-                "Registration Time": "eVar18",
-                "Internal Campaign": "eVar8",
-                "Email Campaign": "eVar15",
-                "Party ID": "eVar26",
-                "Social Campaign": "eVar35",
-                "Slideshows and Quizzes": "prop6",
-                "Sponsor Name": "eVar44",
-                "Registration Source": "eVar6",
-                "Profile ID": "eVar32",
-                "Hash ID": "eVar68",
-                "Status Code": "prop12",
-                "Story": "prop3",
-                "Newsletter Signup Source": "eVar27",
-                "Member Logged In": "eVar24",
-                "Content Type": "eVar29",
-                "Commerce Enabled?": "eVar36",
-                "External Campaign": "campaign",
-                "Search Filters": "prop67",
-                "Search Results Number": "prop68",
-                "Video Playlist ID": "eVar41",
-                "Video Player Name": "eVar40"
-            });
-        d['event'] = "pageview";
-        dataLayer.push(d);
-
-        // Additionally, send any enter as a "Registrations" event
-        if (s.events && s.events.match(/scRemove/)) {
-            var registrations_event_dataLayer = {
-                "event": "Registrations",
-                "Registration Source": d["Registration Source"]
-                // ,"Registration Time": d["Registration Time"] // Cannot find where this is ever set in Omniture and I don't know how to format it myself
-            };
-            if (s.events.match(/event23/)) {
-                registrations_event_dataLayer["Marketing Opt Ins"] = 1;
+        if (!GTM.initialized && $.type(id_or_event) === 'string' && id_or_event.indexOf('GTM-') === 0) {
+            // Initialize the GTM global `dataLayer` array
+            if (!w[dataLayerString]) {
+                dataLayer = w[dataLayerString] = [{
+                    'gtm.start': new Date().getTime(),
+                    event: 'gtm.js'
+                }];
             }
-            dataLayer.push(registrations_event_dataLayer);
+            return init(id_or_event);
         }
-        // Additionally, send a "Newsletter Signup" event for each newsletter in s.products
-        if (s.events && s.events.match(/scAdd/) && s.products) {
-            s.products.split(',').forEach(function(newsletter_id) {
-                dataLayer.push({
-                    "event": "Newsletter Signup",
-                    "Newsletter ID": newsletter_id.replace(/^Newsletter;/, '')
-                });
-            });
+
+        // regular track event
+        return track(id_or_event, pass_user_id);
+
+
+        function track(evt, pass_user_id) {
+            var d = {
+                'event': evt
+            };
+            if (pass_user_id && rd.db('user_id')) {
+                d['userId'] = rd.db('user_id');
+            }
+            return dataLayer.push(d);
         }
 
         /**
@@ -320,30 +282,19 @@
         }
     } // /GTM
 
-    // Initialize the GTM global `dataLayer` array
-    var dataLayerString = 'dataLayer',
-        dataLayer = w[dataLayerString];
-    if (!w[dataLayerString]) {
-        dataLayer = w[dataLayerString] = [{
-            'gtm.start': new Date().getTime(),
-            event: 'gtm.js'
-        }];
-    }
-
 
 
     /**
      * Solve Media
      */
-    function SolveMedia(opts) {
+    function SolveMedia(key) {
         // load Solve Media tag
-        if (!opts || !opts.key) {
+        if (!key) {
             rd.warn('Could not initialize SolveMedia roadblock. No key provided.');
             return false;
         }
         var
-            key = opts.key, // assign the challenge/public key
-            // src = '//api' + (location.protocol == 'https:' ? '-secure' : '') + '.solvemedia.com/papi/challenge.ajax', // invocation JS
+        // src = '//api' + (location.protocol == 'https:' ? '-secure' : '') + '.solvemedia.com/papi/challenge.ajax', // invocation JS
             src = '//api.solvemedia.com/papi/_puzzle.js', // invocation JS
             acp, // placeholder for window.ACPuzzle after /papi/_puzzle.js loads
             $solvemedia = $('#solvemedia');
@@ -822,6 +773,7 @@
                 ROADUNBLOCKED = null;
                 // set environment variables
                 rd.db('lis', 1, ONE_YEAR);
+                rd.db('user_id', response.user_id, ONE_YEAR);
                 rd.db('name', response.name, ONE_YEAR);
                 $name.html(response.name);
                 $profile_bar.show();
@@ -844,6 +796,7 @@
                 ROADUNBLOCKED = null;
                 // set environment variables
                 rd.db('lis', 1, ONE_YEAR);
+                rd.db('user_id', response.user_id, ONE_YEAR);
                 // only set the name if given in resposne
                 response.name && rd.db('name', response.name, ONE_YEAR);
                 // show buttons & clear this form
@@ -1027,34 +980,54 @@
          *
          * Ad Units
          */
-        w['OX_ads'] = [{
-            // Header - 728x90
-            'slot_id': '537278266_728x90_ATF',
-            'auid': '537278266'
-        }, {
-            // Right Rail Above the fold - 300x250
-            'slot_id': '537278268_300x250_ATF',
-            'auid': '537278268'
-        }, {
-            // Right Rail Below the Fold 300x250
-            'slot_id': '537278269_300x250_BTF',
-            'auid': '537278269'
-        }, {
-            // Footer - 728x90
-            'slot_id': '537278267_728x90_BTF',
-            'auid': '537278267'
-        }];
+        // Yieldbot.com Intent Tag
         $.ajax({
-            url: '//ox-d.junemedia.com/w/1.0/jstag',
+            url: '//cdn.yldbt.com/js/yieldbot.intent.js',
             dataType: 'script',
             cache: true
         })
-            // .done(function(data, textStatus, jqXHR) {
-            //     rd.log('OpenX JavaScript Loaded');
-            // })
+        .done(function(data, textStatus, jqXHR) {
+            rd.log('Yieldbot loaded.');
+            var yieldbot = w['yieldbot'];
+            yieldbot.pub('d45f');
+            yieldbot.defineSlot('LB');
+            yieldbot.defineSlot('MR');
+            yieldbot.enableAsync();
+            yieldbot.go();
+            w['OX_ads'] = [{
+                // Header - 728x90
+                'slot_id': '537278266_728x90_ATF',
+                'auid': '537278266',
+                'vars': yieldbot.getSlotCriteria('LB')
+            }, {
+                // Right Rail Above the fold - 300x250
+                'slot_id': '537278268_300x250_ATF',
+                'auid': '537278268',
+                'vars': yieldbot.getSlotCriteria('MR')
+            }, {
+                // Right Rail Below the Fold 300x250
+                'slot_id': '537278269_300x250_BTF',
+                'auid': '537278269'
+            }, {
+                // Footer - 728x90
+                'slot_id': '537278267_728x90_BTF',
+                'auid': '537278267'
+            }];
+            $.ajax({
+                url: '//ox-d.junemedia.com/w/1.0/jstag',
+                dataType: 'script',
+                cache: true
+            })
+            .done(function(data, textStatus, jqXHR) {
+                rd.log('OpenX JavaScript Loaded');
+            })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 rd.error('OpenX JavaScript failed to load');
             });
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            rd.error('Yieldbot failed to load');
+        });
 
 
 
@@ -1098,7 +1071,7 @@
         // rd.warn('jQuery FOUND after '+i+' intervals!')
         t && clearInterval(t);
 
-        // define $ in this context:
+        // define 'jQuery'/$ in this context:
         $ = w[$];
 
         // process any jds() calls before we started

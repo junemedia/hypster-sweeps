@@ -81,18 +81,19 @@ class FrontendController extends SweepsController
     protected $site_slug   = null;
     protected $site_name   = null;
     protected $site_domain = null;
+    protected $site_gtm    = null;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->db->select('id as site_id, slug as site_slug, name as site_name, domain as site_domain');
+        $this->db->select('id as site_id, slug as site_slug, name as site_name, domain as site_domain, gtm as site_gtm');
 
         // production (win.) domains are easy to match against the `site`.`domain` column
         if (strpos($_SERVER['HTTP_HOST'], 'win.') === 0) {
             $this->db->where('domain', $_SERVER['HTTP_HOST']);
         } else {
-            // development/staging domains must have the `slug` in the format SLUG.sweeps.HOST.resolute.com
+            // development/staging domains must have the `slug` in the format SLUG.junesweeps.HOST.resolute.com
             if (!preg_match('/^([a-z]+)\.junesweeps\.[^\.]+\.resolute\.com/', $_SERVER['HTTP_HOST'], $m)) {
                 show_404();
             }
@@ -127,6 +128,7 @@ class FrontendController extends SweepsController
         $data['site_slug']   = $this->site_slug;
         $data['site_name']   = $this->site_name;
         $data['site_domain'] = $this->site_domain;
+        $data['site_gtm']    = $this->site_gtm;
 
         // assign the views
         $data['view'] = is_array($view) ? $view : array($view);

@@ -3,6 +3,7 @@ CREATE TABLE `site` (
     `slug`   VARCHAR(30)                    DEFAULT NULL,
     `name`   VARCHAR(70)                    DEFAULT NULL,
     `domain` VARCHAR(255)                   DEFAULT NULL,
+    `gtm`    VARCHAR(255)                   DEFAULT NULL,
     PRIMARY KEY      (`id`),
     KEY     `slug`   (`slug`),
     KEY     `domain` (`domain`)
