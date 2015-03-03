@@ -71,8 +71,7 @@ body > header {
         }
     }
     .logo,
-    .ad,
-    iframe {
+    .ad {
         height: 90px;
     }
     .logo {
@@ -84,8 +83,7 @@ body > header {
         background: inline-image("betterrecipes/logo.svg") no-repeat 1em 55%;
         background-size: auto 50%;
     }
-    .ad,
-    iframe {
+    .ad {
         position: absolute;
         top: 0;
         right: 1em;
@@ -99,8 +97,7 @@ body > header {
         //     margin-top: 0;
         // }
         .logo,
-        .ad,
-        iframe {
+        .ad {
             display: block;
             position: static;
             margin: 0 auto;
@@ -114,8 +111,7 @@ body > header {
         // > .brwrap {
         //     margin: 0;
         // }
-        .ad,
-        iframe {
+        .ad {
             display: none;
         }
     }
@@ -342,14 +338,12 @@ footer {
         color: inherit;
         margin-left: 1em;
     }
-    .ad,
-    iframe {
+    .ad {
         display: block;
         margin: 0 auto 1rem;
     }
     @media all and (max-width: 727px) {
-        .ad,
-        iframe {
+        .ad {
             display: none;
         }
     }

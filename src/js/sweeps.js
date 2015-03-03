@@ -77,13 +77,31 @@
         XHR_INCOMPLETE = 8,
         XHR_HUMAN = 9,
 
+        // TRACKing status strings (used for GTM events)
+        TRACK_ENTER_ANONYMOUS = 'enterAnonymous', // anonymous user clicks on the "Enter Now" button.
+        TRACK_SIGNUP = 'signup', // user registered a new account successfully
+        TRACK_SIGNUP_FAIL = 'signupFail', // user failed to register a new account
+        TRACK_LOGIN = 'login', // user authenticates successfully
+        TRACK_LOGIN_FAIL = 'loginFail', // user failed to authenticate
+        TRACK_ENTER = 'enter', // authenticated user successfully entered into today’s contest
+        TRACK_ENTER_DUPLICATE = 'enterDuplicate', // authenticated user re-entered into today’s contest
+        TRACK_ENTER_FAIL = 'enterFail', // authenticated user failed to enter into today’s contest for a reason other than duplicate
+        TRACK_FORGOT = 'forgot', // anonymous user successfully entered his/her email and triggered a password reset email
+        TRACK_RESET = 'reset', // anonymous user successfully reset his/her password
+        TRACK_VERIFY = 'verify', // authenticated or anonymous user successfully verified his/her email address (verification email sent after new signup or email address change via profile update)
+        TRACK_VERIFY_REQUEST = 'verifyRequest', // authenticated user requested to verify his/her email address
+        TRACK_PROFILE_UPDATE = 'profileUpdate', // authenticated user updated his/her profile
+        TRACK_LOGOUT = 'logout', // authenticated user logs in
+
+
         // UI elements
         $name, // inside the $profile_bar
         $profile_bar,
         $verify;
 
     function jds() {
-        var args = [], method;
+        var args = [],
+            method;
 
         if (!arguments.length) {
             return false;
@@ -107,22 +125,25 @@
             $('.frame').hide();
             $('#signup').show();
             $('#login_email').trigger('focus');
-            // jds('omniture', 'register');
+            Track(TRACK_ENTER_ANONYMOUS);
             return;
         }
 
+        // do not do tracking here, safer to perform
+        // tracking on XHR responses
         if (entered_contest) {
             if (already_entered) {
                 $('#thanks h2').html('You have already entered today.');
+                // Track(TRACK_ENTER_DUPLICATE);
             }
             $('.frame').hide();
             $('#thanks').show();
             $('.carousel, #winners, .see_all_prizes').hide();
-            // jds('omniture', 'exclusiveoffers');
+            // Track(TRACK_ENTER);
         } else {
             $('.frame').hide();
             $('#prize').show();
-            // jds('omniture', 'enter');
+            // no tracking event here
         }
 
     }
@@ -164,12 +185,13 @@
             $name.html('');
             // only change state (enter) if this is a button click
             // otherwise, it's coming from somewhere like getEligibility()
-            if (evt) {
-                // enter(); // client doesn't want to go to login screen on logout
-                // send to splash screen
-                // $('.frame').hide();
-                // $('#splash').show();
-            }
+            // if (evt) {
+            //     // enter(); // client doesn't want to go to login screen on logout
+            //     // send to splash screen
+            //     // $('.frame').hide();
+            //     // $('#splash').show();
+            // }
+            Track(TRACK_LOGOUT);
         });
         return false;
     }
@@ -186,10 +208,12 @@
                 return fail(data.msg);
             }
             $verify.html('Verification email sent.');
+            Track(TRACK_VERIFY_REQUEST);
         }
 
         function fail(msg) {
             $verify.html('Failed to send, please try again later.');
+            // no tracking event here
         }
         return false;
     }
@@ -199,7 +223,8 @@
      *
      * This will load the GTM JavaScript and send dataLayer calls.
      *
-     * @param mixed opts
+     * @param   string  id_or_event
+     * @param   boolean pass_user_id    default: true; must explicitely send as false to supress
      *
      * @return void
      *
@@ -239,7 +264,7 @@
             var d = {
                 'event': evt
             };
-            if (pass_user_id && rd.db('user_id')) {
+            if (pass_user_id !== false && rd.db('user_id')) {
                 d['userId'] = rd.db('user_id');
             }
             return dataLayer.push(d);
@@ -282,6 +307,57 @@
         }
     } // /GTM
 
+    /**
+     * Report tracking events
+     *
+     * @param   string  event   Tracking event string
+     *
+     * @return  boolean
+     */
+    function Track(event) {
+        var matched = !GTM(event); // boolean for whether the GTM event was matched
+
+        // refresh the ads on any JDS event
+        jds['refreshAds']();
+
+        // DEBUG:
+        // expose every event to GTM
+        rd[matched ? 'log' : 'warn']('GTM ' + event + ': ' + (matched ? 'successfully matched' : 'FAILED to match against') + ' a GTM event');
+
+        // // Do something different for specific events?
+        // switch (event) {
+        //     case TRACK_ENTER_ANONYMOUS:
+        //         break;
+        //     case TRACK_SIGNUP:
+        //         break;
+        //     case TRACK_SIGNUP_FAIL:
+        //         break;
+        //     case TRACK_LOGIN:
+        //         break;
+        //     case TRACK_LOGIN_FAIL:
+        //         break;
+        //     case TRACK_ENTER:
+        //         break;
+        //     case TRACK_ENTER_DUPLICATE:
+        //         break;
+        //     case TRACK_ENTER_FAIL:
+        //         break;
+        //     case TRACK_FORGOT:
+        //         break;
+        //     case TRACK_RESET:
+        //         break;
+        //     case TRACK_VERIFY:
+        //         break;
+        //     case TRACK_VERIFY_REQUEST:
+        //         break;
+        //     case TRACK_PROFILE_UPDATE:
+        //         break;
+        //     case TRACK_LOGOUT:
+        //         break;
+        //     default:
+        //         break;
+        // }
+    }
 
 
     /**
@@ -777,6 +853,7 @@
                 rd.db('name', response.name, ONE_YEAR);
                 $name.html(response.name);
                 $profile_bar.show();
+                Track(TRACK_LOGIN);
                 if (response.eligible) {
                     enter();
                 } else {
@@ -784,8 +861,12 @@
                     rd.db('ineligible', true, response.midnight * 1000); // mark that we are ineligible until midnight tonight
                     // shows #thanks, but with "You have ALREADY entered today…"
                     enter(true);
+                    Track(TRACK_ENTER_DUPLICATE);
                 }
                 return false;
+            },
+            fail: function() {
+                Track(TRACK_LOGIN_FAIL);
             }
         }, xhr);
 
@@ -805,13 +886,20 @@
                 xhr.$form.trigger('reset');
 
                 if (xhr.$form.hasClass('profile')) {
-                    // hanlde the reload on /profile page
+                    Track(TRACK_PROFILE_UPDATE);
+                    // handle the reload on /profile page
                     window.location.href = window.location.href;
                 } else {
+                    Track(TRACK_SIGNUP);
                     // show the #prize_form
                     enter();
                 }
                 return false;
+            },
+            fail: function() {
+                // or could be tracked as update fail, but let's not split hairs
+                // or could also be captcha on first signup
+                Track(TRACK_SIGNUP_FAIL);
             }
         }, xhr);
 
@@ -823,6 +911,7 @@
                 xhr.$form.find('p').hide();
                 xhr.$submit.hide();
                 xhr.$form.find('.forgot_close').html('Dismiss');
+                Track(TRACK_FORGOT);
                 return false;
             }
         }, xhr);
@@ -834,6 +923,7 @@
                 xhr.$form.trigger('reset');
                 xhr.$form.find('fieldset, input').hide();
                 xhr.$form.find('.success').show();
+                Track(TRACK_RESET);
                 return false;
             }
         }, xhr);
@@ -875,6 +965,7 @@
                     } else {
                         // ineligible
                         enter(true);
+                        Track(TRACK_ENTER_DUPLICATE);
                         return false;
                     }
                     return true;
@@ -890,6 +981,7 @@
                 rd.db('ineligible', true, response.midnight * 1000);
                 // this will send us to #thanks since we've set environment variables:
                 enter();
+                Track(TRACK_ENTER);
             }
         }, xhr);
 
@@ -950,6 +1042,18 @@
             }
         }
 
+        //
+        //
+        //
+        //
+        // Requires:
+        // • jQuery to be loaded,
+        // • `debounce` utility function
+        // • document to be ready
+        //
+        //
+        //
+        //
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
@@ -964,6 +1068,7 @@
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
+        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
         /**
          * BetterRecipes
@@ -976,61 +1081,105 @@
         }, 100, true));
 
         /**
-         * BetterRecipes
+         * BetterRecipes::Ad Units
          *
-         * Ad Units
+         * June Media is using OpenX/ReviveAds + Yieldbot.  Refreshing these types of
+         * tags is not trivial, neither party provide an easily documented way to perform
+         * ad refreshes.
+         *
+         * Limitations:
+         * • OpenX/Revive will replace whatever DOM object with a matching id="" with
+         *   the ad tag's generated, usually iFrame, DOM element.  This makes it
+         *   difficult to refresh the ad unit.
+         *
+         * Approach
+         * Since the matching id="" DOM element is replaced, we must create the DOM element
+         * on the fly.
+         *
          */
-        // Yieldbot.com Intent Tag
+
+        var // Do not allow ads to be refreshed more than once every AD_REFRESH_TIME_LIMIT ms
+            AD_REFRESH_TIME_LIMIT = 4000,
+            // keep an internal DEEP copy of OX_ads so that we can use when we refresh
+            rd_OX_ads = [];
+
+        // on DOM ready, create the nested divs with the appropriate id, derrived from data-id
+        function resetAdZones() {
+            $('.ad').each(function(i, e) {
+                var $e = $(e);
+                if (!$e.data('id')) {
+                    return;
+                }
+                $e.empty();
+                $e.append($('<div>').attr('id', $e.data('id')));
+            });
+        }
+
+        function _refreshAds() {
+            resetAdZones();
+            rd_OX_ads.forEach(function(a) {
+                w['OX'].load(a);
+            });
+        }
+
+        // export this to global jds context
+        var refreshAds = jds['refreshAds'] = throttle(_refreshAds, AD_REFRESH_TIME_LIMIT);
+
+        // initialize the ad zones
+        resetAdZones();
+
+        // Yieldbot.com Intent Tag (fire immediately)
         $.ajax({
             url: '//cdn.yldbt.com/js/yieldbot.intent.js',
             dataType: 'script',
             cache: true
         })
-        .done(function(data, textStatus, jqXHR) {
-            rd.log('Yieldbot loaded.');
-            var yieldbot = w['yieldbot'];
-            yieldbot.pub('d45f');
-            yieldbot.defineSlot('LB');
-            yieldbot.defineSlot('MR');
-            yieldbot.enableAsync();
-            yieldbot.go();
-            w['OX_ads'] = [{
-                // Header - 728x90
-                'slot_id': '537278266_728x90_ATF',
-                'auid': '537278266',
-                'vars': yieldbot.getSlotCriteria('LB')
-            }, {
-                // Right Rail Above the fold - 300x250
-                'slot_id': '537278268_300x250_ATF',
-                'auid': '537278268',
-                'vars': yieldbot.getSlotCriteria('MR')
-            }, {
-                // Right Rail Below the Fold 300x250
-                'slot_id': '537278269_300x250_BTF',
-                'auid': '537278269'
-            }, {
-                // Footer - 728x90
-                'slot_id': '537278267_728x90_BTF',
-                'auid': '537278267'
-            }];
-            $.ajax({
-                url: '//ox-d.junemedia.com/w/1.0/jstag',
-                dataType: 'script',
-                cache: true
-            })
             .done(function(data, textStatus, jqXHR) {
-                rd.log('OpenX JavaScript Loaded');
+                rd.log('Yieldbot loaded.');
+                var yieldbot = w['yieldbot'];
+                yieldbot.pub('d45f');
+                yieldbot.defineSlot('LB');
+                yieldbot.defineSlot('MR');
+                yieldbot.enableAsync();
+                yieldbot.go();
+                w['OX_ads'] = [{
+                    // Header - 728x90
+                    'slot_id': '537278266_728x90_ATF',
+                    'auid': '537278266',
+                    'vars': yieldbot.getSlotCriteria('LB')
+                }, {
+                    // Right Rail Above the fold - 300x250
+                    'slot_id': '537278268_300x250_ATF',
+                    'auid': '537278268',
+                    'vars': yieldbot.getSlotCriteria('MR')
+                }, {
+                    // Right Rail Below the Fold 300x250
+                    'slot_id': '537278269_300x250_BTF',
+                    'auid': '537278269'
+                }, {
+                    // Footer - 728x90
+                    'slot_id': '537278267_728x90_BTF',
+                    'auid': '537278267'
+                }];
+                // deep copy to our internal rd_OX_ads
+                $.extend(true, rd_OX_ads, w['OX_ads']);
+                $.ajax({
+                    url: '//ox-d.junemedia.com/w/1.0/jstag',
+                    dataType: 'script',
+                    cache: true
+                })
+                    .done(function(data, textStatus, jqXHR) {
+                        rd.log('OpenX JavaScript Loaded');
+                    })
+                    .fail(function(jqXHR, textStatus, errorThrown) {
+                        rd.error('OpenX JavaScript failed to load');
+                    });
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
-                rd.error('OpenX JavaScript failed to load');
+                rd.error('Yieldbot failed to load');
             });
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            rd.error('Yieldbot failed to load');
-        });
 
-
-
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
         // BREAK OUT INTO a betterrecipes.js
@@ -1048,12 +1197,11 @@
 
     } // end ready()
 
-
-
     /**
      * Expose global context hooks into jds.*
      */
     jds['gtm'] = GTM;
+    jds['track'] = Track;
     jds['solvemedia'] = SolveMedia;
 
 
@@ -1065,7 +1213,7 @@
     (l = function() {
         // rd.log('Checking for jQuery '+i);
         if (!w[$]) {
-            (!i++) && (t = setInterval(l, 50)); // check every 50 milliseconds
+            (!i++) && (t = setInterval(l, 16)); // check every 16 milliseconds
             return;
         }
         // rd.warn('jQuery FOUND after '+i+' intervals!')

@@ -1,6 +1,20 @@
 <?php
     extract($data);
     $is_todays_prize = date('Y-m-d') == $prize['date'];
+    $tag_img = @$prize['img1']
+        ? sprintf('<img%s%s%s/>',
+            ' src="' . $prize['img1'] . '"',
+            @$prize['img2'] ? ' data-img2="' . $prize['img2'] .'"' : '',
+            @$prize['img3'] ? ' data-img3="' . $prize['img3'] .'"' : ''
+            )
+        : '';
+    $tag_desc = @$prize['desc1']
+        ? sprintf('<p%s%s>%s</p>',
+            @$prize['desc2'] ? ' data-desc2="' . safeAttr($prize['desc2']) . '"' : '',
+            @$prize['desc3'] ? ' data-desc3="' . safeAttr($prize['desc3']) . '"' : '',
+            safeHtml($prize['desc1'])
+            )
+        : '';
 ?>
 <div id="prize" class="frame">
 <? if (@$prize): ?>
@@ -10,10 +24,10 @@
      --><? if ($is_todays_prize) echo '&nbsp;| <span>Win today’s prize</span>'; ?><!-- NO GAP
      --></h3>
     <div class="prize"><!-- NO GAP
-     --><img src="<?= $prize['img1'] ?>" data-img2="<?= @$prize['img2'] ?>" data-img3="<?= @$prize['img3'] ?>"/><!-- NO GAP
+     --><?= $tag_img ?><!-- NO GAP
      --><div class="info"><!-- NO GAP
          --><h1><?= $prize['title'] ?></h1><!-- NO GAP
-         --><p data-desc2="<?= safeAttr(@$prize['desc2']) ?>" data-desc3="<?= safeAttr(@$prize['desc3']) ?>"><?= $prize['desc1'] ?></p><!-- NO GAP
+         --><?= $tag_desc ?><!-- NO GAP
          --><div class="alert"></div><!-- NO GAP
          --><?php if ($is_todays_prize): ?><!-- NO GAP
          --><form id="prize_form" class="submit" action="/api/enter" method="POST"><!-- NO GAP

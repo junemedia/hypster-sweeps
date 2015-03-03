@@ -1,5 +1,6 @@
 <? extract($data); ?>
 <!DOCTYPE html>
+<html>
 <head>
 <title><?= safeHtml(@$meta['title'] ? $meta['title'] : @$meta['og:title']) ?></title>
 <meta name="viewport" content="width=device-width"/>
@@ -20,7 +21,7 @@
     <header>
         <div class="wrap">
             <a href="http://www.betterrecipes.com/" class="logo">BetterRecipes</a>
-            <div id="537278266_728x90_ATF" class="ad"></div>
+            <div data-id="537278266_728x90_ATF" class="ad"></div>
             <a class="menu"></a>
         </div>
         <nav><!-- NO GAP
@@ -49,13 +50,13 @@
         </div><!-- NO GAP
         --><div class="rail">
         <!-- Right Rail Ad Units -->
-            <div id="537278268_300x250_ATF"></div>
-            <div id="537278269_300x250_BTF"></div>
+            <div data-id="537278268_300x250_ATF" class="ad"></div>
+            <div data-id="537278269_300x250_BTF" class="ad"></div>
         </div>
     </div><!-- /.wrap -->
     <footer>
         <div class="wrap">
-            <div id="537278267_728x90_BTF" class="ad"></div>
+            <div data-id="537278267_728x90_BTF" class="ad"></div>
             ©<?= ' '.date('Y').' ' ?>June Media Inc
             <a href="http://www.betterrecipes.com/privacy">Privacy Policy</a>
             <a href="http://www.betterrecipes.com/terms">Terms of Service</a>
