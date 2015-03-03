@@ -45,7 +45,7 @@ class Api extends FrontendController
 
         $ip = $this->input->ip_address();
 
-        $this->load->library('solvemedia');
+        $this->load->library('SolveMedia');
         $solve = $this->solvemedia->solve($ip, $challenge, $answer);
 
         if (!$solve['valid']) {
