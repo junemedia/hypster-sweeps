@@ -50,35 +50,37 @@ $route['prize/(:any)']           = 'main/prize/$1';
 
 // Private User/Auth HTML Requests
 $route['profile']                = 'user/profile';
-$route['verify/(:any)']          = 'user/verify/$1'; // anon OK
-$route['reset/(:any)']           = 'user/reset/$1';  // reset password (anon OK)
+$route['verify/(:any)']          = 'user/verify/$1';        // anon OK
+$route['reset/(:any)']           = 'user/reset/$1';         // reset password (anon OK)
 
 // Private JSON API Requests
 $route['api/eligible']           = 'api/eligible';
 $route['api/enter']              = 'api/enter';
 $route['api/logout']             = 'api/logout';
-$route['api/verify']             = 'api/verify';    // generate a new verification email (logged in)
+$route['api/verify']             = 'api/verify';            // generate a new verification email (logged in)
 
 // Public JSON API Requests
-$route['api/captcha']            = 'api/captcha';   // prove your human
+$route['api/captcha']            = 'api/captcha';           // prove your human
 $route['api/signup']             = 'api/signup';
 $route['api/login']              = 'api/login';
-$route['api/reset']              = 'api/reset';     // reset password (anonymous, with token)
+$route['api/reset']              = 'api/reset';             // reset password (anonymous, with token)
 $route['api/forgot']             = 'api/forgot';
 
 // Admin Area
 $route['admin']                  = 'admin/index';           // dashboard
 $route['admin/sweepstakes']      = 'admin/contests';        // list view
-$route['admin/prize/(:num)']     = 'admin/prize/$1';        // GET/HTML of prize detail or 0 for new
+$route['admin/prize/(:num)']     = 'admin/prize/$1';        // GET/html: of prize detail or 0 for new
+$route['admin/thank']            = 'admin/thank';           // GET/html: display form for each site's thank you HTML
 
 // Admin JSON API Requests
-// $route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/JSON list flight date prizes accepts sorting
-// $route['admin/prizes/(:any)']    = 'admin/prizes/$1';       // GET/JSON (accepts sorting/filtering)
-$route['admin/prize']            = 'admin/upsert';          // POST/JSON get or create/update a prize
-$route['admin/contest/add']      = 'admin/addContest';      // POST/JSON add a contest (flight date) to a prize
-$route['admin/contest/del']      = 'admin/delContest';      // POST/JSON remove a future contest (flight date) from a prize
-$route['admin/contest/alt']      = 'admin/altContest';      // POST/JSON pick an alternate winner for a contest
-$route['admin/similar']          = 'admin/similar';         // POST/JSON: return prizes with similar title or images
+// $route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/json: list flight date prizes accepts sorting
+// $route['admin/prizes/(:any)']    = 'admin/prizes/$1';       // GET/json: (accepts sorting/filtering)
+$route['admin/prize']            = 'admin/upsert';          // POST/json: get or create/update a prize
+$route['admin/contest/add']      = 'admin/addContest';      // POST/json: add a contest (flight date) to a prize
+$route['admin/contest/del']      = 'admin/delContest';      // POST/json: remove a future contest (flight date) from a prize
+$route['admin/contest/alt']      = 'admin/altContest';      // POST/json: pick an alternate winner for a contest
+$route['admin/thank/(:num)']     = 'admin/thankUpdate';     // POST/json: update the HTML of a site_id’s thank you page
+// $route['admin/similar']          = 'admin/similar';         // POST/json: return prizes with similar title or images
 
 // Public General/Specific Channel HTML Requests
 $route['default_controller']     = 'main';

@@ -24,7 +24,7 @@ class Admin extends AdminController
         // // Align the dates so that month will end flush to a 7-day calendar  row
         // $begin_date = $this->closestModXDate(strtotime('8 days ago'), 7);
         $begin_date = date('Y-m-d', strtotime('2 Sundays ago'));
-        $end_date   = date('Y-m-d', strtotime('2 Sundays ago') + 86400*7*9 - 86400); // 9 weeks
+        $end_date   = date('Y-m-d', strtotime('2 Sundays ago') + 86400 * 7 * 9 - 86400); // 9 weeks
         // $end_date   = date('Y-m-t', strtotime('+2 months'));
 
         $contests = $this->adminModel->getContestsByDateRange($begin_date, $end_date);
@@ -99,6 +99,19 @@ class Admin extends AdminController
                 show_404();
                 break;
         }
+    }
+
+    /**
+     * GET/html: thank you page HTML (update form for all sites)
+     *
+     * @return  html
+     */
+    public function thank()
+    {
+        $this->load->model('adminModel');
+        $data['nav_thank'] = true;
+        $data['sites']     = $this->adminModel->getSites();
+        return $this->loadView(array('admin/thanks'), $data);
     }
 
     /**

@@ -19,7 +19,7 @@ class Api extends FrontendController
     }
 
     /**
-     * Evaluate user's response to Solve Media's captcha
+     * POST/json: Evaluate user's response to Solve Media's captcha
      *
      * Anonymous is OK, so it is safe to use this before a login/signup form.  Session
      * will only be created if user's response is valid.
@@ -63,6 +63,7 @@ class Api extends FrontendController
     }
 
     /**
+     * POST/json: Check Eligibility
      *
      * Must return "midnight" in successful JSON response so that
      * localStorage can expire at the correct time: EST midnight
@@ -93,7 +94,7 @@ class Api extends FrontendController
     }
 
     /**
-     * Enter user into the contest
+     * POST/json: Enter user into the contest
      *
      * Must return "midnight" in successful JSON response so that
      * localStorage can expire at the correct time: EST midnight
@@ -119,26 +120,36 @@ class Api extends FrontendController
         // Enter the user into the contest
         $this->load->model('prizeModel');
 
-        // Using INSERT IGNORE, CI cannot tell us the affected_rows()
-        // or anything else useful here.
-        // So, if $success evaluates to true, then assume the user
-        // has been entered into the contest.
+        // Thank you page HTML snippet on success;
+        // null if successful but no thank you copy;
+        // (int) 0 if error;
+        // (int) -1 if duplicate
         $success = $this->prizeModel->enter(
             $user_id,
             $this->site_id
         );
 
-        if (!$success) {
-            return $this->json(XHR_ERROR, 'We encountered an error while trying to enter you into this contest. Please try again later.');
+        switch (true) {
+            case $success === null:
+            case strlen($success) > 0:
+                $r['html'] = $success;
+                $r['midnight'] = strtotime('tomorrow');
+                return $this->json(XHR_OK, $r);
+            case $success === -1:
+                // duplicate
+                $r['midnight'] = strtotime('tomorrow');
+                return $this->json(XHR_DUPLICATE, 'You have already entered today.');
+                break;
+            default:
+            case $success === 0:
+                // failed for a reason other than duplicate
+                return $this->json(XHR_ERROR, 'We encountered an error while trying to enter you into this contest. Please try again later.');
+                break;
         }
-
-        $r['midnight'] = strtotime('tomorrow');
-
-        return $this->json(XHR_OK, $r);
     }
 
     /**
-     * Register/update a user
+     * POST/json: Register/update a user
      *
      * This can be called to update profile with the address requirements
      * or to create a user from scratch.
@@ -247,7 +258,7 @@ class Api extends FrontendController
     }
 
     /**
-     * Authenticate user
+     * POST/json: Authenticate user
      *
      * Accept email/password; return JSON of eligible: true/false
      *
@@ -304,7 +315,7 @@ class Api extends FrontendController
     }
 
     /**
-     * Reset password using a token
+     * POST/json: Reset password using a token
      *
      * Authenticated users can change their password in /profile
      *
@@ -332,7 +343,7 @@ class Api extends FrontendController
     }
 
     /**
-     * (Re)send a verificaiton email
+     * POST/json: (Re)send a verificaiton email
      *
      * Only used for logged in users.
      *
@@ -358,9 +369,19 @@ class Api extends FrontendController
         $this->load->library('email');
         $this->load->library('parser');
 
+        // find correct "From:" in config/project.php:
+        $froms = config_item('from');
+        if (@$froms[$this->site_slug]) {
+            $from_email = $froms[$this->site_slug]['email'];
+            $from_name  = $froms[$this->site_slug]['name'];
+        } else {
+            $from_email = $froms['default']['email'];
+            $from_name  = $froms['default']['name'];
+        }
+
         $params = array('link' => 'http://' . $_SERVER['HTTP_HOST'] . '/verify/' . $token);
         $this->email->clear();
-        $this->email->from(config_item('from_email'), config_item('from_name'));
+        $this->email->from($from_email, $from_name);
         $this->email->to($email);
         $this->email->subject('Please Verify Your Email Address');
         $this->email->message($this->parser->parse('../templates/verify', $params, true));
@@ -370,7 +391,7 @@ class Api extends FrontendController
     }
 
     /**
-     * Execute a forgot password request
+     * POST/json: Execute a forgot password request
      *
      *
      */
@@ -394,9 +415,19 @@ class Api extends FrontendController
         $this->load->library('email');
         $this->load->library('parser');
 
+        // find correct "From:" in config/project.php:
+        $froms = config_item('from');
+        if (@$froms[$this->site_slug]) {
+            $from_email = $froms[$this->site_slug]['email'];
+            $from_name  = $froms[$this->site_slug]['name'];
+        } else {
+            $from_email = $froms['default']['email'];
+            $from_name  = $froms['default']['name'];
+        }
+
         $params = array('link' => 'http://' . $_SERVER['HTTP_HOST'] . '/reset/' . $token);
         $this->email->clear();
-        $this->email->from(config_item('from_email'), config_item('from_name'));
+        $this->email->from($from_email, $from_name);
         $this->email->to($email);
         $this->email->subject('Reset Your June Media Sweepstakes Password');
         $this->email->message($this->parser->parse('../templates/reset', $params, true));

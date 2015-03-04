@@ -19,13 +19,13 @@
 </head>
 <body>
     <header>
-        <div class="wrap">
+        <div>
             <a href="http://www.betterrecipes.com/" class="logo">BetterRecipes</a>
-            <div data-id="537278266_728x90_ATF" class="ad"></div>
+            <div class="ad" data-id="537278266_728x90_ATF"></div>
             <a class="menu"></a>
         </div>
         <nav><!-- NO GAP
-         --><div class="wrap"><!-- NO GAP
+         --><div><!-- NO GAP
              --><a href="http://www.betterrecipes.com/recipes">Recipes</a><!-- NO GAP
              --><a href="http://www.betterrecipes.com/blogs/daily-dish">The Daily Dish</a><!-- NO GAP
              --><a href="http://www.betterrecipes.com/contests">Contests</a><!-- NO GAP
@@ -38,7 +38,7 @@
          --></div><!-- NO GAP
      --></nav>
     </header>
-    <div id="jds" class="wrap <?= $site_slug ?>">
+    <div id="jds" class="<?= $site_slug ?>">
         <div class="main">
         <!-- THIS SHOULD EVENTUALLY BE PART OF THE ADMIN -->
         <a class="banner" href="/"><span>Enter to win prizes daily</span></a>
@@ -50,13 +50,13 @@
         </div><!-- NO GAP
         --><div class="rail">
         <!-- Right Rail Ad Units -->
-            <div data-id="537278268_300x250_ATF" class="ad"></div>
-            <div data-id="537278269_300x250_BTF" class="ad"></div>
+            <div class="ad" data-id="537278268_300x250_ATF"></div>
+            <div class="ad" data-id="537278269_300x250_BTF"></div>
         </div>
-    </div><!-- /.wrap -->
+    </div>
     <footer>
-        <div class="wrap">
-            <div data-id="537278267_728x90_BTF" class="ad"></div>
+        <div>
+            <div class="ad" data-id="537278267_728x90_BTF"></div>
             ©<?= ' '.date('Y').' ' ?>June Media Inc
             <a href="http://www.betterrecipes.com/privacy">Privacy Policy</a>
             <a href="http://www.betterrecipes.com/terms">Terms of Service</a>

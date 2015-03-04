@@ -223,4 +223,19 @@ class AdminModel extends CI_Model
         return @$result['error'] ? $result['error'] : $result;
     }
 
+    /**
+     * Return all `site` rows including the `thank` column
+     *
+     * @param   integer $prize_id
+     * @param   string  $date
+     *
+     * @return  boolean
+     */
+    public function getSites()
+    {
+        return $this->db
+                    ->get('site')
+                    ->result_array();
+    }
+
 }

@@ -21,6 +21,7 @@ module.exports = function(grunt) {
                     '../src/js/rd.log.js',
                     '../src/js/rd.cookie.js',
                     '../src/js/rd.db.js',
+                    '../src/js/br.js',
                     '../src/js/sweeps.js'
                 ]
             },

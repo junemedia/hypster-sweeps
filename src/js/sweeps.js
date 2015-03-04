@@ -4,7 +4,55 @@
 
 // This may run at any time.  Since we rely on jQuery, we must wait until
 // it is defined.
-(function(w, $, m, l, t, i) {
+(function(w, $, m, BR, l, t, i) {
+
+    // Reference the global BR object
+    BR = w[BR];
+
+    /**
+     * jds context Globals
+     */
+    var ROADUNBLOCKED, // holds whether or not the captcha (Solve Media or Selectable Media) has been passed
+        ONE_YEAR = 1000 * 60 * 60 * 24 * 365,
+        GENERIC_AJAX_ERROR = 'An unexpected error has occurred. Please try again.',
+
+        // XHR "status" response codes (see app/config/constants.php)
+        XHR_OK = 1,
+        XHR_ERROR = 2,
+        XHR_AUTH = 3,
+        XHR_INVALID = 4,
+        XHR_DUPLICATE = 5,
+        XHR_EXPIRED = 6,
+        XHR_NOT_FOUND = 7,
+        XHR_INCOMPLETE = 8,
+        XHR_HUMAN = 9,
+
+        // Event hook registration (used mostly for GTM events and refreshAds)
+        Events = BR.hook({
+            enterAnonymous: 'enterAnonymous', // anonymous user clicks on the "Enter Now" button.
+            signup: 'signup', // user registered a new account successfully
+            signupFail: 'signupFail', // user failed to register a new account
+            login: 'login', // user authenticates successfully
+            loginFail: 'loginFail', // user failed to authenticate
+            enter: 'enter', // authenticated user successfully entered into today’s contest
+            enterDuplicate: 'enterDuplicate', // authenticated user re-entered into today’s contest
+            enterFail: 'enterFail', // authenticated user failed to enter into today’s contest for a reason other than duplicate
+            forgot: 'forgot', // anonymous user successfully entered his/her email and triggered a password reset email
+            reset: 'reset', // anonymous user successfully reset his/her password
+            verify: 'verify', // authenticated or anonymous user successfully verified his/her email address (verification email sent after new signup or email address change via profile update)
+            verifyRequest: 'verifyRequest', // authenticated user requested to verify his/her email address
+            profileUpdate: 'profileUpdate', // authenticated user updated his/her profile
+            logout: 'logout', // authenticated user logs in
+            slideshow: 'slideshow' // next/prev on a slideshow/carousel
+        }),
+
+        refreshAds = BR.refreshAds,
+
+        // UI elements
+        $name, // inside the $profile_bar
+        $profile_bar,
+        $verify;
+
 
     /**
      * Utility Functions (thank you Underscore.js)
@@ -17,12 +65,12 @@
         var timeout;
         return function() {
             var context = this,
-                args = arguments;
-            var later = function() {
-                timeout = null;
-                if (!immediate) func.apply(context, args);
-            };
-            var callNow = immediate && !timeout;
+                args = arguments,
+                later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                },
+                callNow = immediate && !timeout;
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
@@ -57,48 +105,6 @@
         $(w).scrollTop(i || 0);
     }
 
-
-
-    /**
-     * jds context Globals
-     */
-    var ROADUNBLOCKED, // holds whether or not the captcha (Solve Media or Selectable Media) has been passed
-        ONE_YEAR = 1000 * 60 * 60 * 24 * 365,
-        GENERIC_AJAX_ERROR = 'An unexpected error has occurred. Please try again.',
-
-        // XHR "status" response codes (see app/config/constants.php)
-        XHR_OK = 1,
-        XHR_ERROR = 2,
-        XHR_AUTH = 3,
-        XHR_INVALID = 4,
-        XHR_DUPLICATE = 5,
-        XHR_EXPIRED = 6,
-        XHR_NOT_FOUND = 7,
-        XHR_INCOMPLETE = 8,
-        XHR_HUMAN = 9,
-
-        // TRACKing status strings (used for GTM events)
-        TRACK_ENTER_ANONYMOUS = 'enterAnonymous', // anonymous user clicks on the "Enter Now" button.
-        TRACK_SIGNUP = 'signup', // user registered a new account successfully
-        TRACK_SIGNUP_FAIL = 'signupFail', // user failed to register a new account
-        TRACK_LOGIN = 'login', // user authenticates successfully
-        TRACK_LOGIN_FAIL = 'loginFail', // user failed to authenticate
-        TRACK_ENTER = 'enter', // authenticated user successfully entered into today’s contest
-        TRACK_ENTER_DUPLICATE = 'enterDuplicate', // authenticated user re-entered into today’s contest
-        TRACK_ENTER_FAIL = 'enterFail', // authenticated user failed to enter into today’s contest for a reason other than duplicate
-        TRACK_FORGOT = 'forgot', // anonymous user successfully entered his/her email and triggered a password reset email
-        TRACK_RESET = 'reset', // anonymous user successfully reset his/her password
-        TRACK_VERIFY = 'verify', // authenticated or anonymous user successfully verified his/her email address (verification email sent after new signup or email address change via profile update)
-        TRACK_VERIFY_REQUEST = 'verifyRequest', // authenticated user requested to verify his/her email address
-        TRACK_PROFILE_UPDATE = 'profileUpdate', // authenticated user updated his/her profile
-        TRACK_LOGOUT = 'logout', // authenticated user logs in
-
-
-        // UI elements
-        $name, // inside the $profile_bar
-        $profile_bar,
-        $verify;
-
     function jds() {
         var args = [],
             method;
@@ -125,7 +131,7 @@
             $('.frame').hide();
             $('#signup').show();
             $('#login_email').trigger('focus');
-            Track(TRACK_ENTER_ANONYMOUS);
+            Events.enterAnonymous();
             return;
         }
 
@@ -134,12 +140,10 @@
         if (entered_contest) {
             if (already_entered) {
                 $('#thanks h2').html('You have already entered today.');
-                // Track(TRACK_ENTER_DUPLICATE);
             }
             $('.frame').hide();
             $('#thanks').show();
             $('.carousel, #winners, .see_all_prizes').hide();
-            // Track(TRACK_ENTER);
         } else {
             $('.frame').hide();
             $('#prize').show();
@@ -159,7 +163,6 @@
             dataType: 'json'
         }).done(function(data) {
             if (!data || !data.status || data.status != XHR_OK) {
-                // logout, but do not change any state
                 return logout();
             }
             $profile_bar.show();
@@ -169,7 +172,7 @@
         });
     }
 
-    function logout(evt) {
+    function logout() {
         $.ajax({
             type: 'POST',
             url: '/api/logout',
@@ -183,15 +186,7 @@
             rd.cookie('sid', null);
             ROADUNBLOCKED = null;
             $name.html('');
-            // only change state (enter) if this is a button click
-            // otherwise, it's coming from somewhere like getEligibility()
-            // if (evt) {
-            //     // enter(); // client doesn't want to go to login screen on logout
-            //     // send to splash screen
-            //     // $('.frame').hide();
-            //     // $('#splash').show();
-            // }
-            Track(TRACK_LOGOUT);
+            Events.logout();
         });
         return false;
     }
@@ -205,18 +200,77 @@
 
         function done(data) {
             if (data.err) {
-                return fail(data.msg);
+                return fail(data.message);
             }
             $verify.html('Verification email sent.');
-            Track(TRACK_VERIFY_REQUEST);
+            Events.verifyRequest();
         }
 
         function fail(msg) {
-            $verify.html('Failed to send, please try again later.');
+            $verify.html(GENERIC_AJAX_ERROR);
             // no tracking event here
         }
         return false;
     }
+
+    /**
+     * Report all of our Events to GTM and request a refreshAds()
+     *
+     * This method is bind’ed to all `Events`.  If you want to do something
+     * else for a specific event, you can either bind another event hook:
+     *
+     *      Events.slideshow(function(evt) {
+     *          console.log('Yay, I just did a ' + evt + ' event!');
+     *      });
+     *
+     * - or -
+     *
+     * You can modify the behavoir of this Track callback based on the `event`
+     * string parameter.
+     *
+     * @param   string  event   Tracking event string
+     *
+     * @return  boolean
+     */
+    function basicEventHandler(event) {
+
+        // send the event to GTM
+        var matched = !GTM(event); // boolean, was GTM event found?
+
+        // issue a request to refresh the ad tags
+        refreshAds();
+
+        // VERBOSE:
+        // log whether or not this event was matched in GTM
+        rd.debug('GTM ' + event + ': ' + (matched ? 'successfully matched' : 'FAILED to match against') + ' a GTM event');
+
+    }
+    // Bind Track()’ing to all of our events
+    for (var i in Events) {
+        Events[i](basicEventHandler);
+    }
+
+
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // vvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
     /**
      * Google Tag Manager (GTM)
@@ -307,57 +361,28 @@
         }
     } // /GTM
 
-    /**
-     * Report tracking events
-     *
-     * @param   string  event   Tracking event string
-     *
-     * @return  boolean
-     */
-    function Track(event) {
-        var matched = !GTM(event); // boolean for whether the GTM event was matched
 
-        // refresh the ads on any JDS event
-        jds['refreshAds']();
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
+    // THIS COULD BE MOVED TO br.js
 
-        // DEBUG:
-        // expose every event to GTM
-        rd[matched ? 'log' : 'warn']('GTM ' + event + ': ' + (matched ? 'successfully matched' : 'FAILED to match against') + ' a GTM event');
-
-        // // Do something different for specific events?
-        // switch (event) {
-        //     case TRACK_ENTER_ANONYMOUS:
-        //         break;
-        //     case TRACK_SIGNUP:
-        //         break;
-        //     case TRACK_SIGNUP_FAIL:
-        //         break;
-        //     case TRACK_LOGIN:
-        //         break;
-        //     case TRACK_LOGIN_FAIL:
-        //         break;
-        //     case TRACK_ENTER:
-        //         break;
-        //     case TRACK_ENTER_DUPLICATE:
-        //         break;
-        //     case TRACK_ENTER_FAIL:
-        //         break;
-        //     case TRACK_FORGOT:
-        //         break;
-        //     case TRACK_RESET:
-        //         break;
-        //     case TRACK_VERIFY:
-        //         break;
-        //     case TRACK_VERIFY_REQUEST:
-        //         break;
-        //     case TRACK_PROFILE_UPDATE:
-        //         break;
-        //     case TRACK_LOGOUT:
-        //         break;
-        //     default:
-        //         break;
-        // }
-    }
 
 
     /**
@@ -579,6 +604,7 @@
             $scroller.animate({
                 scrollLeft: x
             }, 400);
+            Events.slideshow();
         }
 
         function goNext(evt) {
@@ -593,6 +619,7 @@
             $scroller.animate({
                 scrollLeft: x
             }, 400);
+            Events.slideshow();
         }
 
         function scrollback(evt) {
@@ -638,8 +665,7 @@
             updateWidthCarouselAndScrollerLeftMax();
         }
 
-        $scroller.on('scroll', throttle(scrollback, 200));
-        // $scroller.on('scroll', scrollback);
+        $scroller.on('scroll', throttle(scrollback, 32));
         $('window').on('resize', resize);
 
     }
@@ -688,21 +714,27 @@
             if (IMG[i] || DESC[i]) {
                 FRAMES.push(i);
                 if (!IMG[i]) {
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
                     IMG[i] = IMG[i - 1];
                 }
                 if (!DESC[i]) {
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
-                    // THIS IS NOT GOOD ENOUGH
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
+                    // THIS IS NOT GOOD ENOUGH -- DO BETTER
                     DESC[i] = DESC[i - 1];
                 }
             }
@@ -738,6 +770,7 @@
                 .removeClass('cur' + CUR_FRAME_INDEX)
                 .addClass('cur' + cur);
             CUR_FRAME_INDEX = cur;
+            Events.slideshow();
         }
 
         function prev(e) {
@@ -853,7 +886,7 @@
                 rd.db('name', response.name, ONE_YEAR);
                 $name.html(response.name);
                 $profile_bar.show();
-                Track(TRACK_LOGIN);
+                Events.login();
                 if (response.eligible) {
                     enter();
                 } else {
@@ -861,12 +894,12 @@
                     rd.db('ineligible', true, response.midnight * 1000); // mark that we are ineligible until midnight tonight
                     // shows #thanks, but with "You have ALREADY entered today…"
                     enter(true);
-                    Track(TRACK_ENTER_DUPLICATE);
+                    Events.enterDuplicate();
                 }
                 return false;
             },
             fail: function() {
-                Track(TRACK_LOGIN_FAIL);
+                Events.loginFail();
             }
         }, xhr);
 
@@ -886,11 +919,11 @@
                 xhr.$form.trigger('reset');
 
                 if (xhr.$form.hasClass('profile')) {
-                    Track(TRACK_PROFILE_UPDATE);
+                    Events.profileUpdate();
                     // handle the reload on /profile page
                     window.location.href = window.location.href;
                 } else {
-                    Track(TRACK_SIGNUP);
+                    Events.signup();
                     // show the #prize_form
                     enter();
                 }
@@ -899,19 +932,19 @@
             fail: function() {
                 // or could be tracked as update fail, but let's not split hairs
                 // or could also be captcha on first signup
-                Track(TRACK_SIGNUP_FAIL);
+                Events.signupFail();
             }
         }, xhr);
 
         $('#forgot_form').on('submit', {
             success: function(response) {
-                xhr.$alert.show().html(response.msg);
+                xhr.$alert.show().html(response.message);
                 xhr.$form.trigger('reset');
                 xhr.$form.find('fieldset.login').hide();
                 xhr.$form.find('p').hide();
                 xhr.$submit.hide();
                 xhr.$form.find('.forgot_close').html('Dismiss');
-                Track(TRACK_FORGOT);
+                Events.forgot();
                 return false;
             }
         }, xhr);
@@ -919,53 +952,25 @@
         $('#reset_form').on('submit', {
             success: function(response) {
                 scrollTop(0);
-                xhr.$alert.show().html(response.msg);
+                xhr.$alert.show().html(response.message);
                 xhr.$form.trigger('reset');
                 xhr.$form.find('fieldset, input').hide();
                 xhr.$form.find('.success').show();
-                Track(TRACK_RESET);
+                Events.reset();
                 return false;
             }
         }, xhr);
 
         $('#prize_form').on('submit', {
-            // prereq: function() {
-            //     if (isLoggedIn()) {
-            //         if (!rd.db('ineligible')) {
-            //             // eligible
-            //             if (!ROADUNBLOCKED) {
-            //                 // Check for roadblock completion (Solve Media)
-            //                 jds.roadblock && jds.roadblock(function() {
-            //                     $('#prize_form').trigger('submit');
-            //                 });
-            //                 return false;
-            //             }
-            //         } else {
-            //             // ineligible
-            //             enter();
-            //             return false;
-            //         }
-            //         return true;
-            //     }
-            //     enter();
-            //     return false;
-            // },
             prereq: function() {
                 if (isLoggedIn()) {
                     if (!rd.db('ineligible')) {
                         // eligible
                         return true;
-                        // if (!ROADUNBLOCKED) {
-                        //     // Check for roadblock completion (Solve Media)
-                        //     jds.roadblock && jds.roadblock(function() {
-                        //         $('#prize_form').trigger('submit');
-                        //     });
-                        //     return false;
-                        // }
                     } else {
                         // ineligible
                         enter(true);
-                        Track(TRACK_ENTER_DUPLICATE);
+                        Events.enterDuplicate();
                         return false;
                     }
                     return true;
@@ -981,7 +986,7 @@
                 rd.db('ineligible', true, response.midnight * 1000);
                 // this will send us to #thanks since we've set environment variables:
                 enter();
-                Track(TRACK_ENTER);
+                Events.enter();
             }
         }, xhr);
 
@@ -1000,7 +1005,8 @@
         $('a.forgot_close').on('click', function() {
             // close the form
             $('#signup').removeClass('forgot');
-            // show all of the things that could be hidden so if they forget password again…
+            // show all of the things that could be hidden so,
+            // if they forget password again…
             var $forgot_form = $('#forgot_form');
             $forgot_form.trigger('reset');
             $forgot_form.find('fieldset, input').show();
@@ -1025,9 +1031,10 @@
         /**
          * Roadblock initialization
          */
-        // Initialize the jds.roadblock with SolveMedia until SelectableMedia comes online
-        // SolveMedia.fire will gracefully exit if ACPuzzle isn't defined/ready
-        // so it's safe to use this as the default captcha even before it's loaded
+        // Initialize the jds.roadblock with SolveMedia until SelectableMedia
+        // comes online SolveMedia.fire will gracefully exit if ACPuzzle isn’t
+        // defined/ready so it's safe to use this as the default captcha even
+        // before it's loaded.
         jds.roadblock = SolveMedia.fire;
 
 
@@ -1037,163 +1044,11 @@
         if (isLoggedIn()) {
             $profile_bar.show();
             if (!rd.db('ineligible')) {
-                // if we know you're ineligble, there's no point in checking with server
+                // if we know you're ineligble, there
+                // is no point in checking with server
                 getEligibility();
             }
         }
-
-        //
-        //
-        //
-        //
-        // Requires:
-        // • jQuery to be loaded,
-        // • `debounce` utility function
-        // • document to be ready
-        //
-        //
-        //
-        //
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-        /**
-         * BetterRecipes
-         *
-         * hamburger opener/closer on mobile devices
-         */
-        $('body>header .menu').on('touchstart selectstart click', debounce(function(evt) {
-            evt.preventDefault();
-            $(this).closest('header').toggleClass('open');
-        }, 100, true));
-
-        /**
-         * BetterRecipes::Ad Units
-         *
-         * June Media is using OpenX/ReviveAds + Yieldbot.  Refreshing these types of
-         * tags is not trivial, neither party provide an easily documented way to perform
-         * ad refreshes.
-         *
-         * Limitations:
-         * • OpenX/Revive will replace whatever DOM object with a matching id="" with
-         *   the ad tag's generated, usually iFrame, DOM element.  This makes it
-         *   difficult to refresh the ad unit.
-         *
-         * Approach
-         * Since the matching id="" DOM element is replaced, we must create the DOM element
-         * on the fly.
-         *
-         */
-
-        var // Do not allow ads to be refreshed more than once every AD_REFRESH_TIME_LIMIT ms
-            AD_REFRESH_TIME_LIMIT = 4000,
-            // keep an internal DEEP copy of OX_ads so that we can use when we refresh
-            rd_OX_ads = [];
-
-        // on DOM ready, create the nested divs with the appropriate id, derrived from data-id
-        function resetAdZones() {
-            $('.ad').each(function(i, e) {
-                var $e = $(e);
-                if (!$e.data('id')) {
-                    return;
-                }
-                $e.empty();
-                $e.append($('<div>').attr('id', $e.data('id')));
-            });
-        }
-
-        function _refreshAds() {
-            resetAdZones();
-            rd_OX_ads.forEach(function(a) {
-                w['OX'].load(a);
-            });
-        }
-
-        // export this to global jds context
-        var refreshAds = jds['refreshAds'] = throttle(_refreshAds, AD_REFRESH_TIME_LIMIT);
-
-        // initialize the ad zones
-        resetAdZones();
-
-        // Yieldbot.com Intent Tag (fire immediately)
-        $.ajax({
-            url: '//cdn.yldbt.com/js/yieldbot.intent.js',
-            dataType: 'script',
-            cache: true
-        })
-            .done(function(data, textStatus, jqXHR) {
-                rd.log('Yieldbot loaded.');
-                var yieldbot = w['yieldbot'];
-                yieldbot.pub('d45f');
-                yieldbot.defineSlot('LB');
-                yieldbot.defineSlot('MR');
-                yieldbot.enableAsync();
-                yieldbot.go();
-                w['OX_ads'] = [{
-                    // Header - 728x90
-                    'slot_id': '537278266_728x90_ATF',
-                    'auid': '537278266',
-                    'vars': yieldbot.getSlotCriteria('LB')
-                }, {
-                    // Right Rail Above the fold - 300x250
-                    'slot_id': '537278268_300x250_ATF',
-                    'auid': '537278268',
-                    'vars': yieldbot.getSlotCriteria('MR')
-                }, {
-                    // Right Rail Below the Fold 300x250
-                    'slot_id': '537278269_300x250_BTF',
-                    'auid': '537278269'
-                }, {
-                    // Footer - 728x90
-                    'slot_id': '537278267_728x90_BTF',
-                    'auid': '537278267'
-                }];
-                // deep copy to our internal rd_OX_ads
-                $.extend(true, rd_OX_ads, w['OX_ads']);
-                $.ajax({
-                    url: '//ox-d.junemedia.com/w/1.0/jstag',
-                    dataType: 'script',
-                    cache: true
-                })
-                    .done(function(data, textStatus, jqXHR) {
-                        rd.log('OpenX JavaScript Loaded');
-                    })
-                    .fail(function(jqXHR, textStatus, errorThrown) {
-                        rd.error('OpenX JavaScript failed to load');
-                    });
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                rd.error('Yieldbot failed to load');
-            });
-
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
-        // BREAK OUT INTO a betterrecipes.js
 
     } // end ready()
 
@@ -1201,9 +1056,7 @@
      * Expose global context hooks into jds.*
      */
     jds['gtm'] = GTM;
-    jds['track'] = Track;
     jds['solvemedia'] = SolveMedia;
-
 
 
     /**
@@ -1237,4 +1090,4 @@
 
 
 
-})(window, 'jQuery', 'jds');
+})(window, 'jQuery', 'jds', 'BR');

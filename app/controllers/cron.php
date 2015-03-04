@@ -100,8 +100,18 @@ class Cron extends CI_Controller
 
         $params['date_pretty'] = date('F j, Y', strtotime($params['date']));
 
+        // find correct "From:" in config/project.php:
+        $froms = config_item('from');
+        if (@$froms[$params['site_slug']]) {
+            $from_email = $froms[$params['site_slug']]['email'];
+            $from_name  = $froms[$params['site_slug']]['name'];
+        } else {
+            $from_email = $froms['default']['email'];
+            $from_name  = $froms['default']['name'];
+        }
+
         // winner email
-        $this->email->from(config_item('from_email'), config_item('from_name'));
+        $this->email->from($from_email, $from_name);
         $this->email->to($params['email']);
         $this->email->bcc(config_item('admin_emails'));
         $this->email->subject($params['site_name'] . ' Winner Notification');

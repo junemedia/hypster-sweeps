@@ -7,12 +7,19 @@
 */
 
 // How long will password reset token and email verification tokens live?
-$config['token_ttl']       = 86400; // 1 day
+$config['token_ttl']                      = 86400; // 1 day
 
-$config['from_name']       = 'June Media Daily Sweepstakes';
-$config['from_email']      = 'win@junemedia.com';
-$config['admin_emails'][]  = 'achalemian@resolute.com';
-// $config['admin_emails'][]  = 'aconforti@resolute.com';
+// Who will be BCC’d on winner emails:
+$config['admin_emails'][]                 = 'achalemian@resolute.com';
+// $config['admin_emails'][]              = 'aconforti@resolute.com';
 
-$config['prize_image_dir'] = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/pimg';
-$config['prize_image_uri'] = '/pimg';
+// The "From:" address for the winner emails:
+// Organized by "site_slug" (`site`.`slug`);
+// If no site slugs match, then "default" will be used.
+$config['from']['betterrecipes']['name']  = 'BetterRecipes Daily Sweepstakes';
+$config['from']['betterrecipes']['email'] = 'win@betterrecipes.com';
+$config['from']['default']['name']        = 'June Media Daily Sweepstakes';
+$config['from']['default']['email']       = 'win@junemedia.com';
+
+$config['prize_image_dir']                = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/pimg';
+$config['prize_image_uri']                = '/pimg';

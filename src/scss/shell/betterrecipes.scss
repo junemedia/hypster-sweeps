@@ -93,9 +93,6 @@ body > header {
         display: none;
     }
     @media all and (max-width: 1000px) {
-        // > .brwrap {
-        //     margin-top: 0;
-        // }
         .logo,
         .ad {
             display: block;
@@ -108,9 +105,6 @@ body > header {
         }
     }
     @media all and (max-width: 727px) {
-        // > .brwrap {
-        //     margin: 0;
-        // }
         .ad {
             display: none;
         }
@@ -331,12 +325,17 @@ footer {
     // b1 = (230 - 255 + 255*.5)/.5 ~= 205
     //
     background: rgba(205, 181, 205, 0.5);
-    padding: 1rem;
+    padding: 1rem 0;
     text-align: center;
     font-size: .85em;
-    a, a:visited, a:hover {
-        color: inherit;
-        margin-left: 1em;
+    a {
+        white-space: nowrap;
+        &,
+        &:visited,
+        &:hover {
+            color: inherit;
+            margin-left: 1em;
+        }
     }
     .ad {
         display: block;

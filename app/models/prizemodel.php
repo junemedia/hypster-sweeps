@@ -106,15 +106,28 @@ class PrizeModel extends CI_Model
         : false;
     }
 
+//
+    //
+    //
+    //
+    //
+    // CONVERT TO SPROC in order to return meaningful results
+    //
+    //
+    //
+    //
+    //
+    //
+
     /**
      * INSERT/enter this user (`user_id`) into the contest (`entry`) table.
      *
-     * @param integer   $user_id
-     * @param integer   $site_id
-     * @param date      $date (optional, default today)
-     * @param time      $time (optional, default now)
+     * @param   integer $user_id
+     * @param   integer $site_id
+     * @param   date    $date (optional, default today)
+     * @param   time    $time (optional, default now)
      *
-     * @return void     we cannot actually get back rows_affected since we're using INSERT IGNORE
+     * @return  mixed   Thank you page HTML snippet on success; null if successful but no thank you copy; (int) 0 if error; (int) -1 if duplicate
      */
     public function enter($user_id, $site_id, $date = null, $time = null)
     {
@@ -126,10 +139,25 @@ class PrizeModel extends CI_Model
             $time = date('H:i:s');
         }
 
+        // // There is no way to get back the number of affected_rows()
+        // // or anything else useful out of this query.
+        // return $this->db->query('INSERT IGNORE INTO `entry` VALUES (?,?,?,?)', // gotta love ORMs
+        //     compact('date', 'user_id', 'site_id', 'time'));
+
         // There is no way to get back the number of affected_rows()
         // or anything else useful out of this query.
-        return $this->db->query('INSERT IGNORE INTO `entry` VALUES (?,?,?,?)', // gotta love ORMs
+        $this->db->query('INSERT IGNORE INTO `entry` VALUES (?,?,?,?)', // gotta love ORMs
             compact('date', 'user_id', 'site_id', 'time'));
+
+        // return the thank you HTML
+        $row = $this->db
+                    ->select('thank')
+                    ->where('id', $site_id)
+                    ->get('site')
+                    ->row_result;
+
+        return @$row['thank'] ? $row['thank'] : null;
+
     }
 
 }

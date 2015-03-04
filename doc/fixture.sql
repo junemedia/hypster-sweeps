@@ -5,9 +5,9 @@ TRUNCATE TABLE `contest`;
 TRUNCATE TABLE `entry`;
 
 
-INSERT INTO `site` (`id`, `slug`, `name`, `domain`)
+INSERT INTO `site` (`id`, `slug`, `name`, `domain`, `gtm`)
 VALUES
-    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com');
+    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com', 'GTM-5VTT4K');
 
 
 INSERT INTO `prize` (`id`, `title`, `img1`, `desc1`, `img2`, `desc2`, `img3`, `desc3`, `award`, `value`, `type`)
