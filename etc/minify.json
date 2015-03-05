@@ -1,10 +1,10 @@
 {
     "mainjs":
     {
-        "js/jds-TIMESTAMP.min.js":
+        "js/betterrecipes-TIMESTAMP.min.js":
         [
             ":async=true",
-            "js/jds.js"
+            "js/betterrecipes.js"
         ]
     },
     "admincss":

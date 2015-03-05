@@ -3,52 +3,68 @@ module.exports = function(grunt) {
 
     'use strict';
 
+    var amdclean = require('amdclean'),
+        fs = require('fs'),
+        amdcleanLogic = function(data) {
+            var outputFile = data.path,
+                intro = fs.readFileSync('../src/js/' + (data.path.match(/admin/) ? 'admin' : 'lib') + '/intro.js'),
+                outro = fs.readFileSync('../src/js/' + (data.path.match(/admin/) ? 'admin' : 'lib') + '/outro.js');
+            fs.writeFileSync(outputFile,
+                intro +
+                amdclean.clean({
+                    'filePath': outputFile,
+                    // 'prefixMode': 'camelCase',
+                    'prefixTransform': function(postNormalizedModuleName, preNormalizedModuleName) {
+                        // somehwat DANGEROUS -- this means that all module names must be unique!
+                        return postNormalizedModuleName.replace(/.*_/,'');
+                    },
+                    'aggressiveOptimizations': true,
+                    'escodegen': {
+                        format: {
+                            indent: {
+                                style: '    '
+                            }
+                        }
+                    },
+                    wrap: false,
+                    'transformAMDChecks': false,
+                    'createAnonymousAMDModule': true,
+                    'removeUseStricts': true
+                }) +
+                outro);
+            // );
+        };
+
+
     // Grunt configuration.
     grunt.initConfig({
 
         pkg: grunt.file.readJSON('package.json'),
 
         source: {
+            js: ['../src/js/**/*.js'],
+            css: ['../src/scss/**/*.scss'],
             php: [{
-                    expand: true,
-                    cwd: '../app/views',
-                    src: [ '**/*.php' ],
-                    dest: '../app/_views'
-            }],
-            css: [ '../src/scss/**/*.scss' ],
-            main: {
-                js: [
-                    '../src/js/rd.log.js',
-                    '../src/js/rd.cookie.js',
-                    '../src/js/rd.db.js',
-                    '../src/js/br.js',
-                    '../src/js/sweeps.js'
-                ]
-            },
-            admin: {
-                js: [
-                    '../src/js/admin.js'
-                ]
-            }
+                expand: true,
+                cwd: '../app/views',
+                src: ['**/*.php'],
+                dest: '../app/_views'
+            }]
         },
 
         watch: {
-            php: {
-                // files: '<%= source.php %>', // this doesn't work for some reason
-                files: [ '../app/views/**/*.php' ],
-                tasks: ['htmlmin:dist']
+            js: {
+                files: '<%= source.js %>',
+                tasks: ['requirejs']
             },
             css: {
                 files: '<%= source.css %>',
                 tasks: ['compass:dist']
             },
-            jsmain: {
-                files: '<%= source.main.js %>',
-                tasks: ['uglify:main']
-            },
-            jsadmin: {
-                files: '<%= source.admin.js %>',
-                tasks: ['uglify:admin']
+            php: {
+                // files: '<%= source.php %>', // this doesn't work for some reason
+                files: ['../app/views/**/*.php'],
+                tasks: ['htmlmin:dist']
             }
         },
 
@@ -81,32 +97,49 @@ module.exports = function(grunt) {
             }
         },
 
-        uglify: {
-            options: {
-                // beautify: true
-            },
-            main: {
-                files: {
-                    '../web/js/jds.js': '<%= source.main.js %>'
+        requirejs: {
+            admin: {
+                options: {
+                    name: 'admin',
+                    baseUrl: '../src/js',
+                    out: '../web/js/admin.js',
+                    optimize: 'uglify',
+                    uglify: {
+                        // beautify: true
+                    },
+                    skipModuleInsertion: true,
+                    onModuleBundleComplete: amdcleanLogic
                 }
             },
-            admin: {
-                files: {
-                    '../web/js/admin.js': '<%= source.admin.js %>'
+            betterrecipes: {
+                options: {
+                    name: 'betterrecipes',
+                    baseUrl: '../src/js',
+                    out: '../web/js/betterrecipes.js',
+                    // optimize: 'uglify',
+                    optimize: 'uglify',
+                    // uglify: {
+                    //     beautify: true
+                    // },
+                    skipModuleInsertion: true,
+                    onModuleBundleComplete: amdcleanLogic
                 }
             }
-        },
+        }
+
     });
 
     // Load the grunt plugins.
     grunt.loadNpmTasks('grunt-contrib-compass');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-inline');
 
     // Register task(s).
-    grunt.registerTask('compile', ['htmlmin', 'compass', 'uglify:main', 'uglify:admin']);
+    grunt.registerTask('compile', ['htmlmin', 'compass', 'requirejs']);
+    grunt.registerTask('build', ['compile']);
     grunt.registerTask('default', ['compile', 'watch']);
 
 };

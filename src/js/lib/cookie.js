@@ -1,8 +1,6 @@
-;(function ( window, document, rd ) {
+define(function() {
 
-    !rd && (window['rd'] = rd = {});
-
-    function cookie (key, value, options) {
+    return function (key, value, options) {
         // key and at least value given, set cookie...
         if (arguments.length > 1 && String(value) !== "[object Object]") {
             !options && (options = {});
@@ -40,12 +38,4 @@
         return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
     }
 
-    // $ || ($ = function() {});
-    // $.cookie = cookie;
-    // $.fn || ($.fn = $.prototype);
-    // $.fn.cookie = cookie;
-
-    // window['rd']['cookie'] = cookie;
-    rd['cookie'] = rd.cookie = cookie;
-
-})( window, document, window['rd'] );
+});
