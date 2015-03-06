@@ -154,7 +154,7 @@ class PrizeModel extends CI_Model
                     ->select('thank')
                     ->where('id', $site_id)
                     ->get('site')
-                    ->row_result;
+                    ->row_array();
 
         return @$row['thank'] ? $row['thank'] : null;
 
