@@ -50,8 +50,10 @@ INSERT INTO `user` (`id`, `email`, `role`, `verified`, `password`, `ip`, `date_r
 VALUES
     -- 1: Adam123
     -- 2: Aconforti123
+    -- 3: Wgrant123
     (1,    'achalemian@resolute.com', 2, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Adam', 'Chalemian', '137 W 25th St', 'New York', 'NY', 10001),
     (2,    'aconforti@resolute.com', 2, 1, X'95B798497FA6C7752EED3E16EED8CC9904BC5BD2', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Angela', 'Conforti','137 W 25th St', 'New York', 'NY', 10001),
+    (3,    'williamg@junemedia.com', 2, 1, X'B903229CD2B55EF123A40230340682684EFE2F24', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'William', 'Grant','137 W 25th St', 'New York', 'NY', 10001),
     (NULL, 'achalemian+1@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Yuri', 'Testikov','7231 Silent Quay', 'Arkansas', 'IL', 62956),
     (NULL, 'achalemian+2@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Joel', 'Rifkin', '4055 Noble Elk Bay', 'Cat Square', 'CT', 06162),
     (NULL, 'achalemian+3@resolute.com', 1, 1, X'D26C0C1998E3CEA784EF8F8835E3970BE2B05D54', 168431411, '2015-01-23 13:10:10', '2015-01-23 14:14:52', 'Justin', 'Pitt','8695 Shady Gate Road', 'Mike Horse', 'NH', 03879),
