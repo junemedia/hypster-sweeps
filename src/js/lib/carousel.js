@@ -16,14 +16,12 @@ define(['./ready', './throttle'], function(ready, throttle) {
 
         $children,
         $last_child,
-        // v
+
         width_scroller,
         width_carousel,
-        scroll_left_max, last_child_width,
-        // index_width_scroller,
-        range_in_view
-        // ^
-    ;
+        scroll_left_max,
+        last_child_width,
+        range_in_view;
 
     ready(function() {
         $carousel = $('.carousel');
@@ -57,7 +55,7 @@ define(['./ready', './throttle'], function(ready, throttle) {
         $next_arrow.on(ON_SELECTSTART_TOUCHSTART, throttle(goNext, 450));
 
         $scroller.on(ON_SCROLL, throttle(scrollback, 32));
-        $(W).on(ON_RESIZE, resize);
+        $(W).on(ON_RESIZE, updateWidthCarouselAndScrollerLeftMax);
 
     });
 
@@ -71,13 +69,11 @@ define(['./ready', './throttle'], function(ready, throttle) {
         last_child_width = $last_child.width();
         // also used to center shiests on load
         width_scroller = last_child_left + last_child_width;
-        // v
+
         width_carousel = $carousel.width()
-        scroll_left_max = width_scroller - width_carousel + 0; // 2 = px of left and right border
-        // ^
-        // index_width_scroller = Math.round(width_scroller / last_child_width);
-        range_in_view = Math.round(width_carousel / last_child_width);
-        // rd.log(i,j);
+        scroll_left_max = width_scroller - width_carousel;
+
+        range_in_view = width_carousel / last_child_width;
     }
 
     function goPrev(evt) {
@@ -98,7 +94,7 @@ define(['./ready', './throttle'], function(ready, throttle) {
     function goNext(evt) {
         var x = $scroller.scrollLeft() + width_carousel * .63;
         if (x >= scroll_left_max) {
-            x = scroll_left_max + 1;
+            x = scroll_left_max + 2; // 2 = px of left and right border
             $carousel.addClass(FLUSH_RIGHT_CLASS);
             $carousel.removeClass(FLUSH_LEFT_CLASS);
         } else {
@@ -111,12 +107,11 @@ define(['./ready', './throttle'], function(ready, throttle) {
     }
 
     function scrollback(evt) {
-        // console.debug('Carousel.scrollback() fired');
-        var cur = $scroller.scrollLeft();
-        if (cur >= scroll_left_max) {
+        var pos = $scroller.scrollLeft();
+        if (pos >= scroll_left_max) {
             $carousel
                 .addClass(FLUSH_RIGHT_CLASS);
-        } else if (cur <= 0) {
+        } else if (pos <= 0) {
             $carousel
                 .addClass(FLUSH_LEFT_CLASS);
         } else {
@@ -128,12 +123,9 @@ define(['./ready', './throttle'], function(ready, throttle) {
         // we need to lazily load all prize images
         // that are in view of the carousel
         // range to load (or check)
-        var i = Math.round(cur / last_child_width),
-            min = i <= 1 ? 0 : (i - 1),
-            max = min + range_in_view;
-        // console.debug(Math.round(min, max));
+        var min = Math.floor(pos / last_child_width),
+            max = min + range_in_view + 1;
         for (var n = min; n <= max; n++) {
-            // console.debug(n);
             var $c = $($children[n]);
             if ($c.length && !$c.data('loaded')) {
                 var img = $c.find('img');
@@ -146,11 +138,6 @@ define(['./ready', './throttle'], function(ready, throttle) {
                     .data('loaded', true);
             }
         }
-    }
-
-    function resize(evt) {
-        // adjust width variables on window.resize
-        updateWidthCarouselAndScrollerLeftMax();
     }
 
 });

@@ -26,9 +26,9 @@
         </div>
         <nav><!-- NO GAP
          --><div><!-- NO GAP
+             --><a href="http://www.betterrecipes.com/">Home</a><!-- NO GAP
              --><a href="http://www.betterrecipes.com/recipes">Recipes</a><!-- NO GAP
              --><a href="http://www.betterrecipes.com/blogs/daily-dish">The Daily Dish</a><!-- NO GAP
-             --><a href="http://www.betterrecipes.com/contests">Contests</a><!-- NO GAP
              --><a href="http://win.betterrecipes.com/" class="on">Sweepstakes</a><!-- NO GAP
              --><form method="GET" action="http://www.betterrecipes.com/search"><!-- NO GAP
                  --><input type="text" name="term" placeholder="Search for recipe" required/><!-- NO GAP

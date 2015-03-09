@@ -38,7 +38,7 @@ define(['./db'], function(db) {
             d['userId'] = db('user_id');
         }
 
-console.debug('ADS_BEING_THOTTLED', !ADS_BEING_THOTTLED);
+        console.debug('ADS_BEING_THOTTLED', !ADS_BEING_THOTTLED);
 
         // Did we successfully refresh the ads, or are they
         // currently being throttled?

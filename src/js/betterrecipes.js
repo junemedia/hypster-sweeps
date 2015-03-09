@@ -134,11 +134,11 @@ define([
     }
 
     function OXSuccess() {
-        console.log('OpenX JavaScript Loaded');
+        console.log('OpenX loaded');
     }
 
     function OXFailure() {
-        console.error('OpenX JavaScript failed to load');
+        console.error('OpenX failed to load');
     }
 
     /**
@@ -174,7 +174,7 @@ define([
     ready(function() {
 
         // hamburger opener/closer on a mobile viewport size
-        $('body>header .menu').on('click selectstart touchstart', debounce(function(evt) {
+        $('body>header .menu').on(ON_CLICK_SELECTSTART_TOUCHSTART, debounce(function(evt) {
             evt.preventDefault();
             $(this).closest('header').toggleClass('open');
         }, 100, true));
