@@ -112,7 +112,9 @@ class FrontendController extends SweepsController
         foreach ($response as $key => $value) {
             $this->{$key} = $value;
         }
+
     }
+
     /**
      * Wrap the load->view() CI method
      *
@@ -134,6 +136,41 @@ class FrontendController extends SweepsController
         $data['view'] = is_array($view) ? $view : array($view);
 
         return $this->load->view('shell/' . $this->site_slug . '.php', compact('data'));
+    }
+
+    /**
+     * Are we human?  Have we correctly answered a capture since
+     * app/config/project.php: $config['human_ttl'] seconds?
+     *
+     * @return  boolean
+     */
+    public function isHuman($set = null)
+    {
+        // is this a set?
+        if ($set === true) {
+            $this->session->set_userdata('human', time());
+            return true;
+        } elseif ($set === false) {
+            $this->session->set_userdata('human', null);
+            return false;
+        }
+
+        if (!@$this->human_ttl) {
+            // load up the configurable TTL for the captcha
+            $this->human_ttl = config_item('human_ttl');
+        }
+
+        $human = $this->session->userdata('human');
+        if (!$human) {
+            return false;
+        }
+        if (time() - $human > $this->human_ttl) {
+            $this->session->set_userdata('human', null); // zero out for good measure
+            return false;
+        }
+
+        // otherwise, we're still considered human
+        return true;
     }
 }
 

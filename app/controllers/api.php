@@ -56,7 +56,7 @@ class Api extends FrontendController
         }
 
         // store the fact that this is a human in the session
-        $this->session->set_userdata('human', true);
+        $this->isHuman(true);
 
         return $this->json(XHR_OK);
 
@@ -113,7 +113,7 @@ class Api extends FrontendController
         }
 
         // human check
-        if (!$this->session->userdata('human')) {
+        if (!$this->isHuman()) {
             return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
         }
 
@@ -189,7 +189,7 @@ class Api extends FrontendController
         }
 
         // human check
-        if (!$this->session->userdata('human')) {
+        if (!$this->isHuman()) {
             return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
         }
 

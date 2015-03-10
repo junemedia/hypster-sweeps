@@ -8,6 +8,7 @@
 
 // How long will password reset token and email verification tokens live?
 $config['token_ttl']                      = 86400; // 1 day
+$config['human_ttl']                      = 86400; // 1 day
 
 // Who will be BCC’d on winner emails:
 $config['admin_emails'][]                 = 'achalemian@resolute.com';
