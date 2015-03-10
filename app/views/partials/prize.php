@@ -21,7 +21,7 @@
     <h3 class="account">Welcome <a href="/profile"></a>, <a class="logout">logout</a></h3>
     <h3 class="prize_today"><!-- NO GAP
      --><?= date('Y') == date('Y', strtotime($prize['date'])) ? date( "F j", strtotime($prize['date'])) : date( "F j, Y", strtotime($prize['date'])); ?><!-- NO GAP
-     --><? if ($is_todays_prize) echo '&nbsp;| <span>Win today’s prize</span>'; ?><!-- NO GAP
+     --><? if ($is_todays_prize) echo '&nbsp;| <span>Win Today’s Prize</span>'; ?><!-- NO GAP
      --></h3>
     <div class="prize"><!-- NO GAP
      --><?= $tag_img ?><!-- NO GAP
