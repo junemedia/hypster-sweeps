@@ -21,7 +21,7 @@
     <header>
         <div>
             <a href="http://www.betterrecipes.com/" class="logo">BetterRecipes</a>
-            <div class="ad" data-id="537278266_728x90_ATF"></div>
+            <div class="ad" data-id="728x90_ATF"></div>
             <a class="menu"></a>
         </div>
         <nav><!-- NO GAP
@@ -50,15 +50,15 @@
         </div><!-- NO GAP
         --><div class="rail">
         <!-- Right Rail Ad Units -->
-            <div class="ad" data-id="537278268_300x250_ATF"></div>
-            <div class="ad" data-id="537278269_300x250_BTF"></div>
+            <div class="ad" data-id="300x250_ATF"></div>
+            <div class="ad" data-id="300x250_BTF"></div>
         </div>
     </div>
     <footer>
         <div>
-            <div class="ad" data-id="537278267_728x90_BTF"></div>
+            <div class="ad" data-id="728x90_BTF"></div>
             ©<?= ' '.date('Y').' ' ?>June Media Inc
-            <a href="http://www.betterrecipes.com/privacy">Privacy Policy</a>
+            <a href="http://www.betterrecipes.com/privacy-policy">Privacy Policy</a>
             <a href="http://www.betterrecipes.com/terms">Terms of Service</a>
         </div>
     </footer>

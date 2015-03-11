@@ -100,22 +100,22 @@ define([
         // load OX tags synchronously (after yieldbot)
         W['OX_ads'] = [{
             // Header - 728x90
-            'slot_id': '537278266_728x90_ATF',
-            'auid': '537278266',
+            'slot_id': '728x90_ATF',
+            'auid': '537513249',
             'vars': yieldbot.getSlotCriteria('LB')
         }, {
             // Right Rail Above the fold - 300x250
-            'slot_id': '537278268_300x250_ATF',
-            'auid': '537278268',
+            'slot_id': '300x250_ATF',
+            'auid': '537513251',
             'vars': yieldbot.getSlotCriteria('MR')
         }, {
             // Right Rail Below the Fold 300x250
-            'slot_id': '537278269_300x250_BTF',
-            'auid': '537278269'
+            'slot_id': '300x250_BTF',
+            'auid': '537513252'
         }, {
             // Footer - 728x90
-            'slot_id': '537278267_728x90_BTF',
-            'auid': '537278267'
+            'slot_id': '728x90_BTF',
+            'auid': '537513250'
         }];
 
         // make a deep copy of this tag configuration
