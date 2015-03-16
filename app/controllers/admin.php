@@ -13,19 +13,27 @@ class Admin extends AdminController
     }
 
     /**
-     * GET/html: index (dashboard)
+     * GET/html: dashboard
      *
      * @return HTML
      */
-    public function index()
+    public function dashboard($offset = null)
     {
+        $calendar_weeks = 86400 * 7 * 9 - 86400; // 9 weeks
+
+        if ($offset === null) {
+            $offset = 0;
+        }
+
         $this->load->model('adminModel');
 
-        // // Align the dates so that month will end flush to a 7-day calendar  row
-        // $begin_date = $this->closestModXDate(strtotime('8 days ago'), 7);
-        $begin_date = date('Y-m-d', strtotime('2 Sundays ago'));
-        $end_date   = date('Y-m-d', strtotime('2 Sundays ago') + 86400 * 7 * 9 - 86400); // 9 weeks
-        // $end_date   = date('Y-m-t', strtotime('+2 months'));
+        // Align the dates so that month will end flush to a 7-day calendar row
+        // AND adjust the begin_date by the $multiplier / $offset
+        $begin_date = strtotime('2 Sundays ago') + $calendar_weeks * $offset;
+        $end_date   = $begin_date + $calendar_weeks; // 9 weeks
+
+        $begin_date = date('Y-m-d', $begin_date);
+        $end_date   = date('Y-m-d', $end_date);
 
         $contests = $this->adminModel->getContestsByDateRange($begin_date, $end_date);
 
@@ -53,22 +61,25 @@ class Admin extends AdminController
         $data['stats']         = $this->adminModel->getPrizeStats();
         $data['dates']         = $dates;
         $data['contests']      = $reindexed;
+        $data['offset']        = $offset;
         return $this->loadView(array('admin/dashboard'), $data);
     }
 
     /**
-     * GET/html: contests (aka sweepstakes)
+     * GET/html: sweepstakes
      *
      * @param   string  $params CSV of sort/limit/offset options
      *
      * @return  html
      */
-    public function contests($params = null)
+    public function sweepstakes()
     {
+
         $this->load->model('adminModel');
         $data['nav_sweepstakes'] = true;
-        $data['contests']        = $this->adminModel->getContestsByDateRange(date('Y-m-d', strtotime('15 days ago')), date('Y-m-d', strtotime('+90 days')));
-        $data['stats']           = $this->adminModel->getPrizeStats();
+        $data['contests']        = $this->adminModel->getContestsWithFilters();
+        $data['prizes']          = $this->adminModel->getEmptyPrizes();
+        // $data['stats']           = $this->adminModel->getPrizeStats();
         return $this->loadView(array('admin/sweepstakes'), $data);
     }
 
@@ -112,6 +123,26 @@ class Admin extends AdminController
         $data['nav_thank'] = true;
         $data['sites']     = $this->adminModel->getSites();
         return $this->loadView(array('admin/thanks'), $data);
+    }
+
+    /**
+     * GET/json: retrieve list of contests with sort options
+     *
+     * @return  json
+     */
+    public function contests()
+    {
+
+        $this->load->model('adminModel');
+
+        $offset  = (int) $this->input->get('offset');
+        $limit   = (int) $this->input->get('limit');
+        $reverse = !!(int) $this->input->get('reverse');
+        $query   = trim($this->input->get('query'));
+
+        $data['contests'] = $this->adminModel->getContestsWithFilters($offset, $limit ? $limit : 100, $reverse, $query);
+
+        return $this->json(XHR_OK, $data);
     }
 
     /**

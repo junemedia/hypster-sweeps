@@ -89,14 +89,14 @@
      */
     #profile,
     .legal,
-    .see_all_prizes,
+    .see_prizes,
     .see_winners {
         display: block;
         margin-bottom: 2rem;
     }
     // .legal,
     .list,
-    .carousel {
+    .calendar {
         margin-bottom: 1rem;
     }
     /**
@@ -194,6 +194,20 @@
         }
     }
     #signup {
+        // temporary greeting:
+        // An enhanced experience is here! …
+        h5 {
+            background-color: #ffa;
+            padding: 1em;
+            font-weight: bold;
+            margin-bottom: -.5em;
+            span {
+                font-weight: normal;
+                font-size: 80%;
+                display: block;
+                margin-top: 1rem;
+            }
+        }
         #forgot_form {
             display: none;
         }
@@ -210,7 +224,7 @@
         display: inline-block;
         margin: 0 0 0 1em;
     }
-    .carousel a:before,
+    .slideshow a:before,
     .loader {
         background: url(data:image/gif;base64,R0lGODlhEAALAPQAAObm5tjY2E5OTiIiIvT09Dg4OO7u7mRkZAQEBL6+viYmJoqKisrKyra2ttzc3Orq6vLy8qCgoAAAAAYGBi4uLtDQ0Nra2mBgYLq6ukpKSoKCgv///wAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCwAAACwAAAAAEAALAEAFLSAgjmQJVGglWqy1ttXzqKdMx3PrAvrL4jebCGgqGo8rYW02tBGXwdlzqkSSQgAh+QQJCwAAACwAAAAABAALAAAFEeAkSSJFjSZ6Sim7tvB7imQIACH5BAkLAAAALAAAAAAKAAsAAAUrICCOgyQN2nVpopRl0oVhV/vGcw24sEzbvRwQ99vdfDoeMXlLrYYjkmkQAgAh+QQJCwAAACwGAAAACgALAAAEJxDIqRBS65wlkRDIkSRH94VjCXigSJptCqPveroqS+dnts0TikURAQAh+QQJCwAGACwGAAEACgAJAAADIGi6NVMgBKCGECMQEurNW2dYmMZ5ZYiC5/hF07owTpEAACH5BAULAAAALAAAAgAQAAcAAAUt4OM4DwCIpNlEUeNAkGO+sRkxTETLwG7jOhjPB7jliERjsNYT/nKo0mkkXbVCACH5BAUWAAIALAAAAgAQAAcAAAMgCBEgosxBZUxwoV6Rbd8fpoWcJnpmaZ1LSn6TtDTPnAAAOw==) no-repeat;
         display: inline-block;
@@ -253,6 +267,21 @@
      */
     .winners {
         font-size: 90%;
+        &.slideshow {
+            direction: rtl;
+            & * {
+                direction: initial;
+            }
+            // transform: rotateZ(90deg);
+            // transform-origin: 50% 0;
+            > div {
+                // width: 250px;
+                // height: 250px;
+                // transform: rotateZ(-90deg);
+                // transform-origin: 50% 0;
+           
+            }
+        }
         div, img {
             display: inline-block;
             vertical-align: middle;
@@ -281,7 +310,6 @@
     /**
      * Common styling for Carousel and Slideshow
      */
-    .carousel,
     .slideshow {
         // prev/next arrows
         b {
@@ -351,70 +379,154 @@
         opacity: 0;
     }
     /**
-     * Carousel
+     * Calendar
      */
-    .carousel {
-        font-size: 90%;
-        -webkit-overflow-scrolling: touch;
-        position: relative;
-        overflow: hidden;
-        .wrap {
-            overflow-y: hidden;
-            overflow-x: scroll;
-            white-space: nowrap;
-            margin-bottom: -100px;
-            > div {
-                margin-bottom: 101px;
-                display: inline-block;
-                vertical-align: top;
-                border: 1px solid #ccc;
-                border-left-width: 0;
-                position: relative;
+    #calendar {
+        header {
+            background: rgba(102, 0, 102, 0.79);
+            color: #fff;
+            font-size: 1.3em;
+            display: block;
+            width: 100%;
+            padding: .5em;
+            text-align: center;
+        }
+    }
+    .calendar {
+        /**
+         * default calendar styles
+         */
+        a {
+            display: inline-block;
+            position: relative;
+            vertical-align: top;
+            border: 1px solid #ccc;
+            border-left-width: 0;
+            &:hover {
+                text-decoration: none;
+                h4 {
+                    display: block;
+                }
+            }
+        }
+        i {
+            font-style: normal;
+            line-height: 1;
+            padding: .7em 0;
+            color: #333;
+            &:first-child {
+                // day of week (Sunday, Monday...)
+                display: block;
+                background-color: #c3c3c3;
+                text-align: center;
+            }
+            &:nth-child(2) {
+                // day of the month (1, 2, 3...)
+                position: absolute;
+                top: 0;
+                left: .5em;
+                letter-spacing: -1px;
+            }
+        }
+        a.today i:nth-child(2) {
+            background: #f00;
+            border-radius: 0.8em;
+            color: #fff;
+            top: .4em;
+            left: .4em;
+            width: 1.6em;
+            height: 1.6em;
+            padding: .3em 0;
+            line-height: 1;
+            text-align: center;
+        }
+        img {
+            width: 100%;
+            margin: 0 auto;
+            display: block;
+        }
+        h4 {
+            color: #fff;
+            display: none;
+            text-align: center;
+            margin: 0;
+            background: rgba(102, 0, 102, 0.79);
+            width: 100%;
+            padding: .3em;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+        p {
+            padding: .5em;
+            margin: 0;
+        }
+        /**
+         * Non-slideshow
+         */
+        > a {
+            width: 25%;
+            // padding-bottom: 25%;
+            overflow: hidden;
+            border-color: #ddd;
+            border-style: solid;
+            border-top-width: 0;
+            border-left-width: 0;
+            border-bottom-width: 1px;
+            border-right-width: 1px;
+            &:nth-child(-n+4) {
+                border-top-width: 1px;
+            }
+            &:nth-child(4n+1) {
+                border-left-width: 1px;
+            }
+            i {
                 &:first-child {
-                    border-left-width: 1px;
+                    // day of week (Sunday, Monday...)
+                    display: none;
                 }
-                i {
-                    font-style: normal;
-                    line-height: 1;
-                    padding: .7em 0;
-                    &:first-child {
-                        // day of week (Sunday, Monday...)
-                        display: block;
-                        font-weight: bold;
-                        background-color: #ccc;
-                        text-align: center;
-                    }
-                    &:nth-child(2) {
-                        // date (1, 2, 3...)
-                        position: absolute;
-                        top: 0;
-                        left: .5em;
-                        letter-spacing: -1px;
-                    }
-                }
-                &.today i:nth-child(2) {
-                    background: #f00;
+                &:nth-child(2) {
+                    // day of the month (1, 2, 3...)
                     border-radius: 0.8em;
-                    color: #fff;
-                    top: .4em;
-                    left: .4em;
                     width: 1.6em;
                     height: 1.6em;
                     padding: .3em 0;
                     line-height: 1;
                     text-align: center;
+                    position: absolute;
+                    top: .3em;
+                    left: .3em;
+                    font-size: 1.2em;
+                    background: #fff;
+                    background: rgba(255, 255, 255, 0.7);
                 }
-                a {
-                    //
-                    // This defines the size of the carousel boxes:
-                    //
-                    width: 11em;
-                    height: 11em;
-                    display: block;
-                    font-weight: normal;
-                    position: relative;
+            }
+        }
+    }
+    /**
+     * Calendar Slideshow
+     */
+    .calendar.slideshow {
+        font-size: 90%;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        .wrap {
+            overflow-y: hidden;
+            overflow-x: scroll;
+            white-space: nowrap;
+            margin-bottom: -100px;
+            > a {
+                width: 11em;
+                margin-bottom: 101px;
+                vertical-align: top;
+                border: 1px solid #ccc;
+                border-left-width: 0;
+                &:first-child {
+                    border-left-width: 1px;
                 }
-                a:before {
+                &:before {
                     // 16 x 11 px
                     content: " ";
                     opacity: 1;
@@ -428,15 +540,15 @@
                     img {
                         visibility: visible;
                     }
-                    a:before {
+                    &:before {
                         display: none;
                     }
                 }
                 img {
-                    width: 100%;
-                    margin: 0 auto;
-                    display: block;
                     visibility: hidden;
+                }
+                h4 {
+                    white-space: normal;
                 }
             }
         }
@@ -479,7 +591,7 @@
     /**
      * Prize Slideshow
      */
-    .prize.slideshow {
+    .slideshow {
         position: relative;
         padding-left: 2em;
         padding-right: 2em;
@@ -511,96 +623,6 @@
         &.cur3 .dots i:last-child {
             background: #fff;
             border: .25em solid #999;
-        }
-    }
-    /**
-     * Calendar
-     */
-    #cal {
-        margin-bottom: 1em;
-        line-height: 0;
-        div {
-            display: inline-block;
-            position: relative;
-            width: 25%;
-            padding-bottom: 25%;
-            background: #fff;
-            overflow: hidden;
-            border-color: #ddd;
-            border-style: solid;
-            border-top-width: 0;
-            border-left-width: 0;
-            border-bottom-width: 1px;
-            border-right-width: 1px;
-            &:nth-child(-n+4) {
-                border-top-width: 1px;
-            }
-            &:nth-child(4n+1) {
-                border-left-width: 1px;
-            }
-            &:hover {
-                background-color: #bbb;
-                color: #fff;
-                span {
-                    background: none;
-                }
-                img {
-                    opacity: 0;
-                }
-                h4,
-                a {
-                    display: block;
-                }
-            }
-            > * {
-                position: absolute;
-            }
-            span {
-                // day of month (date)
-                border-radius: 0.8em;
-                width: 1.6em;
-                height: 1.6em;
-                padding: .3em 0;
-                line-height: 1;
-                text-align: center;
-                position: absolute;
-                top: .3em;
-                left: .3em;
-                font-size: 1.2em;
-                background: #fff;
-                background: rgba(255, 255, 255, 0.7);
-            }
-            &.today span {
-                background: #f00;
-                color: #fff;
-            }
-            img {
-                height: 100%;
-                display: block;
-            }
-            p {
-                padding: .5em;
-                margin: 0;
-            }
-            h4,
-            a {
-                color: inherit;
-                display: none;
-                text-align: center;
-                margin: 0;
-            }
-            h4 {
-                padding: 3em 1em 0;
-            }
-            a {
-                bottom: .8em;
-                left: 0;
-                width: 100%;
-            }
-            a:visited,
-            a:hover {
-                color: inherit;
-            }
         }
     }
     /**

@@ -6,8 +6,53 @@ define([
     /**
      * BR context Globals
      */
-    var // Do not allow ads to be refreshed more than once every
-    // AD_REFRESH_TIME_LIMIT ms
+    var
+        BASE_HREF = 'http://www.betterrecipes.com',
+        FOOTER_LINKS = {
+            'Recipe Categories': [
+                'Appetizer',
+                'Beef',
+                'Bread',
+                'Breakfast',
+                'Cake',
+                'Chicken',
+                'Christmas',
+                'Cookie',
+                'Copycat',
+                'Crock Pot',
+                'Dessert',
+                'Diabetic',
+                'Drink',
+                'Easter',
+                'Easy',
+                'FXB',
+                'Grilling',
+                'Halloween',
+                'Healthy',
+                'Italian',
+                'Low Carb',
+                'Low Fat',
+                'Mexican',
+                'Pork',
+                'Salad',
+                'Seafood',
+                'Soup',
+                'Thanksgiving',
+                'Vegetarian',
+            ],
+            'Your Account': [
+                ['My Recipe Box', '/myrecipebox/all/date-desc/1'],
+                ['Help Resources', '/help'],
+                ['Login/Register', '/signup']
+            ],
+            'Better Recipes': [
+                ['Free Newsletters', '/email-signup'],
+                ['Follow Us on Twitter', 'https://twitter.com/BetterRecipes'],
+                ['Find Us on Facebook', 'https://www.facebook.com/betterrecipes']
+            ]
+        },
+        // Do not allow ads to be refreshed more than once every
+        // AD_REFRESH_TIME_LIMIT ms
         AD_REFRESH_TIME_LIMIT = 4000,
         // Keep an internal DEEP copy of OX_ads so that we can reuse it when we
         // call refreshAds().  OpenX will Array.shift and destroy OX_ads in the
@@ -146,7 +191,6 @@ define([
      * and exposed as refreshAds
      */
     function refreshAdsNow() {
-        ADS_BEING_THOTTLED = false;
         console.debug('Ad refresh at ' + new Date());
         resetAdZones();
         OX_ads_copy.forEach(function(a) {
@@ -156,6 +200,7 @@ define([
 
     // wrap and throttle the actual ad refresh method
     var refreshAds = betterrecipes.refreshAds = debounce(function() {
+            ADS_BEING_THOTTLED = false;
             // add a little cushion to allow a transition to finish
             // before refreshing the ads:
             setTimeout(refreshAdsNow, 1000)
@@ -166,6 +211,32 @@ define([
             ADS_BEING_THOTTLED = true;
         }
     );
+
+
+    function footer() {
+        var $copyright = $('footer nav');
+        for (var heading in FOOTER_LINKS) {
+            var $nav = $('<nav>').append($('<h5>').html(heading)),
+                links = FOOTER_LINKS[heading],
+                links_len = links.length;
+            for (var i = 0; i < links_len; i++)  {
+                var link = links[i],
+                    name,
+                    url;
+                if ($.type(link) == 'string') {
+                    // special case for recipe categories
+                    name = link;
+                    url = BASE_HREF.replace(/www/, name.toLowerCase().replace(' ', '')) + '/';
+                    name += ' Recipes'
+                } else {
+                    url = link[1].charAt(0) == '/' ? BASE_HREF + link[1] : link[1];
+                    name = link[0];
+                }
+                $nav.append($('<a>').attr('href', url).html(name));
+            }
+            $copyright.before($nav);
+        }
+    }
 
     /*
      * Ready method: runs after DOMContentLoaded and once jQuery is ready
@@ -181,6 +252,9 @@ define([
 
         // ad unit initialization
         initAds();
+
+        // create the footer links
+        footer();
 
     });
     W['BR'] = betterrecipes;

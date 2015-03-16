@@ -5,8 +5,9 @@ define([
     './cookie',
     './debounce',
     './throttle',
-    './slideshow',
-    './carousel',
+    './slideshow_prize',
+    './slideshow_calendar',
+    './slideshow_winner',
     './xhr',
     './solvemedia',
     './gtm'
@@ -18,7 +19,7 @@ define([
     debounce,
     throttle,
     slideshow,
-    carousel,
+    calendar,
     xhr,
     solvemedia,
     gtm
@@ -56,7 +57,7 @@ define([
             }
             $('.frame').hide();
             $('#thanks').show();
-            $('.carousel, #winners, .see_all_prizes').hide();
+            $('.calendar, #winners, .see_prizes').hide();
         } else {
             $('.frame').hide();
             $('#prize').show();

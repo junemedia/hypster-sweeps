@@ -14,5 +14,7 @@ define(['./hook'], {
     verifyRequest: hook('verifyRequest'), // authenticated user requested to verify his/her email address
     profileUpdate: hook('profileUpdate'), // authenticated user updated his/her profile
     logout: hook('logout'), // authenticated user logs in
-    slideshow: hook('slideshow') // next/prev on a slideshow/carousel
+    slideshowPrize: hook('slideshowPrize'), // next/prev on the prize slideshow/carousel
+    slideshowCalendar: hook('slideshowCalendar'), // next/prev on the calendar slideshow/carousel
+    slideshowWinner: hook('slideshowWinner') // next/prev on the winner slideshow/carousel
 });

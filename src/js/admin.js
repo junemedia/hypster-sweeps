@@ -5,8 +5,11 @@ define([
     'admin/pad',
     'admin/str2date',
     'admin/date2str',
+    'admin/dashboard',
     'admin/prize',
-    'admin/contest'
+    'admin/contest',
+    'admin/contests',
+    'admin/datepicker'
     ], function(solvemedia) {
 
     /**

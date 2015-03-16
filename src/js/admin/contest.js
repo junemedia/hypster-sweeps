@@ -14,6 +14,7 @@ define(['./str2date', './date2str', './prize'], function(str2date, date2str, pri
     function contestError(msg) {
         $flight_error.html(msg || GENERIC_AJAX_ERROR);
         $flight_footer_row.addClass('error');
+        $(W).scrollTop($flight_error.offset().top);
     }
 
     /**
@@ -27,14 +28,14 @@ define(['./str2date', './date2str', './prize'], function(str2date, date2str, pri
         $flight_error.html('');
         $flight_footer_row.removeClass('error');
         $.ajax({
-            url: '/admin/contest/' + action,
-            data: {
-                'prize_id': prize.id,
-                'date': date
-            },
-            dataType: 'json',
-            type: 'POST'
-        })
+                url: '/admin/contest/' + action,
+                data: {
+                    'prize_id': prize.id,
+                    'date': date
+                },
+                dataType: 'json',
+                type: 'POST'
+            })
             .done(function done(r, textStatus, jqXHR) {
                 if (r.status === 1) {
                     if ($.type(callback) == 'function') {
@@ -147,44 +148,56 @@ define(['./str2date', './date2str', './prize'], function(str2date, date2str, pri
         highlightContestDate(HIGHLIGHT_DATE);
 
         // special binding: flight date adder
-        $flight_add.on('keydown', function(evt) {
-            switch (evt.which) {
-                case 38: // arrow up
-                case 40: // arrow down
-                    // find the latest in Prize.data.dates, or worst case, today (second param to str2date)
-                    var timestamp = (str2date($(this).val()) || str2date(CONTEST_DATES.last(), new Date())).getTime();
-                    if (evt.which == 40) {
-                        timestamp += 86400000;
-                    } else {
-                        timestamp -= 86400000;
-                    }
-                    $(this).val(date2str(timestamp));
-                    return true;
-                case 9: // tab
-                    break;
-                case 13: // return
-                    evt.preventDefault();
-                    break;
-                default:
-                    return true;
-            }
+        $flight_add
+            .on('keydown', function(evt) {
+                switch (evt.which) {
+                    case 38: // arrow up
+                    case 40: // arrow down
+                        // find the latest in Prize.data.dates, or worst case, today (second param to str2date)
+                        var timestamp = (str2date($(this).val()) || str2date(CONTEST_DATES.last(), new Date())).getTime();
+                        if (evt.which == 40) {
+                            timestamp += 86400000;
+                        } else {
+                            timestamp -= 86400000;
+                        }
+                        $(this).val(date2str(timestamp));
+                        return true;
+                    case 9: // tab
+                        break;
+                    case 13: // return
+                        evt.preventDefault();
+                        break;
+                    default:
+                        return true;
+                }
 
-            var new_date = $(this).val();
+                var new_date = $(this).val();
 
-            // check to make sure this date isn't in the past
-            if (str2date(new_date) <= new Date()) {
-                contestError('Cannot add a date in the past');
-                return false;
-            }
+                // check to make sure this date isn't in the past
+                if (str2date(new_date) <= new Date()) {
+                    contestError('Cannot add a date in the past');
+                    return false;
+                }
 
-            // check to make sure this date isn't in our local copy, duh
-            if (CONTEST_DATES.indexOf(new_date) >= 0) {
-                contestError('This prize is already scheduled for ' + new_date + '.');
-                return false;
-            }
+                // check to make sure this date isn't in our local copy, duh
+                if (CONTEST_DATES.indexOf(new_date) >= 0) {
+                    contestError('This prize is already scheduled for ' + new_date + '.');
+                    return false;
+                }
 
-            addContestDate(new_date);
-        });
+                addContestDate(new_date);
+            })
+            .datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: 'today',
+                autoclose: true,
+                orientation: 'left bottom',
+                todayBtn: true,
+                todayHighlight: true
+            // }).on('changeDate', function (e) {
+            }).on('hide', function (e) {
+                addContestDate($flight_add.val());
+            });;
 
         // special binding: DELETE a flight or pick an ALTERNATE winner
         $flight_table.on('click', 'b', function() {

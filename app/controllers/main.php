@@ -43,7 +43,7 @@ class Main extends FrontendController
             }
             next($data['prizes']);
         }
-        $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('4 days ago')));
+        $data['winners'] = $this->prizeModel->getWinnersByDateRange(date('Y-m-d', strtotime('16 days ago')));
 
         // having 'solvemedia' defined will cause the auto load of partials/captcha
         // in the footer of each shell--directly following the <script> line
@@ -62,7 +62,7 @@ class Main extends FrontendController
             'partials/prize',
             'partials/signup',
             'partials/thankyou',
-            'partials/carousel',
+            'partials/calendar',
             'partials/winners',
         ), $data);
     }
@@ -106,7 +106,7 @@ class Main extends FrontendController
             . articleAgreement($latest_winner['prize_title']);
         }
 
-        $this->loadView('partials/winners', $data);
+        $this->loadView('winners', $data);
     }
 
     /**

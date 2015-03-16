@@ -1,6 +1,8 @@
 <? extract($data); ?>
 <div id="signup" class="frame"><!-- NO GAP
 
+ --><h5>An enhanced experience is here! <span>If you already registered for<?= ' ' . $site_domain . ' ' ?>please create a new account to gain access to an improved site.</span></h5><!-- NO GAP
+
  --><form id="signup_form" class="signup" method="post" action="/api/signup">
         <fieldset class="profile">
             <!-- <legend>Profile</legend> -->

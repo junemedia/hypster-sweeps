@@ -32,6 +32,20 @@ class AdminModel extends CI_Model
     }
 
     /**
+     * Get prizes not associated with any contest dates
+     *
+     * @param   integer $prize_id
+     *
+     * @return  array
+     */
+    public function getEmptyPrizes()
+    {
+        return $this->db
+                    ->get('view_prize_empty')
+                    ->result_array();
+    }
+
+    /**
      * Get a prize by id
      *
      * @param   integer $prize_id
@@ -126,6 +140,34 @@ class AdminModel extends CI_Model
         return $this->db
                     ->where(sprintf('`date` BETWEEN "%s" AND "%s"', $begin_date, $end_date), null, false)
                     ->order_by('date DESC')
+                    ->get('view_contest')
+                    ->result_array();
+    }
+
+    /**
+     * Sortable, filterable
+     *
+     * @param   integer $offset
+     * @param   integer $limit
+     * @param   boolean $reverse the default date desc sorting
+     * @param   string  $query to match LIKE %$query% against prize title
+     *
+     * @return array    array of contest objects including winner information
+     */
+    public function getContestsWithFilters($offset = 0, $limit = 100, $reverse = false, $query = '')
+    {
+        if ($query) {
+            $this->db->where('`prize_title` LIKE "%' . $this->db->escape_str($query) . '%"', null, false);
+        }
+
+        if (!$reverse) {
+            $this->db->order_by('date DESC');
+        } else {
+            $this->db->order_by('date ASC');
+        }
+
+        return $this->db
+                    ->limit($limit, $offset)
                     ->get('view_contest')
                     ->result_array();
     }

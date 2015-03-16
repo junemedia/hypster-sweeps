@@ -54,12 +54,15 @@
             <div class="ad" data-id="300x250_BTF"></div>
         </div>
     </div>
+    <div class="ad" data-id="728x90_BTF"></div>
     <footer>
         <div>
-            <div class="ad" data-id="728x90_BTF"></div>
-            ©<?= ' '.date('Y').' ' ?>June Media Inc
+            <!-- Dynamic footer links will be inserted here -->
+            <nav>
+            <a>©<?= ' '.date('Y').' ' ?>June Media Inc</a>
             <a href="http://www.betterrecipes.com/privacy-policy">Privacy Policy</a>
             <a href="http://www.betterrecipes.com/terms">Terms of Service</a>
+            </nav>
         </div>
     </footer>
 <?php

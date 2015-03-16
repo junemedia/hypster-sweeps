@@ -1,4 +1,4 @@
-<?php extract($data); ?><div id="dashboard"><div class="cal"><?php
+<?php extract($data); ?><div id="dashboard"><nav><b data-offset="<?= $offset - 1 ?>"></b> <b data-offset="<?= $offset + 1 ?>"></b><?php /* if ($offset != 0): ?> <a href="/admin/dashboard">Today</a><?php endif; */ ?></nav><div class="cal header"><div>Sunday</div><div>Monday</div><div>Tuesday</div><div>Wednesday</div><div>Thursday</div><div>Friday</div><div>Saturday</div></div><div class="cal"><?php
 
     $today = date('Y-m-d');
     $previous_month = null;

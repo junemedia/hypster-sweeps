@@ -102,7 +102,7 @@ define(['./ready', './events'], function(ready, events) {
             .removeClass('cur' + CUR_FRAME_INDEX)
             .addClass('cur' + cur);
         CUR_FRAME_INDEX = cur;
-        events.slideshow();
+        events.slideshowPrize();
     }
 
     function prev(e) {

@@ -88,6 +88,32 @@ LEFT JOIN
 GROUP BY `p`.`id`;
 
 
+DROP VIEW IF EXISTS `view_prize_empty`;
+CREATE VIEW `view_prize_empty` AS
+SELECT
+    `p`.`id`,
+    `p`.`title`,
+    LOWER(HEX(`p`.`img1`)) AS `img1`,
+    IF(`p`.`img1` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img1`)), '.jpg')) AS `img1_url`,
+    `p`.`desc1`,
+    LOWER(HEX(`p`.`img2`)) AS `img2`,
+    IF(`p`.`img2` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img2`)), '.jpg')) AS `img2_url`,
+    `p`.`desc2`,
+    LOWER(HEX(`p`.`img3`)) AS `img3`,
+    IF(`p`.`img3` IS NULL, NULL, CONCAT('/pimg/', LOWER(HEX(`p`.`img3`)), '.jpg')) AS `img3_url`,
+    `p`.`desc3`,
+    `p`.`award`,
+    `p`.`value`,
+    `p`.`type`
+FROM
+    `prize` `p`
+LEFT JOIN
+    `contest` `c` ON (`c`.`prize_id` = `p`.`id`)
+WHERE
+    `c`.`prize_id` IS NULL
+GROUP BY `p`.`id`;
+
+
 DROP VIEW IF EXISTS `view_profile`;
 CREATE VIEW `view_profile` AS
 SELECT

@@ -82,6 +82,38 @@ define(function() {
      */
     function save() {}
 
+
+    /**
+     * Save this to backend
+     */
+    function evaluateImage(fieldsetimg) {
+        var $fieldsetimg = $(fieldsetimg),
+            $img = $fieldsetimg.find('img'),
+            $warn = $fieldsetimg.find('ol');
+        if (!$img.length || $img.attr('src').match(/unavailable/)) {
+            $fieldsetimg.removeClass('warn');
+            $warn.html('');
+            return;
+        }
+        var errors = []
+            width = $img[0].naturalWidth,
+            height = $img[0].naturalHeight;
+        if (width != height) {
+            errors.push('Please use a square image with an 1:1 aspect ratio.');
+        }
+        if (width < 400 || height < 400) {
+            errors.push('Image should be at least 400 x 400 pixels.');
+        }
+        if (errors.length) {
+            $fieldsetimg.addClass('warn');
+            $warn.html('<li>' + errors.join('</li><li>') + '</li>');
+        } else {
+            $fieldsetimg.removeClass('warn');
+            $warn.html('');
+        }
+    }
+
+
     ready(function() {
         $form = $('form.prize');
         $submit_btn = $form.find('input[type="submit"]');
@@ -91,6 +123,11 @@ define(function() {
         $upload_form = $('form.upload');
         $input_file = $upload_form.find('input[type="file"]');
         $fieldset_img = $form.find('fieldset.img');
+
+        $fieldset_img.each(function (i, e) {
+            $(e).find('img').on('load', function () {evaluateImage($(this).closest('fieldset'))});
+            evaluateImage(e);
+        });
 
         prize.id = parseInt($form.find('input[name="id"]').val());
         if (isNaN(prize.id)) {
@@ -177,6 +214,7 @@ define(function() {
             $fieldset.addClass('empty');
             $img.attr('src', DEFAULT_PRIZE_IMAGE_URL);
             $input_hidden.val('');
+            evaluateImage($fieldset);
         });
         // drag and drop
         $(document)

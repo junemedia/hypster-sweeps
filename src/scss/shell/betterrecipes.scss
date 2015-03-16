@@ -307,9 +307,49 @@ body > div > .rail {
     }
 }
 
+// 728x90 just above the footer
+body > .ad {
+    display: block;
+    margin: 1rem auto;
+    width: 728px;
+    @media all and (max-width: 727px) {
+        display: none;
+    }
+}
+
 footer {
+    // stupid grey stripe above footer
+    // can't use border, because it will blend with the background of the light purple footer
+    position: relative;
+    top: 4em;
+    &:before {
+        content: " ";
+        display: block;
+        width: 100%;
+        height: 4em;
+        position: absolute;
+        top: -4em;
+        left: 0;
+        // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
+        // r1 = (r3 - r2 + r2*a1)/a1
+        // g1 = (g3 - g2 + g2*a1)/a1
+        // b1 = (b3 - b2 + b2*a1)/a1
+        //
+        // RGB3 (the final desired color)
+        // RGB2 (the background color)
+        // A1 (how much opacity you want)
+        //
+        // Let's find the right rgba for .79 opacity*:
+        // r1 = (240 - 255 + 255*.5)/.5 ~= 225
+        // g1 = (240 - 255 + 255*.5)/.5 ~= 225
+        // b1 = (240 - 255 + 255*.5)/.5 ~= 225
+        //
+        background: rgb(230, 230, 230);
+        background: rgba(225, 225, 225, 0.5);
+        background: rgba(105, 105, 105, 0.1);
+    }
     background: rgb(230, 218, 230);
-    // #e6dae6
+    //
     // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
     // r1 = (r3 - r2 + r2*a1)/a1
     // g1 = (g3 - g2 + g2*a1)/a1
@@ -319,31 +359,44 @@ footer {
     // RGB2 (the background color)
     // A1 (how much opacity you want)
     //
-    // Let's find the right rgba for .79 opacity*:
-    // r1 = (230 - 255 + 255*.5)/.5 ~= 205
-    // g1 = (218 - 255 + 255*.5)/.5 ~= 181
-    // b1 = (230 - 255 + 255*.5)/.5 ~= 205
+    // Let's find the right rgba for .2 opacity*:
+    // r1 = (230 - 255 + 255*.2)/.2 ~= 130
+    // g1 = (218 - 255 + 255*.2)/.2 ~= 70
+    // b1 = (230 - 255 + 255*.2)/.2 ~= 130
     //
-    background: rgba(205, 181, 205, 0.5);
+    background: rgba(130, 70, 130, 0.2);
     padding: 1rem 0;
     text-align: center;
-    font-size: .85em;
+    font-size: .8em;
     a {
         white-space: nowrap;
+        margin-right: 1em;
+        line-height: 160%;
+        display: inline-block;
+        &:last-child {
+            margin-right: 0;
+        }
         &,
         &:visited,
         &:hover {
             color: inherit;
-            margin-left: 1em;
         }
     }
-    .ad {
-        display: block;
-        margin: 0 auto 1rem;
+    h5 {
+        margin: 0 0 .3rem 0;
+        font-size: 1em;
+        font-weight: bold;
+        text-transform: uppercase;
     }
-    @media all and (max-width: 727px) {
-        .ad {
-            display: none;
+    nav {
+        text-align: left;
+        margin-bottom: 1em;
+        padding: 0 10%;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        @media all and (max-width: 640px) {
+            padding: 0 1rem;
         }
     }
 }

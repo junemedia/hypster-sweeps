@@ -1,5 +1,21 @@
 <?php extract($data); ?>
 <div id="dashboard">
+<nav>
+    <b data-offset="<?= $offset - 1 ?>"></b>
+    <b data-offset="<?= $offset + 1 ?>"></b>
+    <?php /* if ($offset != 0): ?>
+    <a href="/admin/dashboard">Today</a>
+    <?php endif; */ ?>
+</nav>
+<div class="cal header"><!-- NO GAP
+ --><div>Sunday</div><!-- NO GAP
+ --><div>Monday</div><!-- NO GAP
+ --><div>Tuesday</div><!-- NO GAP
+ --><div>Wednesday</div><!-- NO GAP
+ --><div>Thursday</div><!-- NO GAP
+ --><div>Friday</div><!-- NO GAP
+ --><div>Saturday</div><!-- NO GAP
+--></div>
 <div class="cal"><!-- htmlmin:ignore --><?php
 
     $today = date('Y-m-d');

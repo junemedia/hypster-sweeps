@@ -67,13 +67,14 @@ $route['api/reset']              = 'api/reset';             // reset password (a
 $route['api/forgot']             = 'api/forgot';
 
 // Admin Area
-$route['admin']                  = 'admin/index';           // dashboard
-$route['admin/sweepstakes']      = 'admin/contests';        // list view
+$route['admin']                  = 'admin/dashboard';       // dashboard
+$route['admin/dashboard/(:num)'] = 'admin/dashboard/$1';    // dashboard
+$route['admin/sweepstakes']      = 'admin/sweepstakes';     // list view
 $route['admin/prize/(:num)']     = 'admin/prize/$1';        // GET/html: of prize detail or 0 for new
 $route['admin/thank']            = 'admin/thank';           // GET/html: display form for each site's thank you HTML
 
 // Admin JSON API Requests
-// $route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/json: list flight date prizes accepts sorting
+$route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/json: list flight date prizes accepts sorting
 // $route['admin/prizes/(:any)']    = 'admin/prizes/$1';       // GET/json: (accepts sorting/filtering)
 $route['admin/prize']            = 'admin/upsert';          // POST/json: get or create/update a prize
 $route['admin/contest/add']      = 'admin/addContest';      // POST/json: add a contest (flight date) to a prize
