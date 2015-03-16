@@ -6,6 +6,10 @@
 ?>
 <? if (@$prizes): ?>
 <div id="calendar">
+    <?php if (@$disable_slideshow):
+        $month = (@$prizes[0]['date']) ? date('F', strtotime($prizes[0]['date'])) : ''; ?>
+        <header><?= $month ?></header>
+    <?php endif; ?>
     <div class="calendar<?= @$disable_slideshow ? '' : ' slideshow' ?>"><!-- NO GAP
      --><?php if (!@$disable_slideshow): ?><!-- NO GAP
      --><u class="fade left"></u><!-- NO GAP

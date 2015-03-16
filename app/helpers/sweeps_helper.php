@@ -34,6 +34,12 @@ function articleAgreement($str, $include_str_in_return = true)
 //     return $s;
 // }
 
+function safeTitle($str)
+{
+    // remove any HTML tags, but leave inner content
+    return preg_replace('/<[^>]+>/', '', $str);
+}
+
 function safeHtml($str)
 {
     // prevent double encoding

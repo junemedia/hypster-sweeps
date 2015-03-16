@@ -44,7 +44,6 @@
         border-color: #333;
         color: #fff;
         border-radius: 0.3em;
-        // @include background-image(linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0)));
         background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
     }
     a.btn:hover {
@@ -272,15 +271,6 @@
             & * {
                 direction: initial;
             }
-            // transform: rotateZ(90deg);
-            // transform-origin: 50% 0;
-            > div {
-                // width: 250px;
-                // height: 250px;
-                // transform: rotateZ(-90deg);
-                // transform-origin: 50% 0;
-           
-            }
         }
         div, img {
             display: inline-block;
@@ -362,7 +352,6 @@
         height: 100%;
         width: 1rem;
         background: transparent;
-        // @include background-image(linear-gradient(left, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0)));
         background-image: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
         &.left {
             left: 0;
@@ -387,7 +376,6 @@
             color: #fff;
             font-size: 1.3em;
             display: block;
-            width: 100%;
             padding: .5em;
             text-align: center;
         }

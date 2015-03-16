@@ -11,15 +11,10 @@ $debug-browser-support: true;
     .btn {
         background-color: #7a2279;
     }
-    .carousel {
-        .wrap {
-            > div {
+    .calendar {
+        > div {
+            > a {
                 border-color: #666;
-                border-left-width: 0;
-                border-top-width: 0;
-                &:first-child {
-                    border-left-width: 1px;
-                }
                 i {
                     &:first-child {
                         // day of week (Sunday, Monday...)
@@ -39,15 +34,13 @@ $debug-browser-support: true;
             background: #7a2279;
         }
     }
-    #cal li:hover {
-        background-color: #7a2279;
-    }
     h1 {
         font-size: 1.8em;
         color: #83af1b;
         font-weight: normal;
     }
-    .carousel,
+    #calendar > header,
+    .calendar,
     .slideshow,
     .banner {
         @media all and (max-width: 640px) {
