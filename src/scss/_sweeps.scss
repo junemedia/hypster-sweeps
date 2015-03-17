@@ -273,7 +273,7 @@
         &.slideshow {
             direction: rtl;
             & * {
-                direction: initial;
+                direction: ltr;
             }
         }
         div, img {
