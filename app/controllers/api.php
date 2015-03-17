@@ -429,7 +429,7 @@ class Api extends FrontendController
         $this->email->clear();
         $this->email->from($from_email, $from_name);
         $this->email->to($email);
-        $this->email->subject('Reset Your June Media Sweepstakes Password');
+        $this->email->subject('Reset Your ' . $this->site_name . ' Sweepstakes Password');
         $this->email->message($this->parser->parse('../templates/reset', $params, true));
         $this->email->send();
 
