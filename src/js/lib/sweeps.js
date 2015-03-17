@@ -27,7 +27,7 @@ define([
 
     var
     // UI elements
-        $name, // inside the $profile_bar
+        // $name, // inside the $profile_bar
         $profile_bar,
         $verify;
 
@@ -99,7 +99,7 @@ define([
             db('ineligible', null);
             cookie('sid', null);
             ROADUNBLOCKED = null;
-            $name.html('');
+            // $name.html('');
             events.logout();
         });
         return false;
@@ -181,7 +181,7 @@ define([
                 db('lis', 1, ONE_YEAR);
                 db('user_id', response.user_id, ONE_YEAR);
                 db('name', response.name, ONE_YEAR);
-                $name.html(response.name);
+                // $name.html(response.name);
                 $profile_bar.show();
                 events.login();
                 if (response.eligible) {
@@ -211,7 +211,7 @@ define([
                 // only set the name if given in resposne
                 response.name && db('name', response.name, ONE_YEAR);
                 // show buttons & clear this form
-                $name.html(db('name'));
+                // $name.html(db('name'));
                 $profile_bar.show();
                 xhr.$form.trigger(ON_RESET);
 
@@ -291,8 +291,8 @@ define([
          * UI Bindings
          */
         $profile_bar = $('.account');
-        $name = $($profile_bar.find('a')[0]);
-        $name.html(db('name'));
+        // $name = $($profile_bar.find('a')[0]);
+        // $name.html(db('name'));
         $('.logout').on(ON_CLICK, logout);
         $('a.forgot').on(ON_CLICK, function() {
             $('#signup').addClass('forgot');
