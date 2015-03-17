@@ -27,8 +27,24 @@ define(function() {
     }
 
     function sendFile(file, index) {
-        var fd = new FormData();
+        var
+            fd = new FormData(),
+            $input_hidden = $('input[name="img' + index + '"]'),
+            $fieldset = $input_hidden.closest('fieldset'),
+            $img = $fieldset.find('img');
+
         fd.append('img', file);
+
+        if (!index) {
+            // find the first index image without a src
+            for (var i = 1; i <= 3; i++) {
+                if (!$('input[name="img' + i + '"]').val()) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+
         $.ajax({
             url: '/admin/upload',
             data: fd,
@@ -36,27 +52,16 @@ define(function() {
             contentType: false,
             type: 'POST'
         }).done(function done(r, textStatus, jqXHR) {
-            if (!index) {
-                // find the first index image without a src
-                for (var i = 1; i <= 3; i++) {
-                    if (!$('input[name="img' + i + '"]').val()) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
             // add the uploaded image to the dom and form
-            var
-                $input_hidden = $('input[name="img' + index + '"]'),
-                $fieldset = $input_hidden.closest('fieldset'),
-                $img = $fieldset.find('img');
-
             $fieldset.removeClass('empty');
             $img.attr('src', r.url);
             $input_hidden.val(r.md5);
             $upload_form[0].reset();
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.log('FAIL', jqXHR, textStatus, errorThrown);
+            $warn = $fieldset.find('ol');
+            $fieldset.removeClass('empty').addClass('warn');
+            $warn.html('<li>' + errorThrown + '</li>');
+            console.warn('FAIL', jqXHR, textStatus, errorThrown);
         });
     }
 
@@ -96,8 +101,8 @@ define(function() {
             return;
         }
         var errors = []
-            width = $img[0].naturalWidth,
-            height = $img[0].naturalHeight;
+        width = $img[0].naturalWidth,
+        height = $img[0].naturalHeight;
         if (width != height) {
             errors.push('Please use a square image with an 1:1 aspect ratio.');
         }
@@ -124,8 +129,10 @@ define(function() {
         $input_file = $upload_form.find('input[type="file"]');
         $fieldset_img = $form.find('fieldset.img');
 
-        $fieldset_img.each(function (i, e) {
-            $(e).find('img').on('load', function () {evaluateImage($(this).closest('fieldset'))});
+        $fieldset_img.each(function(i, e) {
+            $(e).find('img').on('load', function() {
+                evaluateImage($(this).closest('fieldset'))
+            });
             evaluateImage(e);
         });
 
