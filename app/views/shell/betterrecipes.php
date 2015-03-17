@@ -52,6 +52,7 @@
         <!-- Right Rail Ad Units -->
             <div class="ad" data-id="300x250_ATF"></div>
             <div class="ad" data-id="300x250_BTF"></div>
+            <div class="ad" data-id="zergnet-widget-29457"></div>
         </div>
     </div>
     <div class="ad" data-id="728x90_BTF"></div>

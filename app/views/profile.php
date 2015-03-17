@@ -22,6 +22,7 @@
         <fieldset class="submit"><!-- NO GAP
          --><input type="submit" value="Update"/><!-- NO GAP
          --><span class="loader"></span><!-- NO GAP
+         --><a href="/">cancel</a><!-- NO GAP
      --></fieldset>
 
     </form>

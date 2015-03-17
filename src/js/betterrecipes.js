@@ -84,6 +84,8 @@ define([
             yieldbotSuccess,
             yieldbotFailure
         );
+
+        zergnet();
     }
 
 
@@ -186,6 +188,23 @@ define([
         console.error('OpenX failed to load');
     }
 
+    function zergnetSuccess() {
+        console.log('Zergnet loaded');
+    }
+
+    function zergnetFailure() {
+        console.error('Zergnet failed to load');
+    }
+
+    function zergnet() {
+        // Zergnet ads are independent of Yieldbot/OpenX
+        scriptAsync(
+            'http://www.zergnet.com/zerg.js?id=29457',
+            zergnetSuccess,
+            zergnetFailure
+        );
+    }
+
     /**
      * This is the actual method to refresh ad units.  It will be throttle’d
      * and exposed as refreshAds
@@ -196,6 +215,7 @@ define([
         OX_ads_copy.forEach(function(a) {
             OX.load(a);
         });
+        zergnet();
     }
 
     // wrap and throttle the actual ad refresh method

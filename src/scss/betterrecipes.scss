@@ -44,8 +44,8 @@ $debug-browser-support: true;
     .slideshow,
     .banner {
         @media all and (max-width: 640px) {
-            margin-left: -1em;
-            margin-right: -1em;
+            margin-left: -1rem;
+            margin-right: -1rem;
         }
         b {
             color: #7a2279;
