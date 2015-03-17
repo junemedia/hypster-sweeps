@@ -510,11 +510,14 @@ form.prize {
         display: block;
         text-align: center;
         cursor: default;
+        color: #333;
+        font-size: 70%;
+        text-transform: uppercase;
+        &.hold:before {
+            content: "Hold to ";
+        }
         &:after {
             content: "Today";
-            color: #333;
-            font-size: 70%;
-            text-transform: uppercase;
         }
     }
     tr:last-child {
@@ -525,7 +528,6 @@ form.prize {
             background-size: auto 70%;
             background-position: .3em 50%;
             background-image: inline-image("admin/calendar.svg");
-
         }
         &.error {
             border: 0;

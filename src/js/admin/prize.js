@@ -66,27 +66,11 @@ define(function() {
     }
 
     /**
-     * uploadImage
-     */
-    function uploadImage() {}
-
-    /**
-     * addImage
-     */
-    function addImage(index, md5) {}
-
-    /**
      * removeImage
      */
     function removeImage(index) {
         Prize.data['img' + index] = null;
     }
-
-    /**
-     * Save this to backend
-     */
-    function save() {}
-
 
     /**
      * Save this to backend

@@ -28,14 +28,14 @@ define(['./str2date', './date2str', './prize'], function(str2date, date2str, pri
         $flight_error.html('');
         $flight_footer_row.removeClass('error');
         $.ajax({
-                url: '/admin/contest/' + action,
-                data: {
-                    'prize_id': prize.id,
-                    'date': date
-                },
-                dataType: 'json',
-                type: 'POST'
-            })
+            url: '/admin/contest/' + action,
+            data: {
+                'prize_id': prize.id,
+                'date': date
+            },
+            dataType: 'json',
+            type: 'POST'
+        })
             .done(function done(r, textStatus, jqXHR) {
                 if (r.status === 1) {
                     if ($.type(callback) == 'function') {
@@ -194,23 +194,35 @@ define(['./str2date', './date2str', './prize'], function(str2date, date2str, pri
                 orientation: 'left bottom',
                 todayBtn: true,
                 todayHighlight: true
-            // }).on('changeDate', function (e) {
-            }).on('hide', function (e) {
+                // }).on('changeDate', function (e) {
+            }).on('hide', function(e) {
                 addContestDate($flight_add.val());
             });;
 
         // special binding: DELETE a flight or pick an ALTERNATE winner
-        $flight_table.on('click', 'b', function() {
-            var $tr = $(this).closest('tr'),
+        $flight_table.on('mousedown', 'b', function() {
+            var $button = $(this),
+                $tr = $button.closest('tr'),
                 date = $tr.find('td:nth-child(2)').text(),
-                has_past = !$tr.hasClass('won'); // what's better?
-            // has_past = str2date(date) > new Date;
+                has_past = !$tr.hasClass('won'),
+                held_down_at = +new Date(),
+                timeout = setTimeout(function() {
+                    $button.removeClass('hold');
+                    if (has_past) {
+                        removeContestDate(date);
+                    } else {
+                        pickAlternateWinner(date);
+                    }
+                }, 1500);
 
-            if (has_past) {
-                removeContestDate(date);
-            } else {
-                pickAlternateWinner(date);
-            }
+            $button
+                .addClass('hold')
+                .on('mouseup mouseleave', function() {
+                    timeout && clearTimeout(timeout);
+                    setTimeout(function() { $button.removeClass('hold'); }, 800);
+                });
+
+
         });
 
 
