@@ -217,8 +217,10 @@ define([
 
                 if (xhr.$form.hasClass('profile')) {
                     events.profileUpdate();
-                    // handle the reload on /profile page
-                    W.location.href = W.location.href;
+                    // // handle the reload on /profile page
+                    // W.location.href = W.location.href;
+                    // JDS-23: client wants to redirect to homepage
+                    W.location.href = '/';
                 } else {
                     events.signup();
                     // show the #prize_form
