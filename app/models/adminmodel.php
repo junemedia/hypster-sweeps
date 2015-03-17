@@ -4,34 +4,6 @@ class AdminModel extends CI_Model
 {
 
     /**
-     * Update a prize with an image
-     *
-     * @param   string  $prize_id
-     * @param   array   key value of img1
-     *
-     * @return  boolean
-     */
-    public function setPrizeImage($prize_id, $images)
-    {
-        $sql  = 'UPDATE `prize` SET ';
-        $sets = array();
-        foreach ($images as $img_index => $md5) {
-            $sets[] = sprintf('`%s`=UNHEX("%s")', $this->db->escape_str($img_index), $this->db->escape_str($md5));
-        }
-        $sql .= implode(', ', $sets);
-        $this->db->query($sql);
-    }
-
-    /**
-     * get statistics on how many flights, prizes exist in db
-     *
-     * @return  array
-     */
-    public function getPrizeStats()
-    {
-    }
-
-    /**
      * Get prizes not associated with any contest dates
      *
      * @param   integer $prize_id
@@ -266,7 +238,7 @@ class AdminModel extends CI_Model
     }
 
     /**
-     * Return all `site` rows including the `thank` column
+     * Return all `site` rows including the `thanks` column
      *
      * @param   integer $prize_id
      * @param   string  $date
@@ -278,6 +250,31 @@ class AdminModel extends CI_Model
         return $this->db
                     ->get('site')
                     ->result_array();
+    }
+
+    /**
+     * Update a `site` with new thank you HTML
+     *
+     *
+     * THIS SHOULD BE A SPROC
+     * THIS SHOULD BE A SPROC
+     * THIS SHOULD BE A SPROC
+     * THIS SHOULD BE A SPROC
+     * THIS SHOULD BE A SPROC
+     * THIS SHOULD BE A SPROC
+     *
+     *
+     * @param   integer $site_id
+     * @param   string  $html
+     *
+     * @return  boolean
+     */
+    public function setThanks($site_id, $html)
+    {
+        $sql  = sprintf('UPDATE `site` SET `thanks`=%s WHERE `id`=%d',
+            ($html ? $this->db->escape($html) : 'NULL'),
+            $site_id);
+        return $this->db->query($sql);
     }
 
 }

@@ -13,7 +13,7 @@
     ?>
         <tr>
             <td><a href="/admin/prize/<?= $id ?>"><?= $title ?></a></td>
-            <td><?= '$' . $award . ' Gift Card' . ($type == 'prize' ? ' or Prize' : '') ?></td>
+            <td><?= '$' . $value . ' Gift Card' . ($type == 'prize' ? ' or Prize' : '') ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>
@@ -48,7 +48,7 @@
             <td><?= $pretty_date ?></td>
             <td><?= $day_of_week ?></td>
             <td><a href="/admin/prize/<?= $prize_id ?>#<?= $date ?>"><?= $prize_title ?></a></td>
-            <td><?= '$' . $prize_award . ' Gift Card' . ($prize_type == 'prize' ? ' or Prize' : '') ?></td>
+            <td><?= '$' . $prize_value . ' Gift Card' . ($prize_type == 'prize' ? ' or Prize' : '') ?></td>
             <td><?= $winner_html ?></td>
         </tr>
     <?php endforeach; ?>

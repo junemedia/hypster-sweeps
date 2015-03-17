@@ -55,9 +55,9 @@ define([
             if (already_entered) {
                 $('#thanks h2').html('You have already entered today.');
             }
-            $('.frame').hide();
-            $('#thanks').show();
-            $('.calendar, #winners, .see_prizes').hide();
+            $('.frame, .calendar, #winners, .see_prizes').hide();
+            // add thank you HTML to #thanks
+            $('#thanks').append($(db('thanks') || '')).show();
         } else {
             $('.frame').hide();
             $('#prize').show();
@@ -180,8 +180,14 @@ define([
                 // set environment variables
                 db('lis', 1, ONE_YEAR);
                 db('user_id', response.user_id, ONE_YEAR);
-                db('name', response.name, ONE_YEAR);
                 // $name.html(response.name);
+                db('name', response.name, ONE_YEAR);
+                // If we get back the thank you HTML, save it.
+                // This should only occur if a user is ineligible,
+                // but let's just store it whenever we get it.
+                if (response.thanks) {
+                    db('thanks', response.thanks, ONE_YEAR);
+                }
                 $profile_bar.show();
                 events.login();
                 if (response.eligible) {
@@ -283,6 +289,8 @@ define([
                 ROADUNBLOCKED = null;
                 // we cannot enter this contest until tomorrow
                 db('ineligible', true, response.midnight * 1000);
+                // store the thank you HTML response
+                db('thanks', response.thanks, ONE_YEAR);
                 // this will send us to #thanks since we've set environment variables:
                 enter();
                 events.enter();

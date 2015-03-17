@@ -4,7 +4,7 @@ CREATE TABLE `site` (
     `name`   VARCHAR(70)                    DEFAULT NULL,
     `domain` VARCHAR(255)                   DEFAULT NULL,
     `gtm`    VARCHAR(255)                   DEFAULT NULL,
-    `thank`  TEXT,
+    `thanks` TEXT,
     PRIMARY KEY      (`id`),
     KEY     `slug`   (`slug`),
     KEY     `domain` (`domain`)

@@ -106,6 +106,25 @@ class PrizeModel extends CI_Model
         : false;
     }
 
+    /**
+     * INSERT/enter this user (`user_id`) into the contest (`entry`) table.
+     *
+     * @param   integer $site_id
+     *
+     * @return  mixed   Thank you page HTML snippet on success; (null) if successful but no thank you copy
+     */
+    public function getThanks($site_id)
+    {
+        // return the thank you HTML
+        $row = $this->db
+                    ->select('thanks')
+                    ->where('id', $site_id)
+                    ->get('site')
+                    ->row_array();
+
+        return @$row['thanks'] ? $row['thanks'] : null;
+    }
+
 //
     //
     //
@@ -151,13 +170,12 @@ class PrizeModel extends CI_Model
 
         // return the thank you HTML
         $row = $this->db
-                    ->select('thank')
+                    ->select('thanks')
                     ->where('id', $site_id)
                     ->get('site')
                     ->row_array();
 
-        return @$row['thank'] ? $row['thank'] : null;
-
+        return $this->getThanks($site_id);
     }
 
 }

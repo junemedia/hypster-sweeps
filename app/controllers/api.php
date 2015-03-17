@@ -132,7 +132,7 @@ class Api extends FrontendController
         switch (true) {
             case $success === null:
             case strlen($success) > 0:
-                $r['html'] = $success;
+                $r['thanks']   = $success;
                 $r['midnight'] = strtotime('tomorrow');
                 return $this->json(XHR_OK, $r);
             case $success === -1:
@@ -302,6 +302,14 @@ class Api extends FrontendController
         $r['midnight'] = strtotime('tomorrow');
         $r['name']     = $user['firstname'];
         $r['user_id']  = $user['id'];
+
+        if (!$r['eligible']) {
+            // include thank you THML if you've already entered today
+            // Thank you page HTML snippet on success;
+            // null if successful but no thank you copy;
+            $r['thanks'] = $this->prizeModel->getThanks($this->site_id);
+        }
+
         return $this->json(XHR_OK, $r);
     }
 

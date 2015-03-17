@@ -5,9 +5,10 @@ TRUNCATE TABLE `contest`;
 TRUNCATE TABLE `entry`;
 
 
-INSERT INTO `site` (`id`, `slug`, `name`, `domain`, `gtm`)
+INSERT INTO `site` (`id`, `slug`, `name`, `domain`, `gtm`, `thanks`)
 VALUES
-    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com', 'GTM-5VTT4K');
+    (1, 'betterrecipes', 'BetterRecipes', 'win.betterrecipes.com', 'GTM-5VTT4K', '    <style>\n    #thanks h3 {\n        margin: 3em 0 1em 0;\n    }\n    #thanks a {\n        width: 48%;\n        margin: 0 2% 1em 0;\n        float: left;\n        text-align: center;\n        text-transform: uppercase;\n        font-weight: bold;\n    }\n    #thanks a:after {\n        content: \" \";\n        visibility: hidden;\n        display: block;\n        height: 0;\n        clear: both;\n    }\n    </style>\n    <h3>See the latest articles from Better Recipes</h3>\n    <a href=\"http://crockpot.betterrecipes.com/slideshows/9-hot-new-slow-cooker-stews\">\n        <img src=\"http://crockpot.betterrecipes.com/uploads/photo/400x300/1/9/19a7796b337ca5cb669ec8be0eed0f06.jpg\"/>\n        9 Hot New Slow-Cooker Stews\n    </a>\n    <a href=\"http://easy.betterrecipes.com/slideshows/15-fluffy-foods-to-bake-this-spring\">\n        <img src=\"http://easy.betterrecipes.com/uploads/photo/400x300/f/7/f7786d1ac9ab47f9f19f981275028e49.jpg\"/>\n        15 Fluffy Foods to Bake this Spring\n    </a>\n    <a href=\"http://lowfat.betterrecipes.com/slideshows/8-surprisingly-low-fat-things-to-eat-this-week\">\n        <img src=\"http://lowfat.betterrecipes.com/uploads/photo/400x300/6/e/6efce2b78c2b1926e983f0059963b65d.jpg\"/>\n        8 Surprisingly Low Fat Things To Eat This Week\n    </a>\n    <a href=\"http://crockpot.betterrecipes.com/slideshows/10-juicy-and-filling-reasons-to-love-your-crockpot-this-spring\">\n        <img src=\"http://crockpot.betterrecipes.com/uploads/photo/400x300/9/3/9337c2ccc6b62a79e8533ced8ca07032.jpg\"/>\n        10 Juicy and Filling Reasons To Love Your Crockpot This Spring\n    </a>'),
+    (2, 'recipe4living', 'Recipe4Living', 'win.recipe4living.com', NULL, NULL);
 
 
 INSERT INTO `prize` (`id`, `title`, `img1`, `desc1`, `img2`, `desc2`, `img3`, `desc3`, `award`, `value`, `type`)

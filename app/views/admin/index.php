@@ -21,7 +21,7 @@
      --><div class="wrap"><!-- NO GAP
          --><a href="/admin" class="<?= @$nav_dashboard ? 'on' : ''?>">Dashboard</a><!-- NO GAP
          --><a href="/admin/sweepstakes" class="<?= @$nav_sweepstakes ? 'on' : ''?>">Sweepstakes</a><!-- NO GAP
-         --><a href="/admin/thank" class="<?= @$nav_thank ? 'on' : ''?>">Thank You</a><!-- NO GAP
+         --><a href="/admin/thanks" class="<?= @$nav_thanks ? 'on' : ''?>">Thank You</a><!-- NO GAP
      --></div><!-- NO GAP
  --></nav>
 </header>

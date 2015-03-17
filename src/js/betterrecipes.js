@@ -85,6 +85,8 @@ define([
             yieldbotFailure
         );
 
+        ourbestbox();
+
         zergnet();
     }
 
@@ -205,6 +207,27 @@ define([
         );
     }
 
+    function ourbestbox(callbackString) {
+        if (!callbackString) {
+            callbackString = 'boxcontent';
+        }
+
+        // define the callback in the global window context
+        W[callbackString] = function (d) {
+            $('#ourbestbox').append(d && d['result'] || '');
+        }
+
+        $.ajax({
+            url: 'http://www.betterrecipes.com/slideshows/ourbestbox_ajax/',
+            type: 'POST',
+            jsonp: callbackString,
+            dataType: 'jsonp',
+            data: {
+                format: "json"
+            }
+        });
+    }
+
     /**
      * This is the actual method to refresh ad units.  It will be throttle’d
      * and exposed as refreshAds
@@ -216,6 +239,7 @@ define([
             OX.load(a);
         });
         zergnet();
+        ourbestbox();
     }
 
     // wrap and throttle the actual ad refresh method
@@ -239,7 +263,7 @@ define([
             var $nav = $('<nav>').append($('<h5>').html(heading)),
                 links = FOOTER_LINKS[heading],
                 links_len = links.length;
-            for (var i = 0; i < links_len; i++)  {
+            for (var i = 0; i < links_len; i++) {
                 var link = links[i],
                     name,
                     url;

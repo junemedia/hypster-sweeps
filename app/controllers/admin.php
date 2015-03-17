@@ -58,7 +58,6 @@ class Admin extends AdminController
         }
 
         $data['nav_dashboard'] = true;
-        $data['stats']         = $this->adminModel->getPrizeStats();
         $data['dates']         = $dates;
         $data['contests']      = $reindexed;
         $data['offset']        = $offset;
@@ -79,7 +78,6 @@ class Admin extends AdminController
         $data['nav_sweepstakes'] = true;
         $data['contests']        = $this->adminModel->getContestsWithFilters();
         $data['prizes']          = $this->adminModel->getEmptyPrizes();
-        // $data['stats']           = $this->adminModel->getPrizeStats();
         return $this->loadView(array('admin/sweepstakes'), $data);
     }
 
@@ -117,12 +115,28 @@ class Admin extends AdminController
      *
      * @return  html
      */
-    public function thank()
+    public function thanks()
     {
         $this->load->model('adminModel');
-        $data['nav_thank'] = true;
-        $data['sites']     = $this->adminModel->getSites();
+        $data['nav_thanks'] = true;
+        $data['sites']      = $this->adminModel->getSites();
         return $this->loadView(array('admin/thanks'), $data);
+    }
+
+    /**
+     * POST/json: update a single site’s thank you HTML
+     *
+     * @return  json
+     */
+    public function thanksUpdate($site_id)
+    {
+        $thanks = trim(base64_decode(str_replace(' ', '+', $this->input->post('b64thanks'))));
+        $this->load->model('adminModel');
+        if (!$this->adminModel->setThanks($site_id, $thanks)) {
+            $this->json(XHR_ERROR);
+        } else {
+            $this->json(XHR_OK);
+        }
     }
 
     /**

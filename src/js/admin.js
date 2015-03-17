@@ -9,6 +9,7 @@ define([
     'admin/prize',
     'admin/contest',
     'admin/contests',
+    'admin/thanks',
     'admin/datepicker'
     ], function(solvemedia) {
 

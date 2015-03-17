@@ -38,7 +38,7 @@ define(['./str2date', './date2str', './infinite_scroll'], function(str2date, dat
             .append($('<td>').html(pretty_date))
             .append($('<td>').html(day_of_week))
             .append($('<td>').html('<a href="/admin/prize/' + data['prize_id'] + '#' + data['date'] + '">' + data['prize_title'] + '</a>'))
-            .append($('<td>').html('$' + data['prize_award'] + ' Gift Card' + (data['prize_type'] == 'prize' ? ' or Prize' : '')))
+            .append($('<td>').html('$' + data['prize_value'] + ' Gift Card' + (data['prize_type'] == 'prize' ? ' or Prize' : '')))
             .append($('<td>').html(winner_html));
     }
 
