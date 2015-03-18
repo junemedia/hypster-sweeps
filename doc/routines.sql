@@ -249,11 +249,6 @@ LOGIN_SPROC:BEGIN
         `id`,
         `role`,
         `firstname`
-        -- `lastname`,
-        -- `address`,
-        -- `city`,
-        -- `state`,
-        -- `zip`
     FROM
         `user`
     WHERE
@@ -270,9 +265,11 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS `CREATE_USER`;
 DELIMITER $$
 CREATE PROCEDURE `CREATE_USER` (
+    IN  IN_IP           VARCHAR(15),    -- will be converted with INET_ATON()
+    IN  IN_OPTIN        TINYINT(1),
+    IN  IN_SITE_ID      TINYINT(3),
     IN  IN_EMAIL        VARCHAR(70),
     IN  IN_PASSWORD     VARCHAR(255),   -- will get SHA1 SALT'd
-    IN  IN_IP           VARCHAR(15),    -- will be converted with INET_ATON()
     IN  IN_FIRSTNAME    VARCHAR(255),
     IN  IN_LASTNAME     VARCHAR(255),
     IN  IN_ADDRESS      VARCHAR(255),
@@ -291,9 +288,11 @@ CREATE_USER_SPROC:BEGIN
     INSERT IGNORE INTO
         `user`
     SET
+        `ip`        = INET_ATON(IN_IP),
+        `optin`     = IN_OPTIN,
+        `site_id`   = IN_SITE_ID,
         `email`     = IN_EMAIL,
         `password`  = UNHEX(SHA1(CONCAT(IN_PASSWORD,SALT))),
-        `ip`        = INET_ATON(IN_IP),
         `firstname` = IN_FIRSTNAME,
         `lastname`  = IN_LASTNAME,
         `address`   = IN_ADDRESS,
@@ -597,4 +596,3 @@ VERIFY_TOKEN_SPROC:BEGIN
 
 END $$
 DELIMITER ;
-

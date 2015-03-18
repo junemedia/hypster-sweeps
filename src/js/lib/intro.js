@@ -28,4 +28,4 @@
         XHR_HUMAN = 9,
 
         // boolean indicating whether or not the ads are being throttled (not refreshed)
-        ADS_BEING_THOTTLED = false;
+        ADS_BEING_THROTTLED = false;

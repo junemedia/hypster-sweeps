@@ -25,10 +25,12 @@ class UserModel extends CI_Model
     {
         // For SPROCs, you MUST use $query->free_result() to avoid
         // getting the "2014 Commands out of sync" mysql error.
-        $sql = sprintf('CALL CREATE_USER(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+        $sql = sprintf('CALL CREATE_USER(%s,%d,%d,%s,%s,%s,%s,%s,%s,%s,%s)',
+            $this->db->escape(@$user['ip']),
+            @$user['optin'] ? 1 : 0,
+            (int) @$user['site_id'],
             $this->db->escape(@$user['email']),
             $this->db->escape(@$user['password']),
-            $this->db->escape(@$user['ip']),
             $this->db->escape(@$user['firstname']),
             $this->db->escape(@$user['lastname']),
             $this->db->escape(@$user['address']),

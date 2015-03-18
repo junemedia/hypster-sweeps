@@ -204,15 +204,17 @@ class Api extends FrontendController
 
         // Set the profile to be passed to Registration Services
         $profile['id']        = $user_id;
+        $profile['ip']        = $this->input->ip_address();
+        $profile['optin']     = $this->input->post('optin') ? 1 : 0;
+        $profile['site_id']   = $this->site_id;
+        $profile['email']     = $this->input->post('email');
+        $profile['password']  = $this->input->post('password');
         $profile['firstname'] = $this->input->post('firstname');
         $profile['lastname']  = $this->input->post('lastname');
         $profile['address']   = $this->input->post('address');
         $profile['city']      = @$geo['city'];
         $profile['state']     = @$geo['state'];
         $profile['zip']       = $this->input->post('zip');
-        $profile['email']     = $this->input->post('email');
-        $profile['password']  = $this->input->post('password');
-        $profile['ip']        = $this->input->ip_address();
 
         // remove empty/null/false values; CAREFUL: removes boolean false values
         $profile = array_filter($profile);

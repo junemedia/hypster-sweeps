@@ -9,8 +9,12 @@ SELECT
     `u`.`city` AS `City`,
     `u`.`state` AS `State`,
     CONCAT(`u`.`zip`, '') AS `Zip`,
+    IF(`u`.`optin` = 1, 'Yes', 'No') AS `Opt In`,
+    `s`.`name` AS `Site`,
     `u`.`date_registered` AS `Registration Date`,
     `u`.`date_verified` AS `Date Email Verified`,
     `u`.`date_updated` AS `Date Last Updated`
 FROM
-    `user` `u`;
+    `user` `u`
+LEFT JOIN
+    `site` `s` ON (`s`.`id` = `u`.`site_id`);

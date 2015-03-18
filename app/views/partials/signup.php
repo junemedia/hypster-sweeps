@@ -12,9 +12,13 @@
             <label for="zip" class="req">Zip Code</label><input type="text" name="zip" id="zip"/>
         </fieldset>
 
-        <fieldset class="credentials hide_on_update">
+        <fieldset class="credentials">
             <label for="email" class="req">Email</label><input type="text" name="email" id="email"/>
             <label for="password" class="req">Password</label><input type="password" name="password" id="password"/>
+        </fieldset>
+
+        <fieldset class="optin">
+            <label for="optin"><input type="checkbox" name="optin" id="optin" checked/>Send me email updates and special offers from June Media</label>
         </fieldset>
 
         <div class="alert"></div>

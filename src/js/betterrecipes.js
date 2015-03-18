@@ -244,7 +244,7 @@ define([
 
     // wrap and throttle the actual ad refresh method
     var refreshAds = betterrecipes.refreshAds = debounce(function() {
-            ADS_BEING_THOTTLED = false;
+            ADS_BEING_THROTTLED = false;
             // add a little cushion to allow a transition to finish
             // before refreshing the ads:
             setTimeout(refreshAdsNow, 1000)
@@ -252,7 +252,7 @@ define([
         AD_REFRESH_TIME_LIMIT,
         true,
         function() {
-            ADS_BEING_THOTTLED = true;
+            ADS_BEING_THROTTLED = true;
         }
     );
 

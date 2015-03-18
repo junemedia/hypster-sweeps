@@ -38,11 +38,9 @@ define(['./db'], function(db) {
             d['userId'] = db('user_id');
         }
 
-        console.debug('ADS_BEING_THOTTLED', !ADS_BEING_THOTTLED);
-
         // Did we successfully refresh the ads, or are they
         // currently being throttled?
-        d['ad'] = !ADS_BEING_THOTTLED;
+        d['ad'] = !ADS_BEING_THROTTLED;
 
         return dataLayer.push(d);
     }
