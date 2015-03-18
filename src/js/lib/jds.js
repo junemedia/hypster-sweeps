@@ -1,4 +1,4 @@
-define(['./sweeps', './solvemedia'], function(solvemedia) {
+define(['./solvemedia', './gtm', './sweeps'], function(solvemedia, gtm) {
 
     /**
      * Actual/true jds() function definition
@@ -22,6 +22,7 @@ define(['./sweeps', './solvemedia'], function(solvemedia) {
         return (method && method in jds && $.isFunction(jds[method])) ? jds[method].apply(this, args) : false;
     }
 
+    jds.gtm = gtm;
     jds.solvemedia = solvemedia;
 
     return jds;

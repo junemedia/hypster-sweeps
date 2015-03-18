@@ -209,17 +209,17 @@ define([
 
     function ourbestbox(callbackString) {
         if (!callbackString) {
-            callbackString = 'boxcontent';
+            callbackString = 'ourbestbox';
         }
 
         // define the callback in the global window context
         W[callbackString] = function (d) {
-            $('#ourbestbox').append(d && d['result'] || '');
+            $('#' + callbackString).append(d && d['result'] || '');
         }
 
         $.ajax({
-            url: 'http://www.betterrecipes.com/slideshows/ourbestbox_ajax/',
-            type: 'POST',
+            // url: 'http://brstage.resolute.com/slideshows/ourbestbox_ajax/',
+            url: 'http://www.betterrecipes.com/slideshows/ourbestbox_ajax',
             jsonp: callbackString,
             dataType: 'jsonp',
             data: {
