@@ -155,9 +155,37 @@ class Main extends FrontendController
      */
     public function rules()
     {
-        $data['meta']['og:title']       = $this->site_name . ' Daily Sweepstakes Rules';
-        $data['meta']['og:domain']      = $this->site_domain;
-        $data['meta']['og:url']         = 'http://' . $_SERVER['HTTP_HOST'] . '/rules';
+        $data['meta']['og:title']  = $this->site_name . ' Daily Sweepstakes Rules';
+        $data['meta']['og:domain'] = $this->site_domain;
+        $data['meta']['og:url']    = 'http://' . $_SERVER['HTTP_HOST'] . '/rules';
+
+        $this->load->model('prizeModel');
+        $this->load->library('parser');
+
+        $prize = $this->prizeModel->getPrizeByDate(date('Y-m-d'));
+
+        if (!$prize) {
+            $data['rules'] = '<p>We are not running a Daily Sweepstakes today.  Please check back tomorrow!</p>';
+            return $this->loadView('rules', $data);
+        }
+
+        $ts_today_end   = strtotime('tomorrow') - 1;
+        $ts_today_begin = $ts_today_end - 86400 + 1;
+        $ts_day_after   = $ts_today_end + 1;
+
+        $params['BEGIN_DATE']     = date('F j, Y \a\t h:i:sa T', $ts_today_begin);
+        $params['END_DATE']       = date('F j, Y \a\t h:i:sa T', $ts_today_end);
+        $params['SITE_LIST']      = sprintf('<a href="%s">%s</a>', 'http://' . $this->site_domain . '/', $this->site_domain);
+        $params['DAY_AFTER']      = date('F j, Y', $ts_day_after);
+        $params['TITLE']          = $prize['title'];
+        $params['ACTUAL_VALUE']   = '$' . $prize['value'];
+        $params['AWARDED_AS']     = $prize['award'];
+        $params['DOMAIN']         = sprintf('<a href="%s">%s</a>', 'http://' . $this->site_domain . '/', $this->site_domain);
+        $params['DOMAIN_PARENT']  = sprintf('<a href="%s">%s</a>', 'http://' . str_replace('win.', '', $this->site_domain) . '/', str_replace('win.', '', $this->site_domain));
+        $params['DOMAIN_WINNERS'] = sprintf('<a href="%s">%s</a>', 'http://' . $this->site_domain . '/winners', $this->site_domain . '/winners');
+
+        $data['rules'] = $this->parser->parse('../templates/rules', $params, true);
+
         $this->loadView('rules', $data);
     }
 
