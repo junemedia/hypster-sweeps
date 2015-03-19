@@ -173,8 +173,8 @@ class Main extends FrontendController
         $ts_today_begin = $ts_today_end - 86400 + 1;
         $ts_day_after   = $ts_today_end + 1;
 
-        $params['BEGIN_DATE']     = date('F j, Y \a\t h:i:sa T', $ts_today_begin);
-        $params['END_DATE']       = date('F j, Y \a\t h:i:sa T', $ts_today_end);
+        $params['BEGIN_DATE']     = date('F j, Y \a\t h:i:s a T', $ts_today_begin);
+        $params['END_DATE']       = date('F j, Y \a\t h:i:s a T', $ts_today_end);
         $params['SITE_LIST']      = sprintf('<a href="%s">%s</a>', 'http://' . $this->site_domain . '/', $this->site_domain);
         $params['DAY_AFTER']      = date('F j, Y', $ts_day_after);
         $params['TITLE']          = $prize['title'];
