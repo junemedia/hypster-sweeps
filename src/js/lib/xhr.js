@@ -37,9 +37,6 @@ define(['./jds'], function(jds) {
         function done(data, textStatus, jqXHR) {
             restore();
 
-            // blur() focus in order to pull down the keyboard on mobile devices
-            $('.logo').trigger(ON_FOCUS).trigger(ON_BLUR);
-
             if (!data || !'status' in data || data['status'] !== XHR_OK) {
                 switch (data['status']) {
                     case XHR_AUTH:
@@ -62,12 +59,10 @@ define(['./jds'], function(jds) {
         function fail(jqXHR, textStatus, errorThrown) {
             restore();
 
-            // blur() focus in order to pull down the keyboard on mobile devices
-            $('.logo').trigger(ON_FOCUS);
-
             $alert.html(GENERIC_AJAX_ERROR).show();
             return callbackFail();
         }
+
         $.ajax({
                 type: 'POST',
                 url: $form.attr('action'),

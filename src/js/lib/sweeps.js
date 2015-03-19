@@ -33,7 +33,9 @@ define([
 
 
     function scrollTop(i) {
-        // defer this so that iOS will close the keyboard
+        // blur() focus in order to pull down the keyboard on mobile devices
+        $('.logo').trigger(ON_FOCUS).trigger(ON_BLUR);
+        // scroll to top
         $(W).scrollTop(i || 0);
     }
 
