@@ -464,6 +464,24 @@ class Admin extends AdminController
     }
 
     /**
+     * GET/json: auth
+     *
+     * Used by Nginx’s auth_request module to check if this request is from an
+     * authenticated admin-level user.  This is specifically used to grant or
+     * deny access to /reports.
+     *
+     * @return  html
+     */
+    public function auth()
+    {
+        return $this->json(XHR_OK);
+    }
+
+    //-------------------------------------------------------------------------
+    //                        Protected (non-Routeable) Methods
+    //-------------------------------------------------------------------------
+
+    /**
      * Proper MD5 sum
      *
      * @param   string  $str

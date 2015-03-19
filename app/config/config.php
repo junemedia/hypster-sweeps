@@ -45,7 +45,13 @@ $config['index_page'] = '';
 | 'ORIG_PATH_INFO'  Uses the ORIG_PATH_INFO
 |
 */
-$config['uri_protocol'] = 'AUTO';
+
+// 'AUTO' will use REQUEST_URI.  However, for Nginx’s auth_request module,
+// you will need to route the PATH_INFO, /admin/auth, instead of the
+// actual request, /reports/xyz.csv.  PATH_INFO seems like a better choice
+// in general and avoids unexpected results:
+
+$config['uri_protocol'] = 'PATH_INFO';
 
 /*
 |--------------------------------------------------------------------------

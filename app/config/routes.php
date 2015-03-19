@@ -75,13 +75,12 @@ $route['admin/thanks']           = 'admin/thanks';          // GET/html: display
 
 // Admin JSON API Requests
 $route['admin/contests/(:any)']  = 'admin/contests/$1';     // GET/json: list flight date prizes accepts sorting
-// $route['admin/prizes/(:any)']    = 'admin/prizes/$1';       // GET/json: (accepts sorting/filtering)
 $route['admin/prize']            = 'admin/upsert';          // POST/json: get or create/update a prize
 $route['admin/contest/add']      = 'admin/addContest';      // POST/json: add a contest (flight date) to a prize
 $route['admin/contest/del']      = 'admin/delContest';      // POST/json: remove a future contest (flight date) from a prize
 $route['admin/contest/alt']      = 'admin/altContest';      // POST/json: pick an alternate winner for a contest
 $route['admin/thanks/(:num)']    = 'admin/thanksUpdate/$1'; // POST/json: update the HTML of a site_id’s thank you page
-// $route['admin/similar']          = 'admin/similar';         // POST/json: return prizes with similar title or images
+$route['admin/auth']             = 'admin/auth';            // GET/json: Nginx auth_request module to check if admin user
 
 // Public General/Specific Channel HTML Requests
 $route['default_controller']     = 'main';

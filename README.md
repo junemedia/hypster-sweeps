@@ -18,19 +18,20 @@
 
 ## URLS
 
-| Production                                                     | Staging (red)                                                                                      |
-|:---------------------------------------------------------------|---------------------------------------------------------------------------------------------------:|
-| [win.**betterrecipes**.com](http://win.betterrecipes.com/)     | [**betterrecipes**.junesweeps.red.resolute.com](http://betterrecipes.junesweeps.red.resolute.com/) |
+| Production                                                     | Staging (white)                                                                                        |
+|:---------------------------------------------------------------|-------------------------------------------------------------------------------------------------------:|
+| [win.**betterrecipes**.com](http://win.betterrecipes.com/)     | [**betterrecipes**.junesweeps.white.resolute.com](http://betterrecipes.junesweeps.white.resolute.com/) |
 
-
-## Business Rules
-
-(coming soon)
-
-## Statistics
-
-(coming soon)
 
 ## Crontab Entries
 
-(coming soon)
+##### Daily Winner Selection
+
+    # junesweeps: Generate reports every night at midnight PRECISELY
+    0    0 * * * root cd /srv/sites/junesweeps && ./bin/cron daily
+
+##### Reports
+
+    # junesweeps: Generate reports every night at 04:37am
+    37   4 * * * root cd /srv/sites/junesweeps && ./bin/reports
+
