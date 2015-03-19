@@ -6,10 +6,6 @@ node_modules
 .nfs*
 nbproject
 
-archive
-cache
-log
-
 web/*.sql.*
 *.html.gz
 *.js.gz
@@ -22,5 +18,3 @@ web/*.sql.*
 
 web/js/*.min.js
 web/css/*.min.css
-
-logs/*
