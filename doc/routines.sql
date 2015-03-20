@@ -194,6 +194,8 @@ PICK_WINNER_SPROC:BEGIN
     WHERE
         `date` = IN_DATE
     AND
+        `user_id` != existing_winner_id
+    AND
         `user_id` NOT IN (
             SELECT
                 DISTINCT(`winner_user_id`)
