@@ -72,11 +72,55 @@ class PrizeModel extends CI_Model
         if (!$begin_date) {
             $begin_date = $end_date;
         }
-        return $this->db
-                    ->where(sprintf('`date` BETWEEN "%s" AND "%s"', $begin_date, $end_date), null, false)
-                    ->order_by('date DESC')
-                    ->get('view_winner')
-                    ->result_array();
+        $winners = $this->db
+                        ->where(sprintf('`date` BETWEEN "%s" AND "%s"', $begin_date, $end_date), null, false)
+                        ->order_by('date DESC')
+                        ->get('view_winner')
+                        ->result_array();
+        return $this->temporarilyAddMeredithWinners($winners, $begin_date, $end_date);
+    }
+
+    /**
+     * TEMPORARILY BACKFILL WINNERS FROM MEREDITH DURING THE FIRST 8 DAYS OF
+     * THIS PROJECT.
+     *
+     * AFTER THE FIRST 8 DAYS, THIS METHOD SHOULD BE DELETE AND getWinnersByDateRange
+     * SHOULD JUST "return $winners"
+     *
+     */
+    public function temporarilyAddMeredithWinners($winners, $begin_date, $end_date)
+    {
+        $project_start_time = time();
+        if (time() - $project_start_time <= 86400 * 8) {
+            return array_merge(
+                $winners,
+                array(
+                    array(
+                        'date'           => '2015-03-23',
+                        'prize_title'    => 'Meredith Prize Day 2',
+                        'prize_img1'     => '/pimg/00000000000000000000000000000009.jpg',
+                        'user_firstname' => 'OVERRIDE',
+                        'user_lastname'  => '2',
+                        'user_city'      => 'Anytown',
+                        'user_state'     => 'NY',
+                        'site_name'      => 'FitnessMagazine',
+                        'site_domain'    => 'win.fitnessmagazine.com',
+                    ),
+                    array(
+                        'date'           => '2015-03-22',
+                        'prize_title'    => 'Meredith Prize Day 1',
+                        'prize_img1'     => '/pimg/00000000000000000000000000000009.jpg',
+                        'user_firstname' => 'OVERRIDE',
+                        'user_lastname'  => '1',
+                        'user_city'      => 'Anytown',
+                        'user_state'     => 'NY',
+                        'site_name'      => 'BHG',
+                        'site_domain'    => 'win.bhg.com',
+                    ),
+                )
+            );
+        }
+        return $winners;
     }
 
     /**
