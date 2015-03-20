@@ -286,8 +286,11 @@ class Api extends FrontendController
 
         $user = $this->userModel->login($this->input->post('email'), $this->input->post('password'));
 
-        if (!$user) {
-            return $this->json(XHR_INVALID, 'Invalid email or password.');
+        // $user === false:
+        if ($user === false) {
+            return $this->json(XHR_INVALID, 'Invalid password. Please try again or reset your password using the Forgot Password link above.');
+        } elseif ($user === null) {
+            return $this->json(XHR_NOT_FOUND, 'If you already registered for ' . $this->site_domain . ' please create a new account to gain access to an improved site.');
         }
 
         // authentication successful, save this in the session

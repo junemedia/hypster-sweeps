@@ -85,7 +85,7 @@ class UserModel extends CI_Model
      * @param  string   $email
      * @param  string   $password
      *
-     * @return array    user array or empty array
+     * @return mixed    user array, (boolean) false, or (null)
      */
     public function login($email, $password)
     {
@@ -98,6 +98,12 @@ class UserModel extends CI_Model
         $query  = $this->db->query($sql);
         $result = $query->row_array();
         $query->free_result();
+
+        if (!$result || @$result['error'] == 'USER_NOT_FOUND') {
+            return null;
+        } elseif (@$result['error'] == 'INVALID_PASSWORD') {
+            return false;
+        }
 
         return (array) $result;
     }

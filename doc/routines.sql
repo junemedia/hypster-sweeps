@@ -245,16 +245,42 @@ LOGIN_SPROC:BEGIN
 
     DECLARE SALT CHAR(40) DEFAULT "4b3be7d16b2875f2d4153a67c23e0d2586585c67";
 
+    DECLARE MY_ID INT(11) UNSIGNED;
+    DECLARE MY_ROLE TINYINT(3) UNSIGNED;
+    DECLARE MY_FIRSTNAME VARCHAR(255);
+    DECLARE MY_PASSWORD BINARY(20);
+
     SELECT
         `id`,
         `role`,
-        `firstname`
+        `firstname`,
+        `password`
+    INTO
+        MY_ID,
+        MY_ROLE,
+        MY_FIRSTNAME,
+        MY_PASSWORD
     FROM
         `user`
     WHERE
-        `email` = IN_EMAIL
-    AND
-        `password` = UNHEX(SHA1(CONCAT(IN_PASSWORD,SALT)));
+        `email` = IN_EMAIL;
+
+    IF MY_ID IS NULL THEN
+        -- user row not found
+        SELECT 'USER_NOT_FOUND' AS `error`;
+        LEAVE LOGIN_SPROC;
+    END IF;
+
+    IF MY_PASSWORD <> UNHEX(SHA1(CONCAT(IN_PASSWORD,SALT))) THEN
+        -- invalid password
+        SELECT 'INVALID_PASSWORD' AS `error`;
+        LEAVE LOGIN_SPROC;
+    END IF;
+
+    SELECT
+        MY_ID AS `id`,
+        MY_ROLE AS `role`,
+        MY_FIRSTNAME AS `firstname`;
 
 END $$
 DELIMITER ;
