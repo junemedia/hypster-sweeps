@@ -194,7 +194,16 @@ PICK_WINNER_SPROC:BEGIN
     WHERE
         `date` = IN_DATE
     AND
-        `user_id` != existing_winner_id
+        `user_id` NOT IN (
+            SELECT
+                DISTINCT(`winner_user_id`)
+            FROM
+                `contest`
+            WHERE
+                `date` BETWEEN DATE_SUB(IN_DATE, INTERVAL 30 DAY) AND DATE_ADD(IN_DATE, INTERVAL 30 DAY)
+            AND
+                `winner_user_id` IS NOT NULL
+            )
     ORDER BY
         RAND()
     LIMIT
