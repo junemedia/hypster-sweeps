@@ -93,8 +93,8 @@ class FrontendController extends SweepsController
         if (strpos($_SERVER['HTTP_HOST'], 'win.') === 0) {
             $this->db->where('domain', $_SERVER['HTTP_HOST']);
         } else {
-            // development/staging domains must have the `slug` in the format SLUG.junesweeps.HOST.resolute.com
-            if (!preg_match('/^([a-z]+)\.junesweeps\.[^\.]+\.resolute\.com/', $_SERVER['HTTP_HOST'], $m)) {
+            // development/staging domains must have the `slug` in the format SLUG.dailysweeps.HOST.resolute.com
+            if (!preg_match('/^([a-z]+)\.dailysweeps\.[^\.]+\.resolute\.com/', $_SERVER['HTTP_HOST'], $m)) {
                 show_404();
             }
             $this->db->where('slug', $m[1]);

@@ -6,32 +6,32 @@
 
 1. Clone to your VM
 
-        git clone git@github.com:resolute/junesweeps.git /srv/sites/junesweeps
+        git clone git@github.com:resolute/dailysweeps.git /srv/sites/dailysweeps
 
 2. Pull last night’s database dump to your VM
 
-        mysql -e 'CREATE DATABASE IF NOT EXISTS `junesweeps`'
-        ssh prod-mfs "cat /srv/mysql/`date '+%A'`/junesweeps.sql.gz" | gzip -dc | mysql junesweeps
+        mysql -e 'CREATE DATABASE IF NOT EXISTS `dailysweeps`'
+        ssh prod-mfs "cat /srv/mysql/`date '+%A'`/dailysweeps.sql.gz" | gzip -dc | mysql dailysweeps
 
-3. Your local copy should now be accessible at http://betterrecipes.junesweeps.YOURNAME.resolute.com/
+3. Your local copy should now be accessible at http://betterrecipes.dailysweeps.YOURNAME.resolute.com/
 
 
 ## URLS
 
 | Production                                                     | Staging (white)                                                                                        |
 |:---------------------------------------------------------------|-------------------------------------------------------------------------------------------------------:|
-| [win.**betterrecipes**.com](http://win.betterrecipes.com/)     | [**betterrecipes**.junesweeps.white.resolute.com](http://betterrecipes.junesweeps.white.resolute.com/) |
+| [win.**betterrecipes**.com](http://win.betterrecipes.com/)     | [**betterrecipes**.dailysweeps.white.resolute.com](http://betterrecipes.dailysweeps.white.resolute.com/) |
 
 
 ## Crontab Entries
 
 ##### Daily Winner Selection
 
-    # junesweeps: Generate reports every night at midnight PRECISELY
-    0    0 * * * root cd /srv/sites/junesweeps && ./bin/cron daily
+    # dailysweeps: Generate reports every night at midnight PRECISELY
+    0    0 * * * root cd /srv/sites/dailysweeps && ./bin/cron daily
 
 ##### Reports
 
-    # junesweeps: Generate reports every night at 04:37am
-    37   4 * * * root cd /srv/sites/junesweeps && ./bin/reports
+    # dailysweeps: Generate reports every night at 04:37am
+    37   4 * * * root cd /srv/sites/dailysweeps && ./bin/reports
 

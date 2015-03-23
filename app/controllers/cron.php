@@ -5,7 +5,7 @@ class Cron extends CI_Controller
     protected $debug               = true;
     protected $error_log           = '';
     protected $error_log_email     = null;
-    protected $error_log_file      = '/tmp/junesweeps-cron-error.log';
+    protected $error_log_file      = '/tmp/dailysweeps-cron-error.log';
     protected $WARN                = 3;
     protected $ERROR               = 2;
     protected $FATAL               = 1;
@@ -42,7 +42,7 @@ class Cron extends CI_Controller
      * Sends emails to the winner and to Meredith about the winner selection.
      *
      * Should be invoked with the following crontab entry (should be midnight on the dot)
-     * 0    0 * * * root /srv/sites/junesweeps/bin/cron daily
+     * 0    0 * * * root /srv/sites/dailysweeps/bin/cron daily
      *
      * @return void
      */
