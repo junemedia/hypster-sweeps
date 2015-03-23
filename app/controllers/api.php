@@ -290,7 +290,7 @@ class Api extends FrontendController
         if ($user === false) {
             return $this->json(XHR_INVALID, 'Invalid password. Please try again or reset your password using the Forgot Password link above.');
         } elseif ($user === null) {
-            return $this->json(XHR_NOT_FOUND, 'If you already registered for ' . $this->site_domain . ' please create a new account to gain access to an improved site.');
+            return $this->json(XHR_NOT_FOUND, 'We have updated our security settings. Please enter your profile information on the left and click the “Next” button for them to take effect.');
         }
 
         // authentication successful, save this in the session
