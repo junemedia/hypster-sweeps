@@ -124,6 +124,20 @@ module.exports = function(grunt) {
                     skipModuleInsertion: true,
                     onModuleBundleComplete: amdcleanLogic
                 }
+            },
+            recipe4living: {
+                options: {
+                    name: 'recipe4living',
+                    baseUrl: '../src/js',
+                    out: '../web/js/recipe4living.js',
+                    // optimize: 'uglify',
+                    optimize: 'uglify',
+                    // uglify: {
+                    //     beautify: true
+                    // },
+                    skipModuleInsertion: true,
+                    onModuleBundleComplete: amdcleanLogic
+                }
             }
         }
 

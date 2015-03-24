@@ -22,8 +22,29 @@ define(['./solvemedia', './gtm', './sweeps'], function(solvemedia, gtm) {
         return (method && method in jds && $.isFunction(jds[method])) ? jds[method].apply(this, args) : false;
     }
 
-    jds.gtm = gtm;
+    // JDS exposure
+
+    // null function that shells can override
+    jds.refreshAds = function() { W.console && console.warn('No refreshAds() method defined in shell!'); }
+
     jds.solvemedia = solvemedia;
+
+    /**
+     * Roadblock initialization
+     */
+    // Initialize the jds.roadblock with SolveMedia until SelectableMedia
+    // comes online SolveMedia.fire will gracefully exit if ACPuzzle isn’t
+    // defined/ready so it's safe to use this as the default captcha even
+    // before it's loaded.
+    jds.roadblock = solvemedia.fire;
+
+    /**
+     * GTM Hook
+     *
+     * allows you to pass in a GTM-XXXX id via jds("gtm", "GTM-XXXX");
+     */
+    jds.gtm = gtm;
+
 
     return jds;
 });

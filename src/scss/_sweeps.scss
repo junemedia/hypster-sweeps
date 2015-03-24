@@ -299,6 +299,9 @@
         p {
             margin: 0;
             font: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
     }
     /**
@@ -526,11 +529,12 @@
                     background-position: 50% 50%;
                     position: absolute;
                     top: 50%;
-                    margin-top: -6px;
                 }
                 &.loaded {
                     img {
                         visibility: visible;
+                        height: auto;
+                        padding-bottom: 0;
                     }
                     &:before {
                         display: none;
@@ -538,6 +542,8 @@
                 }
                 img {
                     visibility: hidden;
+                    height: 0;
+                    padding-bottom: 100%;
                 }
                 h4 {
                     white-space: normal;

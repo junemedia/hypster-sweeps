@@ -301,7 +301,13 @@ define([
         footer();
 
     });
+
+    // register our refreshAds method with jds
+    jds.refreshAds = refreshAds;
+
+    // expose the global window.BR object
     W['BR'] = betterrecipes;
+
     return betterrecipes;
 
 });

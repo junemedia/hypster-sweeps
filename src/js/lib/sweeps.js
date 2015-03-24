@@ -151,7 +151,7 @@ define([
     function basicEventHandler(event) {
 
         // issue a request to refresh the ad tags
-        betterrecipes.refreshAds();
+        jds.refreshAds();
 
         // send the event to GTM
         var matched = !gtm(event); // boolean, was GTM event found?
@@ -325,24 +325,6 @@ define([
         });
         $verify = $('.verify');
         $verify.find('a').on(ON_CLICK, verify);
-
-
-        /**
-         * Roadblock initialization
-         */
-        // Initialize the jds.roadblock with SolveMedia until SelectableMedia
-        // comes online SolveMedia.fire will gracefully exit if ACPuzzle isn’t
-        // defined/ready so it's safe to use this as the default captcha even
-        // before it's loaded.
-        jds.roadblock = solvemedia.fire;
-
-
-        /**
-         * GTM Hook
-         *
-         * allows you to pass in a GTM-XXXX id via jds("gtm", "GTM-XXXX");
-         */
-        jds.gtm = gtm;
 
 
         /**

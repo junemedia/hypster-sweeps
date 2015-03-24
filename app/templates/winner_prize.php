@@ -17,4 +17,3 @@ Sincerely,
 
 June Media
 {site_domain}
-win@junemedia.com

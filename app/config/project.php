@@ -19,6 +19,8 @@ $config['admin_emails'][]                 = 'achalemian@resolute.com';
 // If no site slugs match, then "default" will be used.
 $config['from']['betterrecipes']['name']  = 'BetterRecipes Daily Sweepstakes';
 $config['from']['betterrecipes']['email'] = 'win@betterrecipes.com';
+$config['from']['recipe4living']['name']  = 'Recipe4Living Daily Sweepstakes';
+$config['from']['recipe4living']['email'] = 'win@recipe4living.com';
 $config['from']['default']['name']        = 'June Media Daily Sweepstakes';
 $config['from']['default']['email']       = 'win@junemedia.com';
 
