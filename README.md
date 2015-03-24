@@ -104,8 +104,9 @@ Please refer to the grunt configuration in `etc/gruntfile.js` and the compass co
 
 2. Compile production ready CSS from source **SCSS** `src/scss` files into `web/css`;
 
-3. Minify **PHP/HTML** in the `app/views` directory into `app/_views`.
+3. Minify **PHP/HTML** in the `app/views` directory into `app/_views`;
 
+4. Generate `etc/assets.json` so that PHP can reference the correct CSS/JS version.
 
 ## Routine Maintenance
 
