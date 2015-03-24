@@ -30,6 +30,10 @@ class RDPurge
      */
     public function purge($path)
     {
+        // disabled because June Media’s version of Nginx does not come
+        // compiled with the nginx-cache-purge module
+        return true;
+
         curl_setopt($this->ch, CURLOPT_URL, $this->PURGE_BASE_URL . $path);
         curl_exec($this->ch);
         $info = curl_getinfo($this->ch);

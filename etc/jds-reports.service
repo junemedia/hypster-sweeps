@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily Sweepstakes Generate Reports @ 04:37am every morning
+Wants=jds-reports.timer
+
+[Service]
+Type=simple
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+ExecStart=/srv/sites/dailysweeps/bin/reports
+
+[Install]
+WantedBy=basic.target

@@ -56,7 +56,7 @@ CREATE TABLE `user` (
     `ip`              INT(11)      UNSIGNED NOT NULL DEFAULT  '0'                               COMMENT 'INET_ATON() of IP address during registration',
     `optin`           TINYINT(1)   UNSIGNED NOT NULL DEFAULT  '0'                               COMMENT '1=true, 0=false',
     `site_id`         TINYINT(3)   UNSIGNED NOT NULL DEFAULT  '0'                               COMMENT 'which site the user first signed up on/for',
-    `date_registered` TIMESTAMP             NOT NULL DEFAULT CURRENT_TIMESTAMP                  COMMENT 'registration timestamp',
+    `date_registered` TIMESTAMP                 NULL DEFAULT NULL                               COMMENT 'registration timestamp',
     `date_verified`   TIMESTAMP                 NULL DEFAULT NULL                               COMMENT 'latest timestamp email address verified',
     `date_updated`    TIMESTAMP                 NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP   COMMENT 'latest timestamp of update to profile fields',
     `email`           VARCHAR(70)                    DEFAULT NULL                               COMMENT 'unique key; on change remove reset/verify tokens and set verified to 0',

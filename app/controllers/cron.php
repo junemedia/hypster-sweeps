@@ -112,7 +112,7 @@ class Cron extends CI_Controller
 
         // winner email
         $this->email->from($from_email, $from_name);
-        $this->email->to($params['email']);
+        $this->email->to($params['user_email']);
         $this->email->bcc(config_item('admin_emails'));
         $this->email->subject($params['site_name'] . ' Winner Notification');
 

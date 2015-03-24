@@ -433,6 +433,9 @@ class Admin extends AdminController
 
         $file = $_FILES['img'];
 
+        $file['size'] = filesize($file['tmp_name']);
+        $file['md5'] = md5_file($file['tmp_name']);
+
         if ((int) $file['size'] == 0) {
             return $this->json(XHR_ERROR, 'zero byte file upload');
         }
@@ -464,7 +467,7 @@ class Admin extends AdminController
     }
 
     /**
-     * GET/json: auth
+     * GET/html: reports
      *
      * Used by Nginx’s auth_request module to check if this request is from an
      * authenticated admin-level user.  This is specifically used to grant or
@@ -472,9 +475,12 @@ class Admin extends AdminController
      *
      * @return  html
      */
-    public function auth()
+    public function reports($report)
     {
-        return $this->json(XHR_OK);
+        // PHP is going to send text/html by default;
+        header('Content-Type: text/csv');
+        header('X-Accel-Redirect: /_reports/' . $report);
+        exit;
     }
 
     //-------------------------------------------------------------------------

@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily Sweepstakes Generate Reports @ 04:37am every morning
+
+[Timer]
+OnCalendar=*-*-* 00:04:37
+Unit=jds-reports.service
+
+[Install]
+WantedBy=basic.target

@@ -80,7 +80,9 @@ $route['admin/contest/add']      = 'admin/addContest';      // POST/json: add a 
 $route['admin/contest/del']      = 'admin/delContest';      // POST/json: remove a future contest (flight date) from a prize
 $route['admin/contest/alt']      = 'admin/altContest';      // POST/json: pick an alternate winner for a contest
 $route['admin/thanks/(:num)']    = 'admin/thanksUpdate/$1'; // POST/json: update the HTML of a site_id’s thank you page
-$route['admin/auth']             = 'admin/auth';            // GET/json: Nginx auth_request module to check if admin user
+
+// Admin Reports
+$route['reports/(:any)']         = 'admin/reports/$1';      // GET/html: X-Accel-Redirect if authenticated admin user
 
 // Public General/Specific Channel HTML Requests
 $route['default_controller']     = 'main';

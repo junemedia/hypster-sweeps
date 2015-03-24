@@ -6,6 +6,7 @@ function generate {
     VIEW=$3
 
     mkdir -p "`dirname $CSV`"
+    ssh mdb "rm -f $TMP"
 
     mysql dailysweeps -s -e "SELECT CONCAT('\"',GROUP_CONCAT(COLUMN_NAME SEPARATOR '\",\"'),'\"') FROM information_schema.COLUMNS C WHERE table_name = '$VIEW'" > $CSV && \
     mysql dailysweeps -e "SELECT * INTO OUTFILE '$TMP' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' FROM $VIEW" && \
@@ -18,5 +19,5 @@ function generate {
 
 generate \
     /tmp/dailysweeps-users.csv \
-    /srv/sites/dailysweeps/web/reports/users.csv \
+    /srv/sites/dailysweeps/web/_reports/users.csv \
     report_user

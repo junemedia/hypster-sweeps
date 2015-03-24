@@ -322,20 +322,24 @@ CREATE_USER_SPROC:BEGIN
 
     DECLARE SALT CHAR(40) DEFAULT "4b3be7d16b2875f2d4153a67c23e0d2586585c67";
 
+    -- must explicitely set `date_registered` since MariaDB does not support
+    -- 'DEFAULT CURRENT_TIMESTAMP' with 'ON UPDATE CURRENT_TIMESTAMP'
+    -- on a different column (`date_updated`)
     INSERT IGNORE INTO
         `user`
     SET
-        `ip`        = INET_ATON(IN_IP),
-        `optin`     = IN_OPTIN,
-        `site_id`   = IN_SITE_ID,
-        `email`     = IN_EMAIL,
-        `password`  = UNHEX(SHA1(CONCAT(IN_PASSWORD,SALT))),
-        `firstname` = IN_FIRSTNAME,
-        `lastname`  = IN_LASTNAME,
-        `address`   = IN_ADDRESS,
-        `city`      = IN_CITY,
-        `state`     = IN_STATE,
-        `zip`       = IN_ZIP;
+        `ip`              = INET_ATON(IN_IP),
+        `optin`           = IN_OPTIN,
+        `site_id`         = IN_SITE_ID,
+        `date_registered` = NOW(),
+        `email`           = IN_EMAIL,
+        `password`        = UNHEX(SHA1(CONCAT(IN_PASSWORD,SALT))),
+        `firstname`       = IN_FIRSTNAME,
+        `lastname`        = IN_LASTNAME,
+        `address`         = IN_ADDRESS,
+        `city`            = IN_CITY,
+        `state`           = IN_STATE,
+        `zip`             = IN_ZIP;
 
     SELECT IF(ROW_COUNT()=1, LAST_INSERT_ID(), -1) AS `result`;
 

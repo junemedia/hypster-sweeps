@@ -5,12 +5,7 @@
 <title><?= safeHtml($meta['title']) ?></title>
 <?php endif; ?>
 <meta name="viewport" content="width=device-width"/>
-<?php
-    $minify_config['noout'] = true;
-    require_once('minify.inc.php');
-    $minify_config['group'] = 'admincss';
-    new Minify($minify_config);
-?>
+<link rel="stylesheet" href="/css/admin.css"/>
 </head>
 <body>
 <header>
@@ -33,14 +28,8 @@
 ?>
 </div><!-- /.wrap -->
 <footer><div class="wrap">©<?= ' '.date('Y').' ' ?>June Media Inc</div></footer>
+<!-- admin.js is not setup to be async with jquery / the frontend js IS -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
-<!-- <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')</script> -->
-<?php
-    $minify_config['noout'] = true;
-    require_once('minify.inc.php');
-    $minify_config['group'] = 'adminjs';
-    new Minify($minify_config);
-?>
+<script async src="/js/admin.js"></script>
 </body>
 </html>

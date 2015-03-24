@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily Sweepstakes Winner Selection @ midnight ET
+
+[Timer]
+OnCalendar=*-*-* 00:00:00
+Unit=jds-daily.service
+
+[Install]
+WantedBy=basic.target

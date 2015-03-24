@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily Sweepstakes Winner Selection @ midnight ET
+Wants=jds-daily.timer
+
+[Service]
+Type=simple
+Nice=19
+IOSchedulingClass=2
+IOSchedulingPriority=7
+ExecStart=/srv/sites/dailysweeps/bin/cron daily
+
+[Install]
+WantedBy=basic.target

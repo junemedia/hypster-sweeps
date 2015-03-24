@@ -8,13 +8,7 @@
 <?php if (@is_array($meta)) foreach ($meta as $key => $val): ?>
 <meta name="<?= safeAttr($key) ?>" content="<?= safeAttr(safeTitle($val)) ?>"/>
 <?php endforeach; ?>
-<?php
-    /* SHELL-TIMESTAMP.min.css */
-    $minify_config['noout'] = true;
-    require_once('minify.inc.php');
-    $minify_config['group'] = 'betterrecipes';
-    new Minify($minify_config);
-?>
+<link rel="stylesheet" href="/css/betterrecipes.css"/>
 <link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
 </head>
 <body>
@@ -72,7 +66,7 @@
         $this->load->view('partials/captcha');
     }
 ?>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script async src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
     <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')<?php
 
@@ -92,13 +86,6 @@
             echo ';' . implode(';', $js_script_arr);
         }
  ?></script>
-    <?php
-
-        /* jds-TIMESTAMP.min.js */
-        $minify_config['noout'] = true;
-        require_once('minify.inc.php');
-        $minify_config['group'] = 'mainjs';
-        new Minify($minify_config);
-    ?>
+    <script async src="/js/betterrecipes.js"></script>
 </body>
 </html>
