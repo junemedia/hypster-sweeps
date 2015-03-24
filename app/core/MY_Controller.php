@@ -46,8 +46,8 @@ class SweepsController extends CI_Controller
     /**
      * Sanitize any response array before applying json_encode()
      *
-     * @param mixed $data
-     * @return json
+     * @param   mixed   $data
+     * @return  json
      */
     protected function jsonEncode($data)
     {
@@ -60,8 +60,8 @@ class SweepsController extends CI_Controller
     /**
      * Remove empty or null values from a response array
      *
-     * @param array $data
-     * @return array With $data cleaned recursively
+     * @param   array   $data
+     * @return  array   With $data cleaned recursively
      */
     protected function removeNullEmpty($data)
     {
@@ -71,6 +71,16 @@ class SweepsController extends CI_Controller
             }
         }
         return array_filter($data, function ($v) {return !($v === array() || $v === "" || $v === null);});
+    }
+
+    /**
+     * Return an array of the etc/assets.json
+     *
+     * @return  array
+     */
+    protected function assets()
+    {
+        return json_decode(file_get_contents(APPPATH . '../etc/assets.json'), true);
     }
 
 }
@@ -134,6 +144,9 @@ class FrontendController extends SweepsController
 
         // assign the views
         $data['view'] = is_array($view) ? $view : array($view);
+
+        // assign the $assets
+        $data['assets'] = $this->assets();
 
         return $this->load->view('shell/' . $this->site_slug . '.php', compact('data'));
     }
@@ -204,6 +217,9 @@ class AdminController extends SweepsController
     {
         // assign the views
         $data['view'] = is_array($view) ? $view : array($view);
+
+        // assign the $assets
+        $data['assets'] = $this->assets();
 
         return $this->load->view('admin/index', compact('data'));
     }

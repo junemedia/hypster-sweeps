@@ -105,3 +105,19 @@ Please refer to the grunt configuration in `etc/gruntfile.js` and the compass co
 2. Compile production ready CSS from source **SCSS** `src/scss` files into `web/css`;
 
 3. Minify **PHP/HTML** in the `app/views` directory into `app/_views`.
+
+
+## Routine Maintenance
+
+We use [grunt-filerev](https://www.npmjs.com/package/grunt-filerev) and [grunt-filerev-assets](https://www.npmjs.com/package/grunt-filerev-assets) to manage the versioning of our CSS/JS files (look for config in `etc/gruntfile.js`).  Every time you make a change to any CSS/JS, new revisions are created (based on md5 of output) and placed in `web/css` and `web/js`, respectively.  Since we want to leave references to older versions, eventually the old versions become obsolete and may safely be deleted.
+
+In a pinch, you can quickly remove these old compiled CSS/JS files with the following commands:
+
+    find /srv/sites/dailysweeps/web/css -type f -name "*.css" -mtime +7 -exec git rm "{}" \;
+    find /srv/sites/dailysweeps/web/js -type f -name "*.js" -mtime +7 -exec git rm "{}" \;
+
+Then, just to make sure you haven't deleted assets currently being used:
+
+    cd  /srv/sites/dailysweeps/etc && grunt build
+
+Add any files that were inadvertently deleted with the `find` commands and commit/push.

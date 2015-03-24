@@ -8,7 +8,7 @@
 <?php if (@is_array($meta)) foreach ($meta as $key => $val): ?>
 <meta name="<?= safeAttr($key) ?>" content="<?= safeAttr(safeTitle($val)) ?>"/>
 <?php endforeach; ?>
-<link rel="stylesheet" href="/css/betterrecipes.css"/>
+<link rel="stylesheet" href="<?= $assets['/css/betterrecipes.css'] ?>"/>
 <link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
 </head>
 <body>
@@ -86,6 +86,6 @@
             echo ';' . implode(';', $js_script_arr);
         }
  ?></script>
-    <script async src="/js/betterrecipes.js"></script>
+    <script async src="<?= $assets['/js/betterrecipes.js'] ?>"></script>
 </body>
 </html>

@@ -214,7 +214,7 @@
     <?php if (@is_array($meta)) foreach ($meta as $key => $val): ?>
     <meta name="<?= safeAttr($key) ?>" content="<?= safeAttr(safeTitle($val)) ?>"/>
     <?php endforeach; ?>
-    <link rel="stylesheet" href="/css/recipe4living.css"/>
+    <link rel="stylesheet" href="<?= $assets['/css/recipe4living.css'] ?>"/>
     <meta name="author" content="Recipe4Living, Recipe4Living.com"/>
     <meta name="verify-v1" content="MdhXUubKMGRn6vL5WSVMEXeKt6D4mMrULy9MG+6+Zf8="/>
     <link rel="stylesheet" href="http://www.recipe4living.com/frontend/recipe4living/css/site.css,nav.css,index.css,articles.css,landing.css,recipes.css,account.css,static.css,stickywin.css?v=a80cb" type="text/css" media="screen"/>
@@ -719,7 +719,7 @@
             echo ';' . implode(';', $js_script_arr);
         }
     ?></script>
-    <script async src="/js/recipe4living.js"></script>
+    <script async src="<?= $assets['/js/recipe4living.js'] ?>"></script>
 </body>
 
 </html>

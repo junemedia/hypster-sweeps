@@ -5,7 +5,7 @@
 <title><?= safeHtml($meta['title']) ?></title>
 <?php endif; ?>
 <meta name="viewport" content="width=device-width"/>
-<link rel="stylesheet" href="/css/admin.css"/>
+<link rel="stylesheet" href="<?= $assets['/css/admin.css'] ?>"/>
 </head>
 <body>
 <header>
@@ -30,6 +30,6 @@
 <footer><div class="wrap">©<?= ' '.date('Y').' ' ?>June Media Inc</div></footer>
 <!-- admin.js is not setup to be async with jquery / the frontend js IS -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script async src="/js/admin.js"></script>
+<script async src="<?= $assets['/js/admin.js'] ?>"></script>
 </body>
 </html>
