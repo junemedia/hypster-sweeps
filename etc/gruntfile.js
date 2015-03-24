@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                     // 'prefixMode': 'camelCase',
                     'prefixTransform': function(postNormalizedModuleName, preNormalizedModuleName) {
                         // somehwat DANGEROUS -- this means that all module names must be unique!
-                        return postNormalizedModuleName.replace(/.*_/,'');
+                        return postNormalizedModuleName.replace(/.*_/, '');
                     },
                     'aggressiveOptimizations': true,
                     'escodegen': {
@@ -104,9 +104,6 @@ module.exports = function(grunt) {
                     baseUrl: '../src/js',
                     out: '../web/js/admin.js',
                     optimize: 'uglify',
-                    uglify: {
-                        // beautify: true
-                    },
                     skipModuleInsertion: true,
                     onModuleBundleComplete: amdcleanLogic
                 }
@@ -116,11 +113,7 @@ module.exports = function(grunt) {
                     name: 'betterrecipes',
                     baseUrl: '../src/js',
                     out: '../web/js/betterrecipes.js',
-                    // optimize: 'uglify',
                     optimize: 'uglify',
-                    // uglify: {
-                    //     beautify: true
-                    // },
                     skipModuleInsertion: true,
                     onModuleBundleComplete: amdcleanLogic
                 }
@@ -130,13 +123,34 @@ module.exports = function(grunt) {
                     name: 'recipe4living',
                     baseUrl: '../src/js',
                     out: '../web/js/recipe4living.js',
-                    // optimize: 'uglify',
                     optimize: 'uglify',
-                    // uglify: {
-                    //     beautify: true
-                    // },
                     skipModuleInsertion: true,
                     onModuleBundleComplete: amdcleanLogic
+                }
+            }
+        },
+
+        filerev: {
+            options: {
+                algorithm: 'md5',
+                length: 6
+            },
+            js: {
+                src: ['../web/js/*.js', '!../web/js/*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].js'],
+                dest: '../web/js'
+            },
+            css: {
+                src: ['../web/css/*.css', '!../web/css/*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].css'],
+                dest: '../web/css'
+            }
+        },
+
+        filerev_assets: {
+            dist: {
+                options: {
+                    dest: 'assets.json',
+                    cwd: '../web',
+                    prettyPrint: true
                 }
             }
         }
@@ -150,9 +164,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-inline');
+    grunt.loadNpmTasks('grunt-filerev');
+    grunt.loadNpmTasks('grunt-filerev-assets');
 
     // Register task(s).
-    grunt.registerTask('compile', ['htmlmin', 'compass', 'requirejs']);
+    grunt.registerTask('compile', ['htmlmin', 'compass', 'requirejs', 'filerev', 'filerev_assets']);
     grunt.registerTask('build', ['compile']);
     grunt.registerTask('default', ['compile', 'watch']);
 
