@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: '<%= source.js %>',
-                tasks: ['requirejs']
+                tasks: ['requirejs', 'filerev', 'filerev_assets']
             },
             css: {
                 files: '<%= source.css %>',

@@ -1,7 +1,7 @@
 define([
     'lib/debounce',
     'lib/jds'
-], function(debounce) {
+], function(debounce, jds) {
 
     /**
      * BR context Globals

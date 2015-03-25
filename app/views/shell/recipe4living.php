@@ -326,30 +326,7 @@
     <div id="nav-header">
         <div class="site-wrapper" id="top-ad">
             <div class="screenonly">
-                <!--/* OpenX Asynchronous JavaScript tag */-->
-                <!-- /*
-                      * The tag in this template has been generated for use on a
-                      * non-SSL page. If this tag is to be placed on an SSL page, change the
-                      * 'http://ox-d.junemedia.com/...'
-                      * to
-                      * 'https://ox-d.junemedia.com/...'
-                      */ -->
-                <div id="537229262_728x90ATF" style="width:728px;height:90px;margin:0;padding:0">
-<!--                     <noscript>
-                        <iframe id="8360ccb4d3" name="8360ccb4d3" src="http://ox-d.junemedia.com/w/1.0/afr?auid=537229262&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="728" height="90">
-                            <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=8360ccb4d3&cb=INSERT_RANDOM_NUMBER_HERE"><img src="http://ox-d.junemedia.com/w/1.0/ai?auid=537229262&cs=8360ccb4d3&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt=""></a>
-                        </iframe>
-                    </noscript> -->
-                </div>
-                <script>
-                    var OX_ads = OX_ads || [];
-                    OX_ads.push({
-                        slot_id: "537229262_728x90ATF",
-                        auid: "537229262"
-                    });
-                </script>
-                <script src="http://ox-d.junemedia.com/w/1.0/jstag"></script>
-                <!-- end openx 728x90ATF -->
+                <div class="ad" data-id="728x90_ATF"></div>
             </div>
         </div>
         <div class="site-wrapper">
@@ -446,81 +423,21 @@
                         </div>
                     </div>
                     <div id="panel-right" class="column">
-                        <div class="ad">
-                            <div class="screenonly">
-                                <!--/* OpenX Asynchronous JavaScript tag */-->
-                                <!-- /*
-                                      * The tag in this template has been generated for use on a
-                                      * non-SSL page. If this tag is to be placed on an SSL page, change the
-                                      * 'http://ox-d.junemedia.com/...'
-                                      * to
-                                      * 'https://ox-d.junemedia.com/...'
-                                      */ -->
-                                <div id="537229258_300x250ATF" style="width:300px;height:250px;margin:0;padding:0">
-<!--                                     <noscript>
-                                        <iframe id="d5cee74466" name="d5cee74466" src="http://ox-d.junemedia.com/w/1.0/afr?auid=537229258&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="250">
-                                            <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=d5cee74466&cb=INSERT_RANDOM_NUMBER_HERE"><img src="http://ox-d.junemedia.com/w/1.0/ai?auid=537229258&cs=d5cee74466&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt=""></a>
-                                        </iframe>
-                                    </noscript> -->
-                                </div>
-                                <script>
-                                    var OX_ads = OX_ads || [];
-                                    OX_ads.push({
-                                        slot_id: "537229258_300x250ATF",
-                                        auid: "537229258"
-                                    });
-                                </script>
-                                <script src="http://ox-d.junemedia.com/w/1.0/jstag"></script>
-                                <!-- end openx 300x250ATF -->
-                            </div>
-                        </div>
+                        <div class="ad" data-id="300x250_ATF"></div>
                         <div class="our_best">
                             <h2>Our Best Recipe Collections</h2>
                             <div class="content">
                                 <a href="http://www.recipe4living.com/recipes/baked_chicken_and_mozzarella_salad.htm"><img alt="Baked Chicken and Mozzarella Salad" src="http://www.recipe4living.com/assets/itemimages/280/125/3/default_2f4e92c8484363c0a922b75aaebc62db_dreamstimesmall_47614245.jpg" width="280" height="125"/></a>
                                 <div class="recipe_desc">
-                                    <h2><a href="http://www.recipe4living.com/recipes/baked_chicken_and_mozzarella_salad.htm">Baked Chicken and Mozzarella Salad</a></h2> </div>
+                                    <h2><a href="http://www.recipe4living.com/recipes/baked_chicken_and_mozzarella_salad.htm">Baked Chicken and Mozzarella Salad</a></h2>
+                                </div>
+                            </div>
                         </div>
                         <div class="clear"></div>
                         <div class="ad">
-                            <div class="screenonly">
-                                <!--/* OpenX Asynchronous JavaScript tag */-->
-                                <!-- /*
-                                      * The tag in this template has been generated for use on a
-                                      * non-SSL page. If this tag is to be placed on an SSL page, change the
-                                      * 'http://ox-d.junemedia.com/...'
-                                      * to
-                                      * 'https://ox-d.junemedia.com/...'
-                                      */ -->
-                                <div id="537229261_300x250BTF" style="width:300px;height:250px;margin:0;padding:0">
-<!--                                     <noscript>
-                                        <iframe id="ca4de74810" name="ca4de74810" src="http://ox-d.junemedia.com/w/1.0/afr?auid=537229261&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="300" height="250">
-                                            <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=ca4de74810&cb=INSERT_RANDOM_NUMBER_HERE"><img src="http://ox-d.junemedia.com/w/1.0/ai?auid=537229261&cs=ca4de74810&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt=""></a>
-                                        </iframe>
-                                    </noscript> -->
-                                </div>
-                                <script>
-                                    var OX_ads = OX_ads || [];
-                                    OX_ads.push({
-                                        slot_id: "537229261_300x250BTF",
-                                        auid: "537229261"
-                                    });
-                                </script>
-                                <script src="http://ox-d.junemedia.com/w/1.0/jstag"></script>
-                                <!-- end openx 300x250BTF -->
-                            </div>
+                            <div class="ad" data-id="300x250_BTF"></div>
                             <div style="font-family:Arial color:#000000; font-size:18px; font-weight:bold !important; margin-bottom:5px;">Around The Web</div>
-                            <div id="zergnet-widget-29019"></div>
-                            <script language="javascript">
-                                (function() {
-                                    var zergnet = document.createElement('script');
-                                    zergnet.type = 'text/javascript';
-                                    zergnet.async = true;
-                                    zergnet.src = 'http://www.zergnet.com/zerg.js?id=29019';
-                                    var znscr = document.getElementsByTagName('script')[0];
-                                    znscr.parentNode.insertBefore(zergnet, znscr);
-                                })();
-                            </script>
+                            <div class="ad" data-id="zergnet-widget-29019"></div>
                             <div class="screenonly">
                                 <br>
                                 <!-- begin ZEDO 3 for channel:  R4L_LP_HouseAds_300x250 , publisher: AmpereMedia , Ad Dimension: Medium Rectangle - 300 x 250 -->
@@ -539,34 +456,7 @@
             </div>
             <!-- INFOLINKS_OFF -->
             <div class="clear"></div>
-            <div id="footer-ad">
-                <div class="screenonly">
-                    <!--/* OpenX Asynchronous JavaScript tag */-->
-                    <!-- /*
-                          * The tag in this template has been generated for use on a
-                          * non-SSL page. If this tag is to be placed on an SSL page, change the
-                          * 'http://ox-d.junemedia.com/...'
-                          * to
-                          * 'https://ox-d.junemedia.com/...'
-                          */ -->
-                    <div id="537229263_728x90BTF" style="width:728px;height:90px;margin:0;padding:0">
-<!--                         <noscript>
-                            <iframe id="c1106a2c2b" name="c1106a2c2b" src="http://ox-d.junemedia.com/w/1.0/afr?auid=537229263&cb=INSERT_RANDOM_NUMBER_HERE" frameborder="0" scrolling="no" width="728" height="90">
-                                <a href="http://ox-d.junemedia.com/w/1.0/rc?cs=c1106a2c2b&cb=INSERT_RANDOM_NUMBER_HERE"><img src="http://ox-d.junemedia.com/w/1.0/ai?auid=537229263&cs=c1106a2c2b&cb=INSERT_RANDOM_NUMBER_HERE" border="0" alt=""></a>
-                            </iframe>
-                        </noscript> -->
-                    </div>
-                    <script>
-                        var OX_ads = OX_ads || [];
-                        OX_ads.push({
-                            slot_id: "537229263_728x90BTF",
-                            auid: "537229263"
-                        });
-                    </script>
-                    <script src="http://ox-d.junemedia.com/w/1.0/jstag"></script>
-                    <!-- end openx 728x90BTF-->
-                </div>
-            </div>
+            <div class="ad" data-id="728x90_BTF" id="footer-ad"></div>
         </div>
     </div>
     <div id="footer" class="site-wrapper screenonly">
