@@ -1,3 +1,6 @@
+-- Regex to space out this file:
+-- (?:[\d]+|X?'.*?'|NULL),
+
 TRUNCATE TABLE `site`;
 TRUNCATE TABLE `prize`;
 TRUNCATE TABLE `user`;
