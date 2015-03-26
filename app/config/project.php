@@ -14,6 +14,7 @@ $config['human_ttl']                      = 86400; // 1 day
 $config['admin_emails'][]                 = 'achalemian@resolute.com';
 $config['admin_emails'][]                 = 'williamg@junemedia.com';
 $config['admin_emails'][]                 = 'aburton@junemedia.com';
+$config['admin_emails'][]                 = 'ops@junemedia.com';
 
 // The "From:" address for the winner emails:
 // Organized by "site_slug" (`site`.`slug`);
