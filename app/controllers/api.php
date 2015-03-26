@@ -516,5 +516,16 @@ class Api extends FrontendController
     {
         return $str;
     }
+    
+    /**
+     * Recall for the register users
+     * @param string $name Date to pull out
+     * @return Json or "" on failure
+     */
+    
+    public function syncUser($date = false){
+        echo date("Y-m-d H:m:s", time());
+        
+    }
 
 }
