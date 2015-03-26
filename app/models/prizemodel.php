@@ -105,6 +105,7 @@ class PrizeModel extends CI_Model
                         'user_state'     => 'NY',
                         'site_name'      => 'FitnessMagazine',
                         'site_domain'    => 'win.fitnessmagazine.com',
+                        '_override'      => true,
                     ),
                     array(
                         'date'           => '2015-03-22',
@@ -116,6 +117,7 @@ class PrizeModel extends CI_Model
                         'user_state'     => 'NY',
                         'site_name'      => 'BHG',
                         'site_domain'    => 'win.bhg.com',
+                        '_override'      => true,
                     ),
                 )
             );
