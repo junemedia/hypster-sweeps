@@ -59,7 +59,7 @@ module.exports = function(grunt) {
             },
             css: {
                 files: '<%= source.css %>',
-                tasks: ['compass:dist']
+                tasks: ['compass:dist', 'filerev', 'filerev_assets']
             },
             php: {
                 // files: '<%= source.php %>', // this doesn't work for some reason
