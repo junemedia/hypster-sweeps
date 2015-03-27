@@ -271,6 +271,10 @@ define([
                     // special case for recipe categories
                     name = link;
                     url = BASE_HREF.replace(/www/, name.toLowerCase().replace(' ', '')) + '/';
+                    // special case for Copycat recipes
+                    if (name == 'Copycat') {
+                        url = BASE_HREF.replace(/www/, 'restaurant') + '/';
+                    }
                     name += ' Recipes'
                 } else {
                     url = link[1].charAt(0) == '/' ? BASE_HREF + link[1] : link[1];
