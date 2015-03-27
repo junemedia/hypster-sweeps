@@ -542,9 +542,6 @@ class Api extends FrontendController
      */
     
     public function syncUser($dateStart, $dateStop){
-        //echo date("Y-m-d H:m:s", time());
-        // Setup IP limitation here
-        //echo $dateStart .'-'. $dateStop;
         $local = array(
                '60.216.3.163',             // Jinan Office
                '216.48.124.61'           // JM nibbles server
