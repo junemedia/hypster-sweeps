@@ -214,4 +214,26 @@ class UserModel extends CI_Model
                     ->row_array();
     }
 
+    /**
+     * dump user's profile
+     *
+     * @param   integer $dateStart $dateStop
+     *
+     * @return  array   user
+     */
+    public function dumpUserByDate($dateStart, $dateStop){
+        $result = $this->db
+                    //->select('id,role,verified,ip,optin,site_id,date_register,date_verified,date_updated,email,firstname,lastname,address,city,state,zip')
+                    ->select('*')
+                    ->where('date_registered >', $dateStart)
+                    ->where('date_registered <', $dateStop)
+                    ->get('user');
+
+
+        foreach ($result->result_array() as $row){
+                unset($row["password"]);        // We don't have to transfer password field
+                $r[] = $row;
+        }
+        return $r;
+    }
 }

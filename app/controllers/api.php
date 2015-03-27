@@ -541,9 +541,27 @@ class Api extends FrontendController
      * @return Json or "" on failure
      */
     
-    public function syncUser($date = false){
-        echo date("Y-m-d H:m:s", time());
+    public function syncUser($dateStart, $dateStop){
+        //echo date("Y-m-d H:m:s", time());
+        // Setup IP limitation here
+        //echo $dateStart .'-'. $dateStop;
+        $local = array(
+               '60.216.3.163',             // Jinan Office
+               '216.48.124.61'           // JM nibbles server
+               );
+        $is_local = false;
+        if(isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) $is_local = true;
         
+        if($is_local){
+            $dateStart = date('Y-m-d H:m:s', $dateStart);
+            $dateStop = date('Y-m-d H:m:s', $dateStop);
+
+            $this->load->model('userModel');
+            $users = $this->userModel->dumpUserByDate($dateStart, $dateStop);
+
+           // echo "<pre>";
+           echo json_encode($users);
+        }
     }
 
 }
