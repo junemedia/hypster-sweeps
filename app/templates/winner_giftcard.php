@@ -1,21 +1,19 @@
 {date_pretty}
 
+Congratulations! We are pleased to announce that your email {user_email} was selected from all the entries submitted on {date_pretty} for the {site_domain} Daily Sweepstakes.
 
-{user_firstname} {user_lastname}
-{user_address}
-{user_city}, {user_state} {user_zip}
+Please respond within 10 days of this email received date to verify your submission and confirm the mailing address to which your prize should be sent. This will be awarded in the form of a ${prize_value} gift card. If you would prefer the featured product, {prize_title}, please notify us in your response.
 
+If we do not hear from you within 10 days, an alternative winner will be selected.
 
-Dear {user_firstname} {user_lastname},
+If you have any questions, please contact ContestAdmin@JuneMedia.com.
 
-Congratulations! We are pleased to announce that you have won the {date_pretty} Daily Sweepstakes prize.
-
-There are two prize options you may choose from: a gift card of ${prize_value} or the featured product: {prize_title}. Please respond within 10 days of this email received date if you would prefer the featured product. If we do not hear from you then we will send you the giftcard.
-
-Please allow 6-10 weeks for prize delivery.
+Thanks for entering our Sweepstakes on {site_domain}. Make sure to come back every day for other great items!
 
 Sincerely,
 
 
+Contest Administrator
 June Media
 {site_domain}
+ContestAdmin@JuneMedia.com
