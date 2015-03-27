@@ -157,6 +157,7 @@
         margin-bottom: 0;
     }
     input[type="text"],
+    input[type="email"],
     input[type="password"] {
         line-height: inherit;
         font-size: inherit;
@@ -167,6 +168,7 @@
     fieldset {
         label,
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             display: block;
             width: 100%;
@@ -179,6 +181,7 @@
     }
     fieldset.login {
         input[type="text"],
+        input[type="email"],
         input[type="password"] {
             background: #fff;
         }

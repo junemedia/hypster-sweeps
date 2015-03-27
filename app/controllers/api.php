@@ -171,6 +171,7 @@ class Api extends FrontendController
             $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|callback_properName');
             $this->form_validation->set_rules('address', 'Address', 'trim|required|callback_properAddress');
             $this->form_validation->set_rules('zip', 'Zip Code', 'trim|required|is_natural|min_length[5]');
+            $this->form_validation->set_rules('optin', 'that you agree to receive email updates and special offers from June Media.', 'callback_confirmCheckbox');
         } else {
             $is_new_reg = false;
             // Profile Updates
@@ -466,6 +467,23 @@ class Api extends FrontendController
         } else {
             $this->form_validation->set_message('checkPassword', 'The %s field must be from 6 to 20 characters in length. Must contain at least one capital letter or special character.');
             return false;
+        }
+    }
+
+    /**
+     * Optin checkbox message
+     *
+     * @param  string   $str
+     *
+     * @return boolean
+     */
+    public function confirmCheckbox($str)
+    {
+        if (!$str) {
+            $this->form_validation->set_message('confirmCheckbox', 'Please confirm %s');
+            return false;
+        } else {
+            return true;
         }
     }
 
