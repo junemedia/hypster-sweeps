@@ -77,6 +77,9 @@ class PrizeModel extends CI_Model
                         ->order_by('date DESC')
                         ->get('view_winner')
                         ->result_array();
+        // UNCOMMEND THIS 8 DAYS AFTER LAUNCH:
+        // return $winners;
+        // AND REMOVE THIS:
         return $this->temporarilyAddMeredithWinners($winners, $begin_date, $end_date);
     }
 
@@ -90,7 +93,7 @@ class PrizeModel extends CI_Model
      */
     public function temporarilyAddMeredithWinners($winners, $begin_date, $end_date)
     {
-        $project_start_time = time();
+        $project_start_time = strtotime('2015-03-31');
         if (time() - $project_start_time <= 86400 * 8) {
             return array_merge(
                 $winners,

@@ -122,3 +122,10 @@ Then, just to make sure you haven't deleted assets currently being used:
     cd  /srv/sites/dailysweeps/etc && grunt build
 
 Add any files that were inadvertently deleted with the `find` commands and commit/push.
+
+
+## After Launch
+
+1. Remove conditional on `app/controllers/main.php:77`.
+2. Remove `temporarilyAddMeredithWinners()` method in `app/models/prizemodel.php:86-213`.
+3. Update `getWinnersByDateRange()` to simply return $winners in `app/models/prizemodel.php:80-83`.
