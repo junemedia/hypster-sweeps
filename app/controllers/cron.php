@@ -124,6 +124,10 @@ class Cron extends CI_Controller
             default:
                 $tpl = 'winner_prize';
         }
+
+        // remove any HTML tags in the prize title
+        $params['prize_title'] = safeTitle($params['prize_title']);
+
         $body = $this->parser->parse('../templates/' . $tpl, $params, true);
         $this->email->message($body);
         $this->email->send();

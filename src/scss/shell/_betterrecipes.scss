@@ -383,6 +383,10 @@ footer {
         &:hover {
             color: inherit;
         }
+        &:first-child {
+            text-decoration: none;
+            cursor: text;
+        }
     }
     h5 {
         margin: 0 0 .3rem 0;
