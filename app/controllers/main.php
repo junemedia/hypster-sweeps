@@ -74,8 +74,17 @@ class Main extends FrontendController
     {
         $this->load->model('prizeModel');
 
+        ### REMOVE THIS CONDITIONAL AFTER LAUNCH
+        if (date('Y-m') == '2015-03') {
+            $begin_date = '2015-04-01';
+            $end_date   = '2015-04-30';
+        } else {
+            $begin_date = date('Y-m-1');
+            $end_date   = date('Y-m-t');
+        }
+
         // get prizes
-        $data['prizes'] = $this->prizeModel->getPrizesByDateRange(date('Y-m-1'), date('Y-m-t'));
+        $data['prizes'] = $this->prizeModel->getPrizesByDateRange($begin_date, $end_date);
 
         // <title> & <meta> tags
         $data['meta']['og:title']  = $this->site_name . ' Daily Sweepstakes Calendar';
