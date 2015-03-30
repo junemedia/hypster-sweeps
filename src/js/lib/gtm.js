@@ -60,7 +60,7 @@ define(['./db'], function(db) {
         }
 
         if (!id) {
-            console.error('jds("gtm", ?) called without a "GTM-XXXXXX"');
+            // console.error('jds("gtm", ?) called without a "GTM-XXXXXX"');
             return;
         }
 
@@ -77,7 +77,7 @@ define(['./db'], function(db) {
             })
             .fail(function(jqXHR, textStatus, errorThrown) {
                 initializing = false;
-                console.error('GTM failed to load:', errorThrown);
+                // console.error('GTM failed to load:', errorThrown);
             });
 
     }

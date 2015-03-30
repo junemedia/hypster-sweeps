@@ -159,7 +159,7 @@ define([
         // VERBOSE:
         // log whether or not this event was matched in GTM
         // and also whether or not ads are being refreshed or throttled
-        console.debug('GTM ' + event + ' {ad:' + (!ADS_BEING_THROTTLED ? 'true' : 'false') + '} ' + (matched ? 'successfully matched' : 'FAILED to match against') + ' a GTM event');
+        // console.debug('GTM ' + event + ' {ad:' + (!ADS_BEING_THROTTLED ? 'true' : 'false') + '} ' + (matched ? 'successfully matched' : 'FAILED to match against') + ' a GTM event');
 
     }
 

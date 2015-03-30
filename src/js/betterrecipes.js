@@ -144,7 +144,7 @@ define([
         yieldbot.defineSlot('MR');
         yieldbot.enableAsync();
         yieldbot.go();
-        console.log('Yieldbot loaded');
+        // console.log('Yieldbot loaded');
 
         // load OX tags synchronously (after yieldbot)
         W['OX_ads'] = [{
@@ -179,23 +179,23 @@ define([
     }
 
     function yieldbotFailure() {
-        console.error('Yieldbot failed to load');
+        // console.error('Yieldbot failed to load');
     }
 
     function OXSuccess() {
-        console.log('OpenX loaded');
+        // console.log('OpenX loaded');
     }
 
     function OXFailure() {
-        console.error('OpenX failed to load');
+        // console.error('OpenX failed to load');
     }
 
     function zergnetSuccess() {
-        console.log('Zergnet loaded');
+        // console.log('Zergnet loaded');
     }
 
     function zergnetFailure() {
-        console.error('Zergnet failed to load');
+        // console.error('Zergnet failed to load');
     }
 
     function zergnet() {
@@ -233,7 +233,7 @@ define([
      * and exposed as refreshAds
      */
     function refreshAdsNow() {
-        console.debug('Ad refresh at ' + new Date());
+        // console.debug('Ad refresh at ' + new Date());
         resetAdZones();
         OX_ads_copy.forEach(function(a) {
             OX.load(a);

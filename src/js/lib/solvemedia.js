@@ -18,7 +18,7 @@ define(function() {
             // this is unfortunate, the roadblock has been called,
             // but SolveMedia's invocation JS has not loaded yet.
             ROADUNBLOCKED = true;
-            console.error('SolveMedia.fire executed, but ACPuzzle not ready :(');
+            // console.error('SolveMedia.fire executed, but ACPuzzle not ready :(');
             return false;
         }
         $(document).on(ON_KEYUP, escape);
@@ -86,7 +86,7 @@ define(function() {
     function SolveMedia(key) {
         // load Solve Media tag
         if (!key) {
-            console.warn('Could not initialize SolveMedia roadblock. No key provided.');
+            // console.warn('Could not initialize SolveMedia roadblock. No key provided.');
             return false;
         }
 
@@ -122,7 +122,7 @@ define(function() {
                 dataType: 'script',
                 cache: true // prevent appending ?<timstamp> bullsh
             }).fail(function() {
-                console.error('Failed to load SolveMedia JS: ' + src);
+                // console.error('Failed to load SolveMedia JS: ' + src);
             })
                 .done(function() {
                     acp = W['ACPuzzle'];

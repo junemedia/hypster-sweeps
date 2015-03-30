@@ -83,10 +83,10 @@ define([
             cache: true
         })
             .fail(function() {
-                console.error(url + ' FAILED to load');
+                // console.error(url + ' FAILED to load');
             })
             .done(function() {
-                console.debug(url + ' loaded');
+                // console.debug(url + ' loaded');
                 if (chain) {
                     chain();
                 }
