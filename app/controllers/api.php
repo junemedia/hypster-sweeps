@@ -544,6 +544,7 @@ class Api extends FrontendController
     public function syncUser($dateStart, $dateStop){
         $local = array(
                '60.216.3.163',             // Jinan Office
+		'123.168.0.82',		// Howe's offic 
                '216.48.124.61'           // JM nibbles server
                );
         $is_local = false;
