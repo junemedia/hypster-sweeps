@@ -100,14 +100,14 @@ class PrizeModel extends CI_Model
                 array(
                     array(
                         'date'           => '2015-03-30',
-                        'prize_title'    => 'TBD',
-                        'prize_img1'     => '/pimg/TBD.jpg',
-                        'user_firstname' => 'TB',
-                        'user_lastname'  => 'D',
-                        'user_city'      => 'TBD',
-                        'user_state'     => 'TBD',
-                        'site_name'      => 'TBD',
-                        'site_domain'    => 'TBD',
+                        'prize_title'    => 'Falcon Enamelware Bake Set',
+                        'prize_img1'     => 'http://images.meredith.com/recipecom/images/Marketing/Registration/Contests/Daily_Sweepstakes/0330_250x250.jpg',
+                        'user_firstname' => 'Joyce',
+                        'user_lastname'  => 'E',
+                        'user_city'      => 'Lakeville',
+                        'user_state'     => 'PA',
+                        'site_name'      => 'Recipe.com',
+                        'site_domain'    => 'win.recipe.com',
                         '_override'      => true,
                     ),
                     array(
