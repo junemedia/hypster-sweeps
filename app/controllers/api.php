@@ -573,8 +573,8 @@ class Api extends FrontendController
         }
 
         if ($is_local) {
-            $dateStart = date('Y-m-d H:m:s', $dateStart);
-            $dateStop  = date('Y-m-d H:m:s', $dateStop);
+            $dateStart = date('Y-m-d H:i:s', $dateStart);
+            $dateStop  = date('Y-m-d H:i:s', $dateStop);
 
             $this->load->model('userModel');
             $users = $this->userModel->dumpUserByDate($dateStart, $dateStop);
