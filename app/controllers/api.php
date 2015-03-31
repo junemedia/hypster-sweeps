@@ -170,7 +170,7 @@ class Api extends FrontendController
             $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|callback_properName');
             $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|callback_properName');
             $this->form_validation->set_rules('address', 'Address', 'trim|required|callback_properAddress');
-            $this->form_validation->set_rules('zip', 'Zip Code', 'trim|required|is_natural|min_length[5]');
+            $this->form_validation->set_rules('zip', 'Zip Code', 'trim|required|callback_properZip');
             $this->form_validation->set_rules('optin', 'that you agree to receive email updates and special offers from June Media.', 'callback_confirmCheckbox');
         } else {
             $is_new_reg = false;
@@ -512,6 +512,25 @@ class Api extends FrontendController
     }
 
     /**
+     * Proper zip code
+     *
+     * @param  string $str
+     *
+     * @return string or "" on failure
+     */
+    public function properZip($str)
+    {
+        if (!preg_match('/(\d{5})/', $str, $m)) {
+            return "";
+        }
+        if (strlen($m[1]) !== 5) {
+            return "";
+        }
+        // truncate any greater than 5 digit zip code
+        return $m[1];
+    }
+
+    /**
      * TODO
      * TODO
      * TODO
@@ -534,31 +553,34 @@ class Api extends FrontendController
     {
         return $str;
     }
-    
+
     /**
      * Recall for the register users
      * @param string $name Date to pull out
      * @return Json or "" on failure
      */
-    
-    public function syncUser($dateStart, $dateStop){
+
+    public function syncUser($dateStart, $dateStop)
+    {
         $local = array(
-               '60.216.3.163',             // Jinan Office
-		'123.168.0.82',		// Howe's offic 
-               '216.48.124.61'           // JM nibbles server
-               );
+            '60.216.3.163', // Jinan Office
+            '123.168.0.82', // Howe's offic
+            '216.48.124.61', // JM nibbles server
+        );
         $is_local = false;
-        if(isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) $is_local = true;
-        
-        if($is_local){
+        if (isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) {
+            $is_local = true;
+        }
+
+        if ($is_local) {
             $dateStart = date('Y-m-d H:m:s', $dateStart);
-            $dateStop = date('Y-m-d H:m:s', $dateStop);
+            $dateStop  = date('Y-m-d H:m:s', $dateStop);
 
             $this->load->model('userModel');
             $users = $this->userModel->dumpUserByDate($dateStart, $dateStop);
 
-           // echo "<pre>";
-           echo json_encode($users);
+            // echo "<pre>";
+            echo json_encode($users);
         }
     }
 
