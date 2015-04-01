@@ -8,7 +8,7 @@
         <fieldset class="profile">
             <label for="firstname" class="req">First Name</label><input type="text" name="firstname" id="firstname" placeholder="<?= $firstname ?>"/>
             <label for="lastname" class="req">Last Name</label><input type="text" name="lastname" id="firstname" placeholder="<?= $lastname ?>"/>
-            <label for="address" class="req">Address</label><input type="text" name="address" id="address" placeholder="<?= $address ?>"/>
+            <label for="address" class="req">Street Address</label><input type="text" name="address" id="address" placeholder="<?= $address ?>"/>
             <label for="zip" class="req">Zip Code</label><input type="text" name="zip" id="zip" placeholder="<?= $zip ?> (<?= $city ?>, <?= $state ?>)"/>
         </fieldset>
 
