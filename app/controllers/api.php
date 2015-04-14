@@ -559,29 +559,48 @@ class Api extends FrontendController
      * @param string $name Date to pull out
      * @return Json or "" on failure
      */
-
     public function syncUser($dateStart, $dateStop)
     {
-        $local = array(
-            '60.216.3.163', // Jinan Office
-            '123.168.0.82', // Howe's offic
-            '216.48.124.61', // JM nibbles server
-        );
-        $is_local = false;
-        if (isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) {
-            $is_local = true;
-        }
-
-        if ($is_local) {
+        if ($this->_checkIPLimits()) {
             $dateStart = date('Y-m-d H:i:s', $dateStart);
             $dateStop  = date('Y-m-d H:i:s', $dateStop);
 
             $this->load->model('userModel');
             $users = $this->userModel->dumpUserByDate($dateStart, $dateStop);
-
-            // echo "<pre>";
             echo json_encode($users);
+        }else{
+            echo "Limitation access";
         }
+    }
+    
+    public function getPrize(){
+        
+        $this->load->model('prizeModel');
+
+        $begin_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', time()+ 60*60*24*5);
+
+        // get prizes
+        $data['prizes'] = $this->prizeModel->getPrizesByDateRange($begin_date, $end_date);
+        return $this->json(XHR_OK, $data);
+    }
+    
+    /**
+     * Check if the remote server is authorized to fetch the data
+     * @return boolean
+     */
+    private function _checkIPLimits(){
+        $local = array(
+            '60.216.3.163',     // Jinan Office
+            '123.168.0.82',     // Howe's offic
+            '216.48.124.61',    // JM nibbles server
+            '66.54.186.254'     // JM Chicago office
+        );
+        if (isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) {
+            return true;
+        }else{
+            return false;
+        }       
     }
 
 }

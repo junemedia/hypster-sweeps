@@ -66,6 +66,7 @@ $route['api/login']              = 'api/login';
 $route['api/reset']              = 'api/reset';             // reset password (anonymous, with token)
 $route['api/forgot']             = 'api/forgot';
 $route['api/syncUser']           = 'api/syncUser';          // Sync user to the nibbles system
+$route['api/getPrize']           = 'api/getPrize';          // Load the Prize and send to the nibbles system
 
 // Admin Area
 $route['admin']                  = 'admin/dashboard';       // dashboard
