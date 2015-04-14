@@ -573,16 +573,23 @@ class Api extends FrontendController
         }
     }
     
+    /**
+     * Get the prize and dump out to sent to nibbles
+     * @return Json data
+     */
     public function getPrize(){
-        
-        $this->load->model('prizeModel');
+        if ($this->_checkIPLimits()) {
+            $this->load->model('prizeModel');
 
-        $begin_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', time()+ 60*60*24*5);
+            $begin_date = date('Y-m-d');
+            $end_date   = date('Y-m-d', time()+ 60*60*24*5);
 
-        // get prizes
-        $data['prizes'] = $this->prizeModel->getPrizesByDateRange($begin_date, $end_date);
-        return $this->json(XHR_OK, $data);
+            // get prizes
+            $data['prizes'] = $this->prizeModel->getPrizesByDateRange($begin_date, $end_date);
+            return $this->json(XHR_OK, $data);
+        }else{
+            echo "Limitation access";
+        }
     }
     
     /**
