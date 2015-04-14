@@ -588,7 +588,7 @@ class Api extends FrontendController
                 $begin_date = trim($date);
                 $ymd = explode('-', $begin_date);
                 $endTime = mktime(0, 0, 0, $ymd[1], $ymd[2], $ymd[0]);
-                $end_date   = date('Y-m-d', $beginTime + 60*60*24*5 + 3600);
+                $end_date   = date('Y-m-d', $endTime + 60*60*24*5 + 3600);
             }
 
             // get prizes
