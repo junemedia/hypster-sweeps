@@ -577,12 +577,19 @@ class Api extends FrontendController
      * Get the prize and dump out to sent to nibbles
      * @return Json data
      */
-    public function getPrize(){
+    public function getPrize($date = false){
         if ($this->_checkIPLimits()) {
             $this->load->model('prizeModel');
-
-            $begin_date = date('Y-m-d');
-            $end_date   = date('Y-m-d', time()+ 60*60*24*5);
+            
+            if(!$date){
+                $begin_date = date('Y-m-d');
+                $end_date   = date('Y-m-d', time()+ 60*60*24*5);
+            }else{
+                $begin_date = trim($date);
+                $ymd = explode('-', $begin_date);
+                $endTime = mktime(0, 0, 0, $ymd[1], $ymd[2], $ymd[0]);
+                $end_date   = date('Y-m-d', $beginTime + 60*60*24*5 + 3600);
+            }
 
             // get prizes
             $data['prizes'] = $this->prizeModel->getPrizesByDateRange($begin_date, $end_date);
