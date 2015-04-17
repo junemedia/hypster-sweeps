@@ -387,9 +387,14 @@
                 <li class="parent">
                     <div class="nav-item"> <a href="http://www.recipe4living.com/hints_tips/recipe_collections"><span>Recipe Collections</span></a> </div>
                 </li>
-                <li class="parent">
+                <!--<li class="parent">
                     <div class="nav-item"> <a href="http://www.recipe4living.com/articles"><span>Articles</span></a> </div>
-                </li>
+                </li>-->
+				<li class="parent">
+					<div class="nav-item">
+						<a href="http://win.recipe4living.com/" target="_blank"><span>Giveaways</span></a>
+					</div>
+				</li>
                 <li class="parent">
                     <div class="nav-item"> <a href="http://www.recipe4living.com/hints_tips/product_reviews"><span>Product Reviews</span></a> </div>
                 </li>
