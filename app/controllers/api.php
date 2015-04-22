@@ -607,6 +607,7 @@ class Api extends FrontendController
         $local = array(
             '60.216.3.163',     // Jinan Office
             '123.168.0.82',     // Howe's offic
+	    '216.48.124.18',	// STG.recipe4living.com
             '216.48.124.61',    // JM nibbles server
             '216.48.124.50',    // JM nibbles server
             '216.48.124.62',    // JM nibbles server
