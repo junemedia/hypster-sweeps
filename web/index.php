@@ -91,7 +91,7 @@ $application_folder = '../app';
  *
  */
 
-$view_folder = realpath($application_folder.'/_views');
+$view_folder = realpath($application_folder.'/views');
 
 /*
  * --------------------------------------------------------------------
