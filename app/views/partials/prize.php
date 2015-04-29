@@ -30,7 +30,7 @@
          --><?= $tag_desc ?><!-- NO GAP
          --><div class="alert"></div><!-- NO GAP
          --><?php if ($is_todays_prize): ?><!-- NO GAP
-         --><form id="prize_form" class="submit" action="/api/enter" method="POST"><!-- NO GAP
+         --><form id="prize_form" class="submit" action="/api/enter" method="POST" onsubmit="solvemedia()"><!-- NO GAP
              --><input type="submit" value="Enter Now"/><!-- NO GAP
              --><span class="loader"></span><!-- NO GAP
          --></form><!-- NO GAP

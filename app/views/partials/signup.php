@@ -1,7 +1,7 @@
 <? extract($data); ?>
 <div id="signup" class="frame"><!-- NO GAP
 
- --><form id="signup_form" class="signup" method="post" action="/api/signup">
+ --><form id="signup_form" class="signup" method="post" action="/api/signup" onsubmit="solvemedia()">
         <fieldset class="profile">
             <label for="firstname" class="req">First Name</label><input type="text" name="firstname" id="firstname"/>
             <label for="lastname" class="req">Last Name</label><input type="text" name="lastname" id="firstname"/>

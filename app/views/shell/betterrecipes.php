@@ -10,6 +10,17 @@
 <?php endforeach; ?>
 <link rel="stylesheet" href="<?= $assets['/css/betterrecipes.css'] ?>"/>
 <link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
+
+	<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.ajax"></script>
+	
+	<script type="text/javascript">
+				
+		function solvemedia()
+		{
+			ACPuzzle.create('ym7RhIOhnKDH44Vt.atFOnHyicq2FVs6', 'acwidget', { size: 'standard' });
+		}
+		
+	</script>
 </head>
 <body>
     <header>
