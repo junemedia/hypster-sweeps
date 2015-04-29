@@ -22,14 +22,18 @@
     
     <meta name="msvalidate.01" content="E03168D9BB4076DC3C37E21B03C7EE91"/>
 	
-	<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.ajax"></script>
-	
 	<script type="text/javascript">
 				
 		function solvemedia()
 		{
 			ACPuzzle.create('JvXkbYXwE-M0eL86F6xVTQB0OHhmEyXU', 'acwidget', { size: 'standard' });
 		}
+				
+		function closeSolve()
+		{
+			ACPuzzle.destroy();
+			$("#solvemedia").hide();
+		}		
 		
 	</script>
 	
@@ -281,9 +285,7 @@
         </div>
     </div>
     <div class="clear"></div>
-    <!-- FM Tracking Pixel -->
-    <script type='text/javascript' src='http://static.fmpub.net/site/recipe4livingco'></script>
-    <!-- FM Tracking Pixel -->
+    
     <script>
         var infolinks_pid = 1863387;
         var infolinks_wsid = 0;
@@ -328,20 +330,7 @@
             }
         } catch (e) {}
     </script>
-    <script>
-        window.NREUM || (NREUM = {});
-        NREUM.info = {
-            "beacon": "bam.nr-data.net",
-            "licenseKey": "5080428538",
-            "applicationID": "5794714",
-            "transactionName": "Y1EHYxNXV0UAUEZdV1obMEUIGVBYBVZKGkhcRA==",
-            "queueTime": 0,
-            "applicationTime": 110,
-            "atts": "TxYEFVtNREs=",
-            "errorBeacon": "bam.nr-data.net",
-            "agent": "js-agent.newrelic.com\/nr-536.min.js"
-        }
-    </script>
+   
 
 
     <?php
@@ -349,7 +338,7 @@
             $this->load->view('partials/captcha');
         }
     ?>
-    <script async src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
     <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')<?php
 
@@ -370,6 +359,19 @@
         }
     ?></script>
     <script async src="<?= $assets['/js/recipe4living.js'] ?>"></script>
+	
+	<script>
+		$(document).ready(function(){
+		
+			$.getScript( "http://api.solvemedia.com/papi/challenge.ajax", function( data, textStatus, jqxhr ) {
+			  //console.log( data ); // Data returned
+			  //console.log( textStatus ); // Success
+			  //console.log( jqxhr.status ); // 200
+			 // console.log( "Load was performed." );
+			});
+			
+		});
+	</script>
 </body>
 
 </html>

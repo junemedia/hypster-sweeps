@@ -11,14 +11,20 @@
 <link rel="stylesheet" href="<?= $assets['/css/betterrecipes.css'] ?>"/>
 <link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
 
-	<script type="text/javascript" src="http://api.solvemedia.com/papi/challenge.ajax"></script>
+	
 	
 	<script type="text/javascript">
-				
+	
 		function solvemedia()
 		{
 			ACPuzzle.create('ym7RhIOhnKDH44Vt.atFOnHyicq2FVs6', 'acwidget', { size: 'standard' });
 		}
+		
+		function closeSolve()
+		{
+			ACPuzzle.destroy();
+			$("#solvemedia").hide();
+		}	
 		
 	</script>
 </head>
@@ -77,7 +83,7 @@
         $this->load->view('partials/captcha');
     }
 ?>
-    <script async src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <!-- Create the `jds` pre-object/function which allows for jds() calls before jds.js is loaded -->
     <script>(function(w,m){w[m]=w[m]&&!w[m].nodeName?w[m]:function(){(w[m].q=w[m].q||[]).push(arguments)}})(window,'jds')<?php
 
@@ -98,5 +104,19 @@
         }
  ?></script>
     <script async src="<?= $assets['/js/betterrecipes.js'] ?>"></script>
+	
+	<script>
+		$(document).ready(function(){
+		
+			$.getScript( "http://api.solvemedia.com/papi/challenge.ajax", function( data, textStatus, jqxhr ) {
+			  //console.log( data ); // Data returned
+			  //console.log( textStatus ); // Success
+			  //console.log( jqxhr.status ); // 200
+			 // console.log( "Load was performed." );
+			});
+			
+		});
+	</script>
+	
 </body>
 </html>
