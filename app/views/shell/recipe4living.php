@@ -363,11 +363,15 @@
 	<script>
 		$(document).ready(function(){
 		
+			$.ajaxSetup({
+			  cache: true
+			});
+		
 			$.getScript( "http://api.solvemedia.com/papi/challenge.ajax", function( data, textStatus, jqxhr ) {
 			  //console.log( data ); // Data returned
 			  //console.log( textStatus ); // Success
 			  //console.log( jqxhr.status ); // 200
-			 // console.log( "Load was performed." );
+			  //console.log( "Load was performed." );
 			});
 			
 		});
