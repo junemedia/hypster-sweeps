@@ -137,11 +137,11 @@ class UserModel extends CI_Model
      * Verify a users email address
      *
      * @param  string   $token
-     * @param  integer  $ttl seconds (optional; default 1 day)
+     * @param  integer  $ttl seconds (optional; default 1 day)//Updated default to 3 days andrewb@junemedia.com
      *
      * @return boolean
      */
-    public function verify($token, $ttl = 86400)
+    public function verify($token, $ttl = 259200)
     {
         // For SPROCs, you MUST use $query->free_result() to avoid
         // getting the "2014 Commands out of sync" mysql error.
