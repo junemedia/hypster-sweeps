@@ -188,6 +188,7 @@
                     </div>
                     <div id="panel-right" class="column">
                         <div class="ad" data-id="300x250_ATF"></div>
+			<?php /*
                         <div class="our_best">
                             <h2>Our Best Recipe Collections</h2>
                             <div class="content">
@@ -197,6 +198,7 @@
                                 </div>
                             </div>
                         </div>
+			*/ ?>
                         <div class="clear"></div>
                         <div class="ad">
                             <div class="ad" data-id="300x250_BTF"></div>
@@ -285,12 +287,13 @@
         </div>
     </div>
     <div class="clear"></div>
-    
+   <?php /* 
     <script>
         var infolinks_pid = 1863387;
         var infolinks_wsid = 0;
     </script>
     <script src="http://resources.infolinks.com/js/infolinks_main.js"></script>
+	*/ ?>
     <script src="http://edge.quantserve.com/quant.js"></script>
     <script>
         _qacct = "p-ed7ji9FtIlPSo";
