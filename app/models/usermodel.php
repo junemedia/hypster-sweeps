@@ -113,11 +113,11 @@ class UserModel extends CI_Model
      *
      * @param  string   $token
      * @param  string   $password
-     * @param  integer  $ttl seconds (optional; default 1 day) //Updated default to 2 days 48hrs andrewb@junemedia.com
+     * @param  integer  $ttl seconds (optional; default 1 day) //Updated default to 365 days 48hrs andrewb@junemedia.com
      *
      * @return boolean
      */
-    public function reset($token, $password, $ttl = 172800)
+    public function reset($token, $password, $ttl = 31104000)
     {
         // For SPROCs, you MUST use $query->free_result() to avoid
         // getting the "2014 Commands out of sync" mysql error.
@@ -165,6 +165,19 @@ class UserModel extends CI_Model
      */
     public function getPasswordResetToken($email)
     {
+		
+		$sql = "SELECT `token` FROM `reset` 
+				WHERE `type`='reset' 
+				AND `email`=".$this->db->escape($email)." 
+				LIMIT 1;";
+		
+		$query = $this->db->query( $sql );
+		
+		if ( $query && $query->num_rows() > 0){
+			$result = $query->row_array();
+			return $result['token'];
+		} 
+		
         // For SPROCs, you MUST use $query->free_result() to avoid
         // getting the "2014 Commands out of sync" mysql error.
         $sql = sprintf('CALL RESET_TOKEN(%s)',
