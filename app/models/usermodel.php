@@ -113,11 +113,11 @@ class UserModel extends CI_Model
      *
      * @param  string   $token
      * @param  string   $password
-     * @param  integer  $ttl seconds (optional; default 1 day)
+     * @param  integer  $ttl seconds (optional; default 1 day) //Updated default to 2 days 48hrs andrewb@junemedia.com
      *
      * @return boolean
      */
-    public function reset($token, $password, $ttl = 86400)
+    public function reset($token, $password, $ttl = 172800)
     {
         // For SPROCs, you MUST use $query->free_result() to avoid
         // getting the "2014 Commands out of sync" mysql error.
