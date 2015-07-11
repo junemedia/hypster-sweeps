@@ -612,6 +612,7 @@ class Api extends FrontendController
             '216.48.124.50',    // JM nibbles server
             '216.48.124.62',    // JM nibbles server
             '216.48.124.41',    // JM nibbles server
+	    '104.130.175.114',	// JM new rackspace server
             '66.54.186.254'     // JM Chicago office
         );
         if (isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) {
