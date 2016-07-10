@@ -6,7 +6,7 @@ Please respond within 10 days of this email received date to verify your submiss
 
 If we do not hear from you within 10 days, an alternative winner will be selected.
 
-If you have any questions, please contact ContestAdmin@JuneMedia.com.
+Please be sure to send your response or any questions to ContestAdmin@JuneMedia.com.
 
 Thanks for entering our Sweepstakes on {site_domain}. Make sure to come back every day for other great items!
 
