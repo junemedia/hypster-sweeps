@@ -172,7 +172,7 @@ define([
         $.extend(true, OX_ads_copy, W['OX_ads']);
 
         scriptAsync(
-            '//ox-d.junemedia.com/w/1.0/jstag',
+            '//junemedia-d.openx.net/w/1.0/jstag',
             OXSuccess,
             OXFailure
         );

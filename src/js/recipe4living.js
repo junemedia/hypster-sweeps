@@ -29,7 +29,7 @@ define([
             'auid': '537614200'
         }];
 
-        getScript('//ox-d.junemedia.com/w/1.0/jstag');
+        getScript('//junemedia-d.openx.net/w/1.0/jstag');
     }
 
 
