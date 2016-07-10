@@ -100,7 +100,8 @@ class FrontendController extends SweepsController
         $this->db->select('id as site_id, slug as site_slug, name as site_name, domain as site_domain, gtm as site_gtm');
 
         // production (win.) domains are easy to match against the `site`.`domain` column
-        if (strpos($_SERVER['HTTP_HOST'], 'win.') === 0) {
+//       if (strpos($_SERVER['HTTP_HOST'], 'win.') === 0) {
+         if (strpos($_SERVER['HTTP_HOST'], 'win.') !== false) {
             $this->db->where('domain', $_SERVER['HTTP_HOST']);
         } else {
             // development/staging domains must have the `slug` in the format SLUG.dailysweeps.HOST.resolute.com

@@ -54,15 +54,12 @@ class Cron extends CI_Controller
         $this->load->model('prizeModel');
 
         $user = $this->adminModel->pickWinner($date);
-
-        switch (true) {
-            case $user == -1:
-                return $this->error($this->ERROR, 'No contest exists on ' . $date . '.');
-                break;
-            case $user == -2:
-                return $this->error($this->ERROR, 'We do not have any other entries on ' . $date . '.');
-                break;
-            case @$user['id'] >= 1:
+	//var_dump($user);
+        if($user == -1){
+			return $this->error($this->ERROR, 'No contest exists on ' . $date . '.');
+		}elseif($user == -2){
+			return $this->error($this->ERROR, 'We do not have any other entries on ' . $date . '.');
+		}elseif(@$user['id'] >= 1){
                 // grab all of the information for this contest:
                 $winner = $this->prizeModel->getWinnersByDateRange($date);
                 if (!$winner) {
@@ -70,10 +67,8 @@ class Cron extends CI_Controller
                 }
                 $winner = array_shift($winner);
                 $this->sendMail($winner);
-                break;
-            default:
+        }else{
                 return $this->error($this->ERROR, 'Unexpected error from $this->adminModel->pickWinner(' . $date . ').');
-                break;
         }
     }
 

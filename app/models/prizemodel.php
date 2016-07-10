@@ -78,9 +78,9 @@ class PrizeModel extends CI_Model
                         ->get('view_winner')
                         ->result_array();
         // UNCOMMEND THIS 8 DAYS AFTER LAUNCH:
-        // return $winners;
+         return $winners;
         // AND REMOVE THIS:
-        return $this->temporarilyAddMeredithWinners($winners, $begin_date, $end_date);
+        //return $this->temporarilyAddMeredithWinners($winners, $begin_date, $end_date);
     }
 
     /**
