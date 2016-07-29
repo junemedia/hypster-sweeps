@@ -7,7 +7,12 @@
 
         git clone git@github.com:resolute/dailysweeps.git /srv/sites/dailysweeps
 
-2. Create the database and import fixture data
+2. Create project config file from template and edit acordingly
+
+        cd /srv/sites/dailysweeps/app/config
+        cp project.php.template project.php
+
+3. Create the database and import fixture data
 
         mysql -e 'DROP DATABASE IF EXISTS `dailysweeps`;
         CREATE DATABASE `dailysweeps`' && \
@@ -20,7 +25,7 @@
         doc/fixture.sql \
         | mysql dailysweeps
 
-3. Project should be accessible at http://betterrecipes.dailysweeps.ENVIRONMENT.resolute.com/
+4. Project should be accessible at http://betterrecipes.dailysweeps.ENVIRONMENT.resolute.com/
 
 
 ## URLs
