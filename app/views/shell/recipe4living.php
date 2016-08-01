@@ -379,6 +379,9 @@
 			
 		});
 	</script>
+
+  <?php $this->load->view("ads/$site_slug/underdog"); ?>
+
 </body>
 
 </html>
