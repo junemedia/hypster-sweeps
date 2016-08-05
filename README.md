@@ -25,7 +25,14 @@
         doc/fixture.sql \
         | mysql dailysweeps
 
-4. Project should be accessible at http://betterrecipes.dailysweeps.ENVIRONMENT.resolute.com/
+4. Ensure that packages needed to run the build process are in place:
+
+    # yum install nodejs npm ruby ruby-devel
+    # npm install -g grunt-cli
+    # gem update --system
+    # gem install compass
+
+5. Project should be accessible at http://betterrecipes.dailysweeps.ENVIRONMENT.resolute.com/
 
 
 ## URLs
