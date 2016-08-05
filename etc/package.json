@@ -1,28 +1,27 @@
 {
-    "name"        : "dailysweeps",
-    "version"     : "0.0.1",
-    "description" : "June Media Daily Sweeps",
-    "author"      : "Resolute Digital",
-    "private"     : true,
-    "scripts"     : {
-        "test"    : "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository"  : {
-        "type"    : "git",
-        "url"     : "git://github.com/resolute/dailysweeps.git"
-    },
-    "dependencies": {
-        "amdclean"                : "~2.4.0",
-        "grunt"                   : "~0.4.2",
-        "grunt-contrib-compass"   : "~0.7.0",
-        "grunt-contrib-requirejs" : "~0.4.4",
-        "grunt-contrib-uglify"    : "~0.6.0",
-        "grunt-contrib-htmlmin"   : "~0.3.0",
-        "grunt-contrib-watch"     : "~0.5.3",
-        "grunt-contrib-clean"     : "~0.5.0",
-        "grunt-inline"            : "~0.3.2",
-        "grunt-filerev"           : "~2.2.0",
-        "grunt-filerev-assets"    : "~0.3.2",
-        "mkdirp"                  : "~0.3.5"
-    }
+  "name": "dailysweeps",
+  "version": "0.0.1",
+  "description": "June Media Daily Sweeps",
+  "author": "Resolute Digital",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/resolute/dailysweeps.git"
+  },
+  "dependencies": {
+    "amdclean": "~2.4.0",
+    "grunt": "~0.4.2",
+    "grunt-contrib-compass": "~0.7.0",
+    "grunt-contrib-requirejs": "~0.4.4",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-inline": "~0.3.2",
+    "grunt-filerev": "~2.2.0",
+    "grunt-filerev-assets": "~0.3.2",
+    "mkdirp": "~0.3.5"
+  }
 }

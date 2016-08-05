@@ -32,7 +32,6 @@ module.exports = function(grunt) {
                     'removeUseStricts': true
                 }) +
                 outro);
-            // );
         };
 
 
@@ -44,12 +43,6 @@ module.exports = function(grunt) {
         source: {
             js: ['../src/js/**/*.js'],
             css: ['../src/scss/**/*.scss'],
-            php: [{
-                expand: true,
-                cwd: '../app/views',
-                src: ['**/*.php'],
-                dest: '../app/_views'
-            }]
         },
 
         watch: {
@@ -61,32 +54,6 @@ module.exports = function(grunt) {
                 files: '<%= source.css %>',
                 tasks: ['compass:dist', 'filerev', 'filerev_assets']
             },
-            php: {
-                // files: '<%= source.php %>', // this doesn't work for some reason
-                files: ['../app/views/**/*.php'],
-                tasks: ['htmlmin:dist']
-            }
-        },
-
-        htmlmin: {
-            options: {
-                ignoreCustomComments: [/<\?(.|\n|\s)+?\?>/], // regex
-                removeComments: true, // removes SSI includes :(
-                collapseWhitespace: true,
-                removeIgnored: false,
-                removeCommentsFromCDATA: true,
-                removeCDATASectionsFromCDATA: true,
-                useShortDoctype: true,
-                removeEmptyAttributes: true,
-                removeScriptTypeAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                keepClosingSlash: true,
-                minifyJS: true,
-                minifyCSS: true
-            },
-            dist: {
-                files: '<%= source.php %>'
-            }
         },
 
         compass: {
@@ -161,14 +128,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-compass');
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-htmlmin');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-inline');
     grunt.loadNpmTasks('grunt-filerev');
     grunt.loadNpmTasks('grunt-filerev-assets');
 
     // Register task(s).
-    grunt.registerTask('compile', ['htmlmin', 'compass', 'requirejs', 'filerev', 'filerev_assets']);
+    grunt.registerTask('compile', ['compass', 'requirejs', 'filerev', 'filerev_assets']);
     grunt.registerTask('build', ['compile']);
     grunt.registerTask('default', ['compile', 'watch']);
 
