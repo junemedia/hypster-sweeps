@@ -112,13 +112,11 @@ Please refer to the grunt configuration in `etc/gruntfile.js` and the compass co
 
 1. Generate an AMD-clean, asynchronous version of the project’s **JavaScript** for each site defined in `etc/gruntfile.js`;
 
-    *Each site configuration may use any combination of source files.  Meaning, the JS for betterrecipes could be completely different than the JS for recipe4living.  It all depends on how you `define()` and link dependencies in `src/js`.  At the time of this writting, both sites use generally the exact same JS, with the exception of some betterrecipes-specific JS code for the Better Recipes shell.*
+    *Each site configuration may use any combination of source files.  Meaning, the JS for betterrecipes could be completely different than the JS for recipe4living.  It all depends on how you `define()` and link dependencies in `src/js`. At the time of this writing, both sites use generally the exact same JS, with the exception of some betterrecipes-specific JS code for the Better Recipes shell.*
 
 2. Compile production ready CSS from source **SCSS** `src/scss` files into `web/css`;
 
-3. Minify **PHP/HTML** in the `app/views` directory into `app/_views`;
-
-4. Generate `etc/assets.json` so that PHP can reference the correct CSS/JS version.
+3. Generate `etc/assets.json` so that PHP can reference the correct CSS/JS version.
 
 ## Routine Maintenance
 
