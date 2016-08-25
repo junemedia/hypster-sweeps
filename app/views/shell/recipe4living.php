@@ -156,9 +156,6 @@
         <li class="parent">
         <div class="nav-item"> <a href="http://www.recipe4living.com/hints_tips/product_reviews"><span>Product Reviews</span></a> </div>
         </li>
-        <li class="parent">
-        <div class="nav-item"> <a href="http://videos.recipe4living.com/"><span>Videos</span></a> </div>
-        </li>
         <li class="parent" style="padding:0px;">
         <div class="nav-icon-item"> <span>Follow Us:</span>
           <a href="http://goo.gl/8XKWk" target="_blank"><img src="http://www.recipe4living.com/frontend/recipe4living/images/site/R4l-facebook.png"/></a>
