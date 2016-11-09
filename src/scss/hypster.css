@@ -1,0 +1,79 @@
+$debug-browser-support: true;
+
+@charset "UTF-8";
+
+@import "shell/betterrecipes";
+
+@import "sweeps";
+
+#jds.betterrecipes {
+    input[type="submit"],
+    .btn {
+        background-color: #7a2279;
+    }
+    .calendar {
+        > div {
+            > a {
+                border-color: #666;
+                i {
+                    &:first-child {
+                        // day of week (Sunday, Monday...)
+                        color: #fff;
+                        background: #444;
+                    }
+                    &:nth-child(2) {
+                        // date (1, 2, 3...)
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+    #calendar {
+        h2.banner {
+            background: #7a2279;
+        }
+    }
+    h1 {
+        font-size: 1.8em;
+        color: #83af1b;
+        font-weight: normal;
+    }
+    #calendar > header,
+    .calendar,
+    .slideshow,
+    .banner {
+        @media all and (max-width: 640px) {
+            margin-left: -1rem;
+            margin-right: -1rem;
+        }
+        b {
+            color: #7a2279;
+        }
+    }
+    .banner {
+        // background-image: inline-image("betterrecipes/banner.png");
+        background-image: image-url("betterrecipes/banner.png");
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        padding-top: 15%;
+        text-decoration: none;
+        span {
+            display: block;
+            background: #7da603;
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: .4rem .8rem;
+            font-size: .9rem;
+        }
+        @media all and (max-width: 640px) {
+            background-size: 90% auto;
+            background-position: 1rem 17%;
+            padding-top: 18%;
+            span {
+                padding: .4rem 1rem;
+            }
+        }
+    }
+}
