@@ -2,11 +2,11 @@ $debug-browser-support: true;
 
 @charset "UTF-8";
 
-@import "shell/betterrecipes";
+@import "shell/hypster";
 
 @import "sweeps";
 
-#jds.betterrecipes {
+#jds.hypster {
     input[type="submit"],
     .btn {
         background-color: #7a2279;
@@ -52,8 +52,6 @@ $debug-browser-support: true;
         }
     }
     .banner {
-        // background-image: inline-image("betterrecipes/banner.png");
-        background-image: image-url("betterrecipes/banner.png");
         background-size: 100% auto;
         background-repeat: no-repeat;
         padding-top: 15%;

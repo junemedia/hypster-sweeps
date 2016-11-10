@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="<?= $assets['/css/hypster.css'] ?>"/>
   <link rel="stylesheet" href="http://hypster.com/bundles/css?v=EKDg3wnM3G5p_xNhRqwB5s4yJcmdIj6i3w5jmMn5X8k1" />
 
-  <link rel="shortcut icon" href="http://www.betterrecipes.com/favicon.ico"/>
+  <link rel="shortcut icon" href="http://www.hypster.com/favicon.ico"/>
 
   <script type="text/javascript">
     function solvemedia()

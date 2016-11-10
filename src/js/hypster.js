@@ -7,50 +7,8 @@ define([
      * BR context Globals
      */
     var
-        BASE_HREF = 'http://www.betterrecipes.com',
-        FOOTER_LINKS = {
-            'Recipe Categories': [
-                'Appetizer',
-                'Beef',
-                'Bread',
-                'Breakfast',
-                'Cake',
-                'Chicken',
-                'Christmas',
-                'Cookie',
-                'Copycat',
-                'Crock Pot',
-                'Dessert',
-                'Diabetic',
-                'Drink',
-                'Easter',
-                'Easy',
-                'FXB',
-                'Grilling',
-                'Halloween',
-                'Healthy',
-                'Italian',
-                'Low Carb',
-                'Low Fat',
-                'Mexican',
-                'Pork',
-                'Salad',
-                'Seafood',
-                'Soup',
-                'Thanksgiving',
-                'Vegetarian',
-            ],
-            'Your Account': [
-                ['My Recipe Box', '/myrecipebox/all/date-desc/1'],
-                ['Help Resources', '/help'],
-                ['Login/Register', '/signup']
-            ],
-            'Better Recipes': [
-                ['Free Newsletters', '/email-signup'],
-                ['Follow Us on Twitter', 'https://twitter.com/BetterRecipes'],
-                ['Find Us on Facebook', 'https://www.facebook.com/betterrecipes']
-            ]
-        },
+        BASE_HREF = 'http://hypster.com',
+        FOOTER_LINKS = {},
         // Do not allow ads to be refreshed more than once every
         // AD_REFRESH_TIME_LIMIT ms
         AD_REFRESH_TIME_LIMIT = 4000,
@@ -64,7 +22,7 @@ define([
     /**
      * placeholder, could do something, but doesn't
      */
-    function betterrecipes() {}
+    function hypster() {}
 
     /**
      * Begin loading of Ad tags as soon as possible
@@ -243,7 +201,7 @@ define([
     }
 
     // wrap and throttle the actual ad refresh method
-    var refreshAds = betterrecipes.refreshAds = debounce(function() {
+    var refreshAds = hypster.refreshAds = debounce(function() {
             ADS_BEING_THROTTLED = false;
             // add a little cushion to allow a transition to finish
             // before refreshing the ads:
@@ -310,8 +268,8 @@ define([
     jds.refreshAds = refreshAds;
 
     // expose the global window.BR object
-    W['BR'] = betterrecipes;
+    W['HYP'] = hypster;
 
-    return betterrecipes;
+    return hypster;
 
 });

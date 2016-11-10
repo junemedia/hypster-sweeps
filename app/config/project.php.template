@@ -17,10 +17,8 @@ $config['admin_emails'][]                 = 'johns@junemedia.com';
 // The "From:" address for the winner emails:
 // Organized by "site_slug" (`site`.`slug`);
 // If no site slugs match, then "default" will be used.
-$config['from']['betterrecipes']['name']  = '';
-$config['from']['betterrecipes']['email'] = '';
-$config['from']['recipe4living']['name']  = '';
-$config['from']['recipe4living']['email'] = '';
+$config['from']['hypster']['name']  = '';
+$config['from']['hypster']['email'] = '';
 $config['from']['default']['name']        = '';
 $config['from']['default']['email']       = '';
 

@@ -605,22 +605,15 @@ class Api extends FrontendController
      */
     private function _checkIPLimits(){
         $local = array(
-            '60.216.3.163',     // Jinan Office
-            '123.168.0.82',     // Howe's offic
-	    '216.48.124.18',	// STG.recipe4living.com
-            '216.48.124.61',    // JM nibbles server
-            '216.48.124.50',    // JM nibbles server
-            '216.48.124.62',    // JM nibbles server
-            '216.48.124.41',    // JM nibbles server
-	    '104.130.175.114',	// JM new rackspace server
+	          '23.253.156.54',	  // JM new rackspace server
             '162.242.248.108',  // niblets server
-            '66.54.186.254'     // JM Chicago office
+            '66.117.110.138'    // JM Chicago office
         );
         if (isset($_SERVER['REMOTE_ADDR']) && array_search($_SERVER['REMOTE_ADDR'], $local) !== false) {
             return true;
         }else{
             return false;
-        }       
+        }
     }
 
 }

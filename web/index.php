@@ -1,9 +1,5 @@
 <?php
 
-if ( isset($_SERVER['QUERY_STRING']) && ( strpos( $_SERVER['QUERY_STRING'], '@') )){
-	header("Location: http://win.betterrecipes.com");
-}
-
 /*
  * ---------------------------------------------------------------
  * APPLICATION ENVIRONMENT

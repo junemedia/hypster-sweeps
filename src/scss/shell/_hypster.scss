@@ -15,7 +15,7 @@ body {
     border: 0;
     margin: 0;
     @media all and (min-width: 1000px) {
-        background: inline-image("betterrecipes/bg.png") 50% 0 repeat-y;
+        //background: inline-image("hypster/bg.png") 50% 0 repeat-y;
     }
 }
 
@@ -80,7 +80,7 @@ body > header {
         display: block;
         width: 256px;
         color: transparent;
-        background: inline-image("betterrecipes/logo.svg") no-repeat 1em 55%;
+        //background: inline-image("hypster/logo.svg") no-repeat 1em 55%;
         background-size: auto 50%;
     }
     .ad {

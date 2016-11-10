@@ -84,26 +84,6 @@ module.exports = function(grunt) {
                     skipModuleInsertion: true,
                     onModuleBundleComplete: amdcleanLogic
                 }
-            },
-            betterrecipes: {
-                options: {
-                    name: 'betterrecipes',
-                    baseUrl: '../src/js',
-                    out: '../web/js/betterrecipes.js',
-                    optimize: 'uglify',
-                    skipModuleInsertion: true,
-                    onModuleBundleComplete: amdcleanLogic
-                }
-            },
-            recipe4living: {
-                options: {
-                    name: 'recipe4living',
-                    baseUrl: '../src/js',
-                    out: '../web/js/recipe4living.js',
-                    optimize: 'uglify',
-                    skipModuleInsertion: true,
-                    onModuleBundleComplete: amdcleanLogic
-                }
             }
         },
 

@@ -17,7 +17,6 @@ define(['./db'], function(db) {
      *      jds("gtm", "myGtmEvent", true)
      *
      * GTM IDs are defined in the database `site`.`gtm`
-     *      BetterRecipes: GTM-5VTT4K
      *
      */
 
