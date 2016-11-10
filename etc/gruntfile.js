@@ -75,6 +75,16 @@ module.exports = function(grunt) {
                     onModuleBundleComplete: amdcleanLogic
                 }
             },
+            hypster: {
+                options: {
+                    name: 'hypster',
+                    baseUrl: '../src/js',
+                    out: '../web/js/hypster.js',
+                    optimize: 'uglify',
+                    skipModuleInsertion: true,
+                    onModuleBundleComplete: amdcleanLogic
+                }
+            },
             betterrecipes: {
                 options: {
                     name: 'betterrecipes',
