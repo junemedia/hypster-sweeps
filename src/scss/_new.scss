@@ -1,0 +1,17 @@
+
+// temporary, should get incorporated into src/scss/hypster.scss
+
+#jds.hypster {
+  .main {
+    float: left;
+    width:720px;
+    margin-right: 20px;
+  }
+  .rail {
+    width: 300px;
+    float: right;
+  }
+  .banner {
+    background-image: image-url('banner.png');
+  }
+}

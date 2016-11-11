@@ -6,10 +6,12 @@ $debug-browser-support: true;
 
 @import "sweeps";
 
+@import "new";
+
 #jds.hypster {
     input[type="submit"],
     .btn {
-        background-color: #7a2279;
+        //background-color: #7a2279;
     }
     .calendar {
         > div {
@@ -48,7 +50,7 @@ $debug-browser-support: true;
             margin-right: -1rem;
         }
         b {
-            color: #7a2279;
+            color: #555;
         }
     }
     .banner {
@@ -58,7 +60,7 @@ $debug-browser-support: true;
         text-decoration: none;
         span {
             display: block;
-            background: #7da603;
+            background: #555;
             color: #fff;
             font-weight: bold;
             text-transform: uppercase;

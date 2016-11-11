@@ -1,416 +1,8733 @@
-@import "compass/css3";
-@import "compass/css3/transform";
+// @import "compass/css3";
+// @import "compass/css3/transform";
 
-* {
-    box-sizing: border-box;
-}
+@import url(http://fonts.googleapis.com/css?family=Lato:300,900);
 
-body {
-    // -webkit-font-smoothing: subpixel-antialiased;
-    // -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: 'Trebuchet MS', sans-serif;
-    color: #777;
-    border: 0;
-    margin: 0;
-    @media all and (min-width: 1000px) {
-        //background: inline-image("hypster/bg.png") 50% 0 repeat-y;
-    }
-}
-
-a {
-    text-decoration: none;
-    cursor: pointer;
-    &,
-    &:visited,
-    &:hover,
-    &:active {
-        color: #606;
-    }
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 400;
-}
-
-.btn, input[type="submit"] {
-    font-family: inherit;
-    letter-spacing: 1px;
-}
-
-input::-moz-focus-inner,
-button::-moz-focus-inner {
-    border: 0;
-    padding: 0;
-}
-
-// globally used to maintain elements within max-width
-// CAREFUL: you should not need to alter this anywhere else in the SCSS
-// THERE ARE FOUR (4) WRAP SELECTORS:
-// wrap element:
-body > header > div,
-body > header > nav > div,
-body > div,
-body > footer > div {
-    max-width: 1000px;
-    margin: 0 auto;
-    position: relative;
-}
-
-body > header {
-    text-align: center;
-    // wrap element:
-    @media all and (min-width: 1000px) {
-        > div {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-    }
-    .logo,
-    .ad {
-        height: 90px;
-    }
-    .logo {
-        // I'D PREFER THIS HEIGHT TO BE A PADDING-BOTTOM: XX%
-        // IT COULD LOOK BETTER WHEN SNAPPING TO RESPONSIVE SIZES
-        display: block;
-        width: 256px;
-        color: transparent;
-        //background: inline-image("hypster/logo.svg") no-repeat 1em 55%;
-        background-size: auto 50%;
-    }
-    .ad {
-        position: absolute;
-        top: 0;
-        right: 1em;
-        width: 728px;
-    }
-    .menu {
-        display: none;
-    }
-    @media all and (max-width: 1000px) {
-        .logo,
-        .ad {
-            display: block;
-            position: static;
-            margin: 0 auto;
-        }
-        .logo {
-            width: 100%;
-            background-position: 50% 60%;
-        }
-    }
-    @media all and (max-width: 727px) {
-        .ad {
-            display: none;
-        }
-    }
-    nav {
-        // or #863686
-        // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
-        // r1 = (r3 - r2 + r2*a1)/a1
-        // g1 = (g3 - g2 + g2*a1)/a1
-        // b1 = (b3 - b2 + b2*a1)/a1
-        //
-        // RGB3 (the final desired color)
-        // RGB2 (the background color)
-        // A1 (how much opacity you want)
-        //
-        // Let's find the right rgba for .79 opacity*:
-        // r1 = (134 - 255 + 255*.79)/.79 ~= 102
-        // g1 = ( 54 - 255 + 255*.79)/.79 ~= 0
-        // b1 = (134 - 255 + 255*.79)/.79 ~= 102
-        //
-        // *.79 is the most translucent we can get without making g1 < 0
-        // which, would be out of range
-        //
-        background: rgba(102, 0, 102, 0.79);
-        font-size: 1.3em;
-        line-height: 100%;
-        letter-spacing: 1px;
-        padding: .25em 0;
-        a,
-        form {
-            display: inline-block;
-            vertical-align: middle;
-            margin: .25em 2%;
-        }
-        a {
-            color: #fff;
-            text-transform: uppercase;
-            &:hover,
-            &:visited {
-                color: #fff;
-            }
-            &.on {
-                text-decoration: underline;
-            }
-        }
-        input {
-            display: block;
-            outline: 0;
-            height: 100%;
-        }
-        form {
-            display: inline-block;
-            width: 10em;
-            // height: 100%;
-            // height: 1.3em;
-            overflow: hidden;
-            position: relative;
-            padding-right: 1em;
-        }
-        input[type="email"],
-        input[type="text"] {
-            border: 0;
-            width: 100%;
-            margin-right: 1em;
-            border-radius: .3em 0 0 .3em;
-            font-size: 75%;
-            padding: .2em .3em;
-        }
-        input[type="submit"] {
-            background: #ebebeb;
-            border: 0;
-            border-radius: 0 .3em .3em 0;
-            // border-radius: 0;
-            // border-top-right-radius: .3rem;
-            // border-bottom-right-radius: .3rem;
-            position: absolute;
-            top: 0;
-            right: 0;
-            text-transform: uppercase;
-            color: #863686;
-            letter-spacing: 0;
-            font-weight: 600;
-            -webkit-appearance: button;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-        }
-    }
-    // *** also requires some JS, found in sweeps.js ***
-    // hamburger menu opener/closer on mobile
-    @media all and (max-width: 640px) {
-        .logo {
-            background-position: 1em 68%;
-            background-size: auto 65%;
-            height: 70px;
-        }
-        .menu {
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-            cursor: pointer;
-            display: block;
-            // background-color: #863686;
-            // border: 2px solid #fff;
-            border: 3px solid #863686;
-            border-radius: 3em;
-            width: 3em;
-            height: 3em;
-            position: absolute;
-            right: 1em;
-            top: 50%;
-            margin-top: -1.5em;
-            &:after {
-                content: " ";
-                display: block;
-                position: absolute;
-                width: 74%;
-                height: 74%;
-                top: 13%;
-                left: 13%;
-                background-size: 100% 100%;
-                background-image: inline-image("menu.svg");
-            }
-        }
-        &.open {
-            .menu:after {
-                background-image: inline-image("close.svg");
-            }
-        }
-        // wrap element:
-        > nav > div {
-            display: none;
-        }
-        &.open {
-            // wrap element:
-            > nav > div {
-                display: block;
-            }
-        }
-        nav a, nav form {
-            display: block;
-            margin: .5em 2% .5em 2em;
-            text-align: left;
-        }
-        nav form {
-            margin-top: 1em;
-        }
-    }
-}
-
-body > div > .main {
-    margin: 1rem 300px 0 1rem;
-    // account for the margin around .rail
-    border-right: 2rem solid transparent;
-    @media all and (min-width: 728px) {
-        // (250px x 4) + (16 (1em) x 4)
-        min-height: 1048px;
-    }
-    box-sizing: content-box;
-    @media all and (max-width: 727px) {
-        margin-right: 1rem;
-        border-right: none;
-    }
-    @media all and (max-width: 640px) {
-        margin-top: 0;
-    }
-}
-
-body > div > .rail {
-    clear: both;
-    position: absolute;
-    width: 300px;
+html {
+    scrollbar-face-color: #777;
+    scrollbar-base-color: #777;
+    scrollbar-arrow-color: #000;
+    scrollbar-track-color: #313537;
+    scrollbar-shadow-color: #777;
+    scrollbar-highlight-color: #777;
+    scrollbar-3dlight-color: #666;
+    scrollbar-darkshadow-Color: #666;
     height: 100%;
-    overflow: auto;
-    top: 0;
-    right: 1rem;
-    > * {
-        margin-top: 1rem;
-        display: block;
-    }
-    > *:first-child {
-        margin-top: 0;
-    }
-    @media all and (max-width: 727px) {
-        position: relative;
-        top: auto;
-        right: auto;
-        width: auto;
-        & > * {
-            display: inline-block;
-            width: 300px;
-            vertical-align: top;
-            margin-left: 1rem;
-        }
-        & > *:first-child {
-            margin-top: 1rem;
-        }
-    }
-    @media all and (max-width: 600px) {
-        & > * {
-            display: block;
-            margin: 1rem auto;
-        }
-    }
+    font-family: 'Lato', sans-serif
 }
-
-// 728x90 just above the footer
-body > .ad {
-    display: block;
-    margin: 1rem auto;
+::-webkit-scrollbar {
+    height: 12px;
+    width: 12px;
+    background: #202020
+}
+::-webkit-scrollbar-thumb {
+    background: #676767;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .75)
+}
+::-webkit-scrollbar-corner {
+    background: #000
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px white inset
+}
+textarea:focus,
+input:focus {
+    outline: 0
+}
+body {
+    font-size: .85em;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    color: #454545;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%
+}
+header,
+footer,
+nav,
+section {
+    display: block
+}
+img {
+    border: 0
+}
+.MainBD13 {
+    float: left;
+    width: 100%;
+    min-width: 1040px;
+    min-height: 100%;
+    height: auto!important;
+    height: 100%
+}
+fieldset {
+    border: 1px solid #ddd;
+    padding: 0 1.4em 1.4em 1.4em;
+    margin: 0 0 1.5em 0
+}
+legend {
+    font-size: 1.2em;
+    font-weight: bold
+}
+textarea {
+    min-height: 75px
+}
+.editor-label {
+    margin: 1em 0 0 0
+}
+.editor-field {
+    margin: .5em 0 0 0
+}
+input[type=text] {
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+input[type=button] {
+    height: 22px;
+    line-height: 19px;
+    border: 1px solid #1c1c1c;
+    background-color: #1c1c1c;
+    color: #fff;
+    cursor: pointer
+}
+input[type=submit] {
+    height: 22px;
+    line-height: 19px;
+    border: 1px solid #1c1c1c;
+    background-color: #1c1c1c;
+    color: #fff;
+    cursor: pointer
+}
+a {
+    color: #000;
+    text-decoration: none
+}
+a:hover {
+    color: #000
+}
+a:visited {
+    color: #000
+}
+.ContentHeaderCont {
+    float: left;
+    width: 100%;
+    height: 175px
+}
+.ContentRootCont {
+    width: 1040px;
+    height: auto;
+    margin: auto
+}
+.ContentFooterCont {
+    clear: both;
+    min-width: 1040px;
+    width: 100%;
+    height: 280px;
+    background-color: #d5af55;
+    border-top: 4px solid #d5af55;
+    margin-top: 0
+}
+/*
+.FeaturedAdContBottom {
     width: 728px;
-    @media all and (max-width: 727px) {
-        display: none;
-    }
+    height: 90px;
+    float: left;
+    margin: 16px 2px 0 160px;
+    overflow: hidden
 }
-
-footer {
-    // stupid grey stripe above footer
-    // can't use border, because it will blend with the background of the light purple footer
-    position: relative;
-    top: 4em;
-    &:before {
-        content: " ";
-        display: block;
-        width: 100%;
-        height: 4em;
-        position: absolute;
-        top: -4em;
-        left: 0;
-        // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
-        // r1 = (r3 - r2 + r2*a1)/a1
-        // g1 = (g3 - g2 + g2*a1)/a1
-        // b1 = (b3 - b2 + b2*a1)/a1
-        //
-        // RGB3 (the final desired color)
-        // RGB2 (the background color)
-        // A1 (how much opacity you want)
-        //
-        // Let's find the right rgba for .79 opacity*:
-        // r1 = (240 - 255 + 255*.5)/.5 ~= 225
-        // g1 = (240 - 255 + 255*.5)/.5 ~= 225
-        // b1 = (240 - 255 + 255*.5)/.5 ~= 225
-        //
-        background: rgb(230, 230, 230);
-        background: rgba(225, 225, 225, 0.5);
-        background: rgba(105, 105, 105, 0.1);
-    }
-    background: rgb(230, 218, 230);
-    //
-    // From: http://stackoverflow.com/questions/12228548/findinq-equivalent-color-with-opacity
-    // r1 = (r3 - r2 + r2*a1)/a1
-    // g1 = (g3 - g2 + g2*a1)/a1
-    // b1 = (b3 - b2 + b2*a1)/a1
-    //
-    // RGB3 (the final desired color)
-    // RGB2 (the background color)
-    // A1 (how much opacity you want)
-    //
-    // Let's find the right rgba for .2 opacity*:
-    // r1 = (230 - 255 + 255*.2)/.2 ~= 130
-    // g1 = (218 - 255 + 255*.2)/.2 ~= 70
-    // b1 = (230 - 255 + 255*.2)/.2 ~= 130
-    //
-    background: rgba(130, 70, 130, 0.2);
-    padding: 1rem 0;
+.menuContHolder {
+    float: left;
+    width: 40px;
+    margin-left: 15px
+}
+.hypContHolder {
+    float: left;
+    width: 102px;
+    margin-left: 4px
+}
+#MenuHSub {
+    display: none;
+    position: absolute;
+    left: 2%;
+    float: left;
+    width: 96%;
+    height: 425px;
+    overflow: hidden;
+    background-color: #232323;
+    border-radius: 3px
+}
+#MenuHSubCont {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0%;
+    float: left;
+    width: 100%;
+    height: 425px;
+    overflow: hidden;
+    background-image: none
+}
+#MenuHSub .MenuHSubItm {
+    float: left;
+    width: 23.3%;
+    height: 200px;
+    margin: 1% 0 0 1%;
+    background-color: #424242;
+    border-radius: 3px;
     text-align: center;
-    font-size: .8em;
-    a {
-        white-space: nowrap;
-        margin-right: 1em;
-        line-height: 160%;
-        display: inline-block;
-        &:last-child {
-            margin-right: 0;
-        }
-        &,
-        &:visited,
-        &:hover {
-            color: inherit;
-        }
-        &:first-child {
-            text-decoration: none;
-            cursor: text;
-        }
-    }
-    h5 {
-        margin: 0 0 .3rem 0;
-        font-size: 1em;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-    nav {
-        text-align: left;
-        margin-bottom: 1em;
-        padding: 0 10%;
-        &:last-child {
-            margin-bottom: 0;
-        }
-        @media all and (max-width: 640px) {
-            padding: 0 1rem;
-        }
-    }
+    font-size: 18px;
+    line-height: 30px;
+    cursor: pointer
+}
+#MenuHSub .MenuHSubItm img {
+    margin-top: 60px
+}
+#MenuHSub .MenuHSubItm span {
+    font-size: 18px
+}
+#HypsterSub {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 3px;
+    float: left;
+    width: 165px;
+    height: 25px;
+    background-color: #383838;
+    border-top: 3px solid #191919;
+    border-radius: 1px;
+    border-bottom: 1px solid #292929;
+    border-right: 1px solid #292929
+}
+.listenContHolder {
+    float: left;
+    width: 122px;
+    margin-left: 0
+}
+#ListenSub {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 3px;
+    float: left;
+    width: 137px;
+    height: 25px;
+    background-color: #383838;
+    border-top: 3px solid #191919;
+    border-radius: 1px;
+    border-bottom: 1px solid #292929;
+    border-right: 1px solid #292929
+}
+.createContHolder {
+    float: left;
+    width: 122px;
+    margin-left: 0
+}
+#CreateSub {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 3px;
+    float: left;
+    width: 142px;
+    height: 25px;
+    background-color: #383838;
+    border-top: 3px solid #191919;
+    border-radius: 1px;
+    border-bottom: 1px solid #292929;
+    border-right: 1px solid #292929
+}
+.connectContHolder {
+    float: left;
+    width: 122px;
+    margin-left: 5px
+}
+#ConnectSub {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 3px;
+    float: left;
+    width: 155px;
+    height: 25px;
+    background-color: #383838;
+    border-top: 3px solid #191919;
+    border-radius: 1px;
+    border-bottom: 1px solid #313131;
+    border-right: 1px solid #313131
+}
+#HypsterSub .HypSub_charts {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#HypsterSub .HypSub_festivals {
+    display: block;
+    float: left;
+    width: 90px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#HypsterSub .HypSub_howTo {
+    display: block;
+    float: left;
+    width: 90px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#HypsterSub .HypSub_news {
+    display: block;
+    float: left;
+    width: 63px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#ListenSub .HypSub_listen {
+    display: block;
+    float: left;
+    width: 65px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#ListenSub .HypSub_playlists {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#ListenSub .HypSub_radio {
+    display: block;
+    float: left;
+    width: 75px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-left: 1px solid #191919
+}
+#ListenSub .HypSub_tv {
+    display: block;
+    float: left;
+    width: 55px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#ListenSub .HypSub_pop {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#CreateSub .HypSub_player {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#CreateSub .HypSub_playlist {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#CreateSub .HypSub_radio {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#ConnectSub .HypSub_connect {
+    display: block;
+    float: left;
+    width: 80px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center;
+    border-right: 1px solid #191919
+}
+#ConnectSub .HypSub_similar {
+    display: block;
+    float: left;
+    width: 70px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+#ConnectSub .HypSub_musicP {
+    display: block;
+    float: left;
+    width: 112px;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+.TopHeaderCont {
+    float: right;
+    width: 300px;
+    height: 30px;
+    margin: 0;
+    margin: 0 0 0 0
+}
+.LoginCont {
+    float: right;
+    min-width: 50px;
+    height: 25px;
+    line-height: 25px;
+    color: #575757;
+    text-align: right;
+    padding: 0 0 0 8px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 14px
+}
+.LoginAcctCont {
+    float: right;
+    width: 80px;
+    height: 25px;
+    line-height: 25px;
+    color: #575757;
+    text-align: right;
+    padding: 0 0 0 8px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    margin-right: 7px;
+    cursor: pointer
+}
+.LoginPlrCont {
+    float: right;
+    min-width: 50px;
+    height: 25px;
+    line-height: 25px;
+    color: #575757;
+    text-align: right;
+    padding: 0 0 0 8px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    margin-right: 5px;
+    cursor: pointer;
+    padding: 0 10px 0 10px
+}
+.VideoThumbCont .vprcontI {
+    float: left;
+    width: 76px;
+    height: 56px
+}
+.videoBoxHeader {
+    float: left;
+    width: 218px;
+    height: 30px;
+    margin-left: 0;
+    margin-top: -30px;
+    background-color: #1f2b30;
+    overflow: hidden;
+    opacity: .97;
+    filter: alpha(opacity=97);
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Lato', sans-serif;
+    line-height: 30px;
+    text-align: left;
+    padding-left: 10px
+}
+.VideoThumbBox {
+    display: block;
+    float: right;
+    width: 125px;
+    height: 125px;
+    background: none;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 19px;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 4px;
+    overflow: hidden;
+    border-radius: 180px;
+    background-color: #cdcdcd
+}
+.VideoThumbBox .VideoThumbCont {
+    margin: -5px 0 0 -10px;
+    float: left;
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+    border-radius: 2px
+}
+.VideoThumbCont .vprcontI {
+    float: left;
+    width: 76px;
+    height: 56px
+}
+.videoBoxHeader {
+    float: left;
+    width: 218px;
+    height: 30px;
+    margin-left: 0;
+    margin-top: -30px;
+    background-color: #1f2b30;
+    overflow: hidden;
+    opacity: .97;
+    filter: alpha(opacity=97);
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Lato', sans-serif;
+    line-height: 30px;
+    text-align: left;
+    padding-left: 10px
+}
+.txtRegister {
+    margin-top: 7px;
+    width: 342px;
+    height: 25px;
+    border: 1px solid #d5af55;
+    border-radius: 8px
+}
+.txtLogin {
+    float: right;
+    margin-top: 7px;
+    width: 242px;
+    height: 25px;
+    border: 1px solid #d5af55;
+    border-radius: 8px
+}
+.txtValidator {
+    color: #3fbc91;
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: normal
+}
+.txtValidatorLog {
+    color: #c00;
+    font-family: Arial;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: normal
+}
+.txtValidator ul {
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0
+}
+.InnerNewsCont {
+    float: left;
+    width: 400px;
+    height: 505px;
+    margin: 20px 0 0 13px;
+    text-align: left
+}
+.PostItm {
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 14px;
+    margin-top: 0;
+    line-height: 20px;
+    color: #cdcdcd;
+    float: left;
+    width: 205px;
+    height: 160px;
+    overflow: hidden;
+    margin-left: 5px
+}
+.PostItm-title {
+    display: block;
+    font-size: 18px;
+    margin-top: -4px;
+    height: 22px;
+    overflow: hidden
+}
+.PostItm-title span {
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    color: #eee
+}
+.fuHMPText {
+    float: right;
+    font-size: 16px;
+    margin-top: 4px;
+    color: #d4ae52;
+    background-color: #313537;
+    padding: 0 18px 1px 18px;
+    margin: 6px -4px 0 0;
+    border-radius: 2px
+}
+.sld1_topCont {
+    float: left;
+    width: 1024px
+}
+.sld1_topCont .topLeft {
+    float: left;
+    width: 706px;
+    height: 360px;
+    overflow: hidden;
+    background-color: #1c1c1c;
+    border: 2px solid #1c1c1c;
+    border-radius: 2px
+}
+.sld1_topCont .topRight {
+    float: left;
+    width: 300px;
+    height: 250px;
+    overflow: hidden;
+    margin: 0 0 0 8px;
+    background-color: #1c1c1c;
+    border: 2px solid #1c1c1c;
+    border-radius: 2px;
+    overflow: hidden
+}
+.sld1_topCont .topRightSoc {
+    float: left;
+    width: 300px;
+    height: 98px;
+    overflow: hidden;
+    margin: 8px 0 0 8px;
+    background-color: #1c1c1c;
+    border: 2px solid #1c1c1c;
+    border-radius: 2px;
+    overflow: hidden
+}
+.topRightSoc div {
+    float: left;
+    margin: 15px 0 0 50px
+}
+.topRightSoc .twitter_icn {
+    float: left;
+    width: 33px;
+    margin: 15px 10px 0 13px;
+    cursor: pointer;
+    border: none
+}
+.topRightSoc .tumblr_icn {
+    float: left;
+    width: 33px;
+    margin: 15px 10px 0 0;
+    cursor: pointer;
+    border: none
+}
+.topRightSoc .facebook_icn {
+    float: left;
+    width: 33px;
+    margin: 15px 10px 0 0;
+    cursor: pointer;
+    border: none
+}
+.topRightSoc .email_icn {
+    float: left;
+    width: 33px;
+    margin: 15px 10px 0 0;
+    cursor: pointer;
+    border: none
+}
+.sld1_topCont2 {
+    display: none;
+    float: left;
+    width: 1022px;
+    height: 230px;
+    overflow: hidden;
+    background-color: #1c1c1c;
+    border: 2px solid #1c1c1c;
+    border-radius: 2px
+}
+#listenSlide1_textBoxes {
+    float: left;
+    width: 1024px
+}
+#listenSlide1_textBoxes2 {
+    float: left;
+    width: 1024px
+}
+#listenSlide1_textBoxes2 .middleC1 {
+    float: left;
+    width: 30%;
+    padding: 4px .5% 0 .5%;
+    height: 140px;
+    margin: 16px 0 0 0;
+    background-color: #2e3335;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52
+}
+#listenSlide1_textBoxes2 .middleC2 {
+    float: left;
+    width: 31%;
+    padding: 4px .5% 0 .5%;
+    height: 140px;
+    margin: 16px 0 0 2%;
+    background-color: #2e3335;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52
+}
+#listenSlide1_textBoxes2 .middleC3 {
+    float: left;
+    width: 31%;
+    padding: 4px .5% 0 .5%;
+    height: 140px;
+    margin: 16px 0 0 2%;
+    background-color: #2e3335;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52
+}
+.btn11 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: 0 0 0 0;
+    background: #42606e;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.btn22 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: 23px 0 0 0;
+    background: #42606e;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.btn33 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: 23px 0 0 0;
+    background: #42606e;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.btn111 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: 6px 0 0 0;
+    background: #4a4a4a;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.btn222 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: -14px 0 0 0;
+    background: #4a4a4a;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.btn333 {
+    float: right;
+    width: 77px;
+    height: 19px;
+    margin: 27px 0 0 0;
+    background: #4a4a4a;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer
+}
+.sld1_middleCont {
+    float: left;
+    width: 100%
+}
+.sld1_bottomCont #txtSearchString {
+    float: left;
+    width: 420px;
+    height: 31px;
+    margin: 1px 0 0 5px;
+    padding: 0 7px 0 7px;
+    background-color: #fff;
+    border: none
+}
+.sld1_bottomCont #btnSearch {
+    float: left;
+    width: 39px;
+    height: 39px;
+    margin: 4px 0 0 5px;
+    background: url('http://hypster.com/imgs/lstn_search_icn.png') no-repeat;
+    cursor: pointer
+}
+.sld1_bottomContInnr {
+    float: left;
+    width: 100%;
+    height: 50px;
+    margin: 15px 0 0 0;
+    border-radius: 2px
+}
+.sld1_bottomCont #listenSlide1_search {
+    float: right;
+    width: 45%;
+    height: 52px;
+    overflow: hidden;
+    margin: 5px
+}
+.sld1_bottomCont #VisualSHolder {
+    float: left;
+    min-width: 1200px
+}
+.sld1_bottomCont .VisualS_itm {
+    float: left;
+    height: 52px;
+    cursor: pointer
+}
+.popularHomeContHolder {
+    float: left;
+    width: 435px;
+    height: 610px
+}
+.popularHomeInner {
+    float: left;
+    width: 440px;
+    margin-left: 0;
+    margin-top: 0
+}
+.popularHomeInner .headerCont {
+    float: left;
+    width: 330px;
+    height: 35px;
+    margin: 0 0 8px 0;
+    padding: 2px;
+    background: #eee url('http://hypster.com/imgs/home/News_HeaderBack.png') no-repeat right;
+    margin-left: -15px
+}
+.popularHomeInner .headerCont div {
+    float: left;
+    min-width: 150px;
+    overflow: hidden;
+    margin: 7px 0 0 13px;
+    font-size: 22px;
+    color: #d4ae52
+}
+.popularHomeInner .headerCont a {
+    float: left;
+    min-width: 150px;
+    overflow: hidden;
+    margin: 7px 0 0 13px;
+    font-size: 22px;
+    color: #d4ae52
+}
+.popularHomeInner .songItm {
+    float: left;
+    width: 415px;
+    height: 32px;
+    line-height: 32px;
+    margin-top: 7px;
+    padding: 2px;
+    color: #dedede;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #585a5d;
+    border-radius: 1px
+}
+.popularHomeInner .songItm1 {
+    float: left;
+    width: 415px;
+    height: 32px;
+    line-height: 32px;
+    margin-top: 7px;
+    padding: 2px;
+    color: #dedede;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #4b5052;
+    border-radius: 1px
+}
+.popularHomeInner .songItm_title {
+    display: block;
+    float: left;
+    width: 320px;
+    margin-left: 7px;
+    overflow: hidden;
+    color: #fefefe
+}
+.popularHomeInner .songItm_play {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 4px 4px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+.popularHomeInner .songItm_likes {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 7px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.popularHomeInner .songItm_views {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 7px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.popularHomeInner .songItm_add {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 4px 4px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/search-music-icon.png') no-repeat center
+}
+.popularHomeAdCont {
+    float: left;
+    width: 160px;
+    height: 600px;
+    margin: 0 0 0 0;
+    background-color: #4f5356;
+    border: 3px solid #4f5356;
+    border-radius: 3px;
+    overflow: hidden
+}
+#listenSlide3_cont {
+    float: right;
+    width: 420px;
+    height: 605px;
+    margin: 0 0 0 0;
+    background-color: #5a5d5f;
+    border-radius: 2px
+}
+#listenTab1 {
+    float: left;
+    width: 100%;
+    min-height: 200px;
+    overflow: hidden;
+    margin-top: -2px
+}
+#listenTab2 {
+    display: none;
+    float: left;
+    width: 100%;
+    min-height: 325px;
+    margin-top: -2px
+}
+#listenTab3 {
+    display: none;
+    float: left;
+    width: 100%;
+    min-height: 325px;
+    margin-top: -2px
+}
+#plstsListenTab1 {
+    float: left;
+    width: 100%;
+    min-height: 325px;
+    overflow: hidden;
+    margin-top: -2px
+}
+#plstsListenTab2 {
+    display: none;
+    float: left;
+    width: 100%;
+    min-height: 325px;
+    margin-top: -2px
+}
+#plstsListenTab3 {
+    display: none;
+    float: left;
+    width: 100%;
+    min-height: 325px;
+    margin-top: -2px
+}
+#listenTab1 .contTop {
+    float: left;
+    width: 100%;
+    min-height: 65px
+}
+#listenTab1 .contMiddle {
+    float: left;
+    min-width: 2200px;
+    height: 250px;
+    margin-top: 10px;
+    overflow: hidden;
+    background-color: #171717;
+    border: 2px solid #171717;
+    margin-top: 12px
+}
+#listenTab1 #txtSearchString {
+    float: left;
+    width: 570px;
+    height: 40px;
+    margin: 5px 0 0 3px;
+    padding: 0 7px 0 7px;
+    border: none
+}
+#listenTab1 #btnSearch {
+    float: left;
+    width: 39px;
+    height: 39px;
+    margin: 12px 0 0 12px;
+    background: url('http://hypster.com/imgs/lstn_search_icn.png') no-repeat;
+    cursor: pointer
+}
+#listenTab1 .VisSearchItm {
+    float: left;
+    height: 125px;
+    cursor: pointer
+}
+#listenTab1 #txtSearchString_youtube {
+    float: left;
+    width: 160px;
+    height: 22px;
+    margin: 7px 0 0 25px;
+    padding: 0 7px 0 3px;
+    background-color: #eee;
+    border: 1px solid #d4ae52;
+    border-radius: 5px;
+    font-size: 14px
+}
+#listenTab1 #btnSearch_youtube {
+    float: left;
+    width: 60px;
+    height: 26px;
+    line-height: 26px;
+    margin: 7px 0 0 5px;
+    background-color: #47bb90;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #fff;
+    text-align: center
+}
+#listenTab1 #AddSearch {
+    display: none;
+    float: left;
+    width: 100%;
+    height: 150px
+}
+#listenTab1 #AddSearchIC {
+    float: left;
+    width: 100%
+}
+#listenTab1 .AdvSrch {
+    float: left;
+    width: 100%;
+    margin: 20px 0 0 20px;
+    padding: 2px;
+    color: #d4ae52;
+    font-size: 16px
+}
+#listenTab1 .AdvSrchYTS {
+    float: left;
+    width: 100%;
+    margin: 5px 0 0 0
+}
+#listenTab1 .AdvSrchOrdr {
+    float: left;
+    width: 100%;
+    margin: 0 0 0 5px
+}
+#listenTab1 .AdvSrchOrdr div {
+    float: left;
+    margin: 5px 0 0 15px;
+    line-height: 24px
+}
+#listenTab2 .contLimit {
+    float: left;
+    width: 100%;
+    margin: 20px 1% 1% 1%;
+    text-align: left
+}
+#listenTab2 .contTop {
+    float: left;
+    width: 100%;
+    color: #dedede;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter
+}
+#listenTab2 .contMiddle {
+    float: left;
+    width: 100%
+}
+#listenTab2 .RadioSt {
+    float: left;
+    width: 240px;
+    margin: 8px 0 0 10px;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    font-size: 17px;
+    border-radius: 2px;
+    cursor: pointer
+}
+.contMiddle .radioSearch {
+    float: left;
+    width: 100%;
+    height: 62px;
+    margin: 0 0 0 0;
+    border-radius: 2px
+}
+.contMiddle #stationName {
+    float: left;
+    width: 420px;
+    height: 31px;
+    margin: 11px 0 0 1px;
+    padding: 0 7px 0 7px;
+    background-color: #eee;
+    border: 1px solid #dedede;
+    border-radius: 5px
+}
+.contMiddle .btnRadioSearch {
+    float: left;
+    width: 130px;
+    height: 33px;
+    margin: 11px 0 0 11px;
+    background: #3fbc91;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 19px;
+    cursor: pointer
+}
+#listenTab3 .contLimit {
+    float: left;
+    width: 100%;
+    margin: 20px 1% 1% 1%;
+    text-align: left
+}
+#listenTab3 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    border-radius: 2px;
+    color: #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#listenTab3 .plCov {
+    float: left;
+    width: 30px;
+    height: 30px;
+    background-color: #000
+}
+#listenTab3 .plName {
+    float: left;
+    width: 220px;
+    height: 27px;
+    margin-left: 2px;
+    overflow: hidden
+}
+#listenTab3 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#listenTab3 .PlstViews {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+#listenTab3 .PlstLikes {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+#listenTab3 .plEdit {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/edit_icon_lte.png') no-repeat center
+}
+#listenTab1 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    background-color: #303030;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#listenTab1 .plName {
+    float: left;
+    width: 240px;
+    height: 27px;
+    margin-left: 7px;
+    overflow: hidden
+}
+#listenTab1 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#listenTab2 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    border-radius: 2px;
+    color: #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#listenTab2 .plName {
+    float: left;
+    width: 240px;
+    height: 27px;
+    margin-left: 7px;
+    overflow: hidden
+}
+#listenTab2 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#listenTab3 .plItemCreate {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    background-color: #42bc90;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#listenTab3 .plItemCreate div {
+    float: left;
+    width: 260px;
+    margin-left: 7px
+}
+#plstsListenTab1 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    background-color: #303030;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#plstsListenTab1 .plName {
+    float: left;
+    width: 240px;
+    height: 27px;
+    margin-left: 7px;
+    overflow: hidden
+}
+#plstsListenTab1 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#plstsListenTab2 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    background-color: #303030;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#plstsListenTab2 .plName {
+    float: left;
+    width: 240px;
+    height: 27px;
+    margin-left: 7px;
+    overflow: hidden
+}
+#plstsListenTab2 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#plstsListenTab3 .plItem {
+    float: left;
+    width: 310px;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 15px 10px 0;
+    padding: 5px;
+    background-color: #303030;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer
+}
+#plstsListenTab3 .plName {
+    float: left;
+    width: 240px;
+    height: 27px;
+    margin-left: 7px;
+    overflow: hidden
+}
+#plstsListenTab3 .plPlay {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 2px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#CreateSection1 {
+    float: left;
+    width: 335px;
+    height: 420px;
+    overflow: hidden;
+    margin: 0;
+    background-color: #fff;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #000;
+    cursor: pointer
+}
+#CreateSection2 {
+    float: left;
+    width: 335px;
+    height: 420px;
+    overflow: hidden;
+    margin-left: 5px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #000;
+    cursor: pointer;
+    background-color: #fff
+}
+#CreateSection3 {
+    float: left;
+    width: 335px;
+    height: 420px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #fff;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #000;
+    cursor: pointer
+}
+#CreateSection1 .secImgs {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-top: 5px
+}
+#CreateSection1 .secText {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 0
+}
+#CreateSection2 .secImgs {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-top: 10px
+}
+#CreateSection2 .secText {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 7px
+}
+#CreateSection3 .secImgs {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px
+}
+#CreateSection3 .secText {
+    float: left;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 8px
+}
+#CreateContHolder {
+    float: left;
+    width: 100%
+}
+#CreatePlayerSection1 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin: 0;
+    background-color: #1d1d1c;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreatePlayerSection2 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #2b3032;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreatePlayerSection3 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #2b3032;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreatePlayerSection1 img {
+    margin: 20px 0 10px 0
+}
+#CreatePlayerSection2 img {
+    margin: 20px 0 10px 0
+}
+#CreatePlayerSection3 img {
+    margin: 20px 0 10px 0
+}
+#CreateStationSection1 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin: 0;
+    background-color: #2b3032;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreateStationSection2 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #2b3032;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreateStationSection3 {
+    float: left;
+    width: 338px;
+    height: 140px;
+    line-height: 14px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #1d1d1c;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 2px
+}
+#CreateStationSection1 img {
+    margin: 20px 0 10px 0
+}
+#CreateStationSection2 img {
+    margin: 20px 0 10px 0
+}
+#CreateStationSection3 img {
+    margin: 20px 0 10px 0
+}
+.CreatePlayer_ReadMoreAP {
+    float: left;
+    width: 280px;
+    height: 60px;
+    line-height: 60px;
+    margin: 13px 0 14px 14px;
+    padding: 3px;
+    border-radius: 1px;
+    background-color: #42606e;
+    text-align: center;
+    font-size: 18px;
+    cursor: pointer
+}
+.connectHead {
+    float: right;
+    width: 100%;
+    text-align: left
+}
+.connectHead .ffHeader {
+    float: left;
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 0 0 -120px;
+    text-align: right;
+    font-size: 22px;
+    color: #d4ae52;
+    padding-right: 120px;
+    background: url("/imgs/home/featuredVideo_HeaderBack.png") no-repeat scroll right center #eee
+}
+.connectCont {
+    float: left;
+    width: 858px;
+    padding: 0 0 15px 0;
+    text-align: left;
+    background-color: #2d3132
+}
+.connectCont .connectInnerCont {
+    float: left;
+    width: 860px;
+    margin: -16px 0 0 -16px
+}
+.connectFriendCont {
+    float: left;
+    width: 407px;
+    min-height: 142px;
+    overflow: hidden;
+    padding: 3px;
+    background-color: #282c2d;
+    border-radius: 1px;
+    margin-top: 15px;
+    margin-left: 15px;
+    text-align: left
+}
+.connectPaging {
+    float: left;
+    width: 100%;
+    height: 28px;
+    margin: 23px 0 0 0;
+    color: #fff;
+    overflow: hidden
+}
+.connectPaging .ConnectPage {
+    float: left;
+    min-width: 29px;
+    line-height: 28px;
+    border-radius: 2px;
+    text-align: center;
+    margin-right: 10px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer
+}
+.style_22 {
+    color: #aaa;
+    font-size: 13px
+}
+.style_23 {
+    color: #fff;
+    font-size: 16px
+}
+.style_24 {
+    color: #d4ae52
+}
+.connectFriendCont .txtHolder {
+    float: left;
+    width: 190px;
+    margin-top: 0;
+    margin-left: 3px;
+    font-size: 16px;
+    color: #eee
+}
+.connectFriendCont .txtHolder div {
+    float: left;
+    width: 100%;
+    margin-top: 2px;
+    margin-left: 5px
+}
+.connectFriendCont .ActButtons {
+    float: left;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 2px
+}
+.connectFriendCont .FollowBtn {
+    float: right;
+    width: 120px;
+    overflow: hidden;
+    height: 22px;
+    line-height: 22px;
+    margin: 2px 4px 0 0;
+    padding: 0 2px 0 2px;
+    background-color: #757575;
+    border-radius: 1px;
+    font-size: 13px;
+    color: #fff;
+    text-align: center
+}
+.connectFriendCont .DetailsBtn {
+    float: left;
+    width: 264px;
+    height: 22px;
+    line-height: 22px;
+    margin: 2px 4px 0 5px;
+    background-color: #454545;
+    color: #ccc;
+    text-align: center;
+    border-radius: 1px;
+    cursor: pointer
+}
+.connectTH {
+    float: right;
+    width: 1024px;
+    margin-top: 15px
+}
+.connectTH .sbItem {
+    float: left;
+    width: 235px;
+    height: 25px;
+    margin: 5px;
+    color: #fff;
+    padding: 2px 2px 2px 8px;
+    font-size: 15px;
+    cursor: pointer;
+    background-color: #1c1c1c;
+    border-radius: 2px
+}
+.connectTH .sbItem img {
+    float: left;
+    margin-top: 3px
+}
+.connectTH .sbItem div {
+    float: left;
+    margin-top: 2px;
+    margin-left: 3px
+}
+.SearchPageRoot {
+    float: left;
+    width: 100%;
+    min-height: 50px;
+    margin: 0 0 4px 0
+}
+.SearchPageRoot .SongItm {
+    display: block;
+    float: left;
+    width: 99%;
+    min-height: 55px;
+    padding: .5%;
+    line-height: 17px;
+    margin: 0 0 6px 0;
+    color: #fff;
+    text-align: left;
+    background-color: #000;
+    border: 1px solid #3fbc91;
+    border-radius: 1px
+}
+.SearchPageRoot .SongItmB {
+    display: block;
+    float: left;
+    width: 98%;
+    min-height: 70px;
+    padding: 1%;
+    line-height: 17px;
+    margin: 0 0 6px 0;
+    color: #fff;
+    text-align: left;
+    background-color: #1d1d1d;
+    border-radius: 1px
+}
+.SearchPageRoot .lfCont {
+    float: left;
+    cursor: pointer;
+    width: 80%
+}
+.SearchPageRoot .rtCont {
+    float: right;
+    width: 95px;
+    text-align: right
+}
+.SearchPageRoot .SyndicationBtn {
+    float: left;
+    width: 800px;
+    background-color: #1d1d1d;
+    color: #d4ae52;
+    margin: 5px 2px 2px 2px;
+    padding: 1px 2px 2px 2px;
+    overflow: hidden
+}
+.SearchPageRoot .PlayPl_btn {
+    float: right;
+    width: 110px;
+    height: 22px;
+    line-height: 22px;
+    background-color: #4a4a4a;
+    color: #fff;
+    margin: 3px 2px 2px 2px;
+    cursor: pointer;
+    text-align: center
+}
+.SearchPageRoot .AddPl_btn {
+    float: right;
+    width: 110px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #4a4a4a;
+    color: #d4ae52;
+    margin: 3px 2px 2px 2px;
+    cursor: pointer;
+    text-align: center
+}
+.SearchPageRoot .GetRing_btn {
+    display: block;
+    float: right;
+    width: 180px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #4a4a4a;
+    margin: 5px 2px 2px 2px;
+    text-align: center
+}
+.SearchPageRoot .SearchSimilar_btn {
+    float: right;
+    width: 180px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #4a4a4a;
+    margin: 3px 2px 2px 2px;
+    cursor: pointer;
+    text-align: center
+}
+.NFMessageCont {
+    float: left;
+    width: 98%;
+    height: 50px;
+    padding: 1%;
+    margin-bottom: 5px;
+    border-radius: 3px;
+    font-size: 17px;
+    color: #d4ae52
+}
+.NFMessageCont div {
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 3px
+}
+.SongSearchPagingRoot {
+    float: right;
+    width: 69%;
+    padding: 1%
+}
+.SongSearchPagingRoot .PagingInner {
+    float: left;
+    max-width: 700px;
+    height: 30px;
+    overflow: hidden
+}
+.lfCont .imgThumb {
+    float: left;
+    width: 60px;
+    height: 45px
+}
+.lfCont .songCont {
+    float: left;
+    width: 85%;
+    height: 23px;
+    line-height: 23px;
+    overflow: hidden;
+    margin: 10px 0 0 6px;
+    font-size: 21px
+}
+.searchPagingBtn {
+    float: left;
+    display: block;
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+    margin-right: 6px;
+    border-radius: 13px;
+    color: #d4ae52;
+    font-size: 16px;
+    padding: 0 0 0 0;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid #d4ae52
+}
+.searchPagingBtn_Sel {
+    float: left;
+    display: block;
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+    margin-right: 6px;
+    border-radius: 13px;
+    color: #d4ae52;
+    font-size: 15px;
+    font-family: Arial, Verdana, sans-serif;
+    text-align: center;
+    padding: 0 0 0 0;
+    cursor: pointer;
+    border: 1px solid #d4ae52;
+    background-color: #353535
+}
+.PopularMusicOnHypster {
+    float: right;
+    width: 100%;
+    margin-left: 15px
+}
+.PopularMusicOnHypster .PopularHeaderCont {
+    float: left;
+    width: 100%
+}
+.PopularMusicOnHypster .PopularHeader {
+    float: left;
+    width: 250px;
+    margin-top: 40px;
+    color: #2e3335;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 27px
+}
+.PopularMusicOnHypster .PopularAdCont {
+    float: right;
+    width: 728px;
+    height: 90px;
+    background-color: #1c1c1c;
+    border: 3px solid #1c1c1c;
+    border-radius: 2px;
+    overflow: hidden
+}
+.PopularMusicOnHypster .PopularMusicCont {
+    float: left;
+    width: 500px;
+    margin-top: 10px
+}
+.PopularMusicCont .SongItm {
+    background-color: #1c1c1c;
+    border-radius: 1px;
+    float: left;
+    width: 490px;
+    height: 28px;
+    line-height: 28px;
+    margin-top: 7px;
+    padding: 5px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    overflow: hidden;
+    cursor: pointer
+}
+.PopularMusicCont .SongItmB {
+    background-color: #1c1c1c;
+    border-radius: 1px;
+    float: left;
+    width: 490px;
+    height: 28px;
+    line-height: 28px;
+    margin-top: 7px;
+    padding: 5px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    overflow: hidden;
+    cursor: pointer
+}
+.PopularMusicCont .SongTitle {
+    float: left;
+    width: 390px;
+    overflow: hidden;
+    margin-left: 7px;
+    color: #efefef
+}
+.PopularMusicCont .SongAdPl {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 2px 4px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/search-music-icon.png') no-repeat center
+}
+.PopularMusicCont .SongLstn {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 4px 4px 0 0;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+.PopularPlaylists {
+    float: right;
+    width: 100%
+}
+.PopularPlaylists .PopularHeaderCont {
+    float: left;
+    width: 100%
+}
+.PopularPlaylists .PopularHeader {
+    float: left;
+    width: 250px;
+    margin-top: 40px;
+    color: #2e3335;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 27px
+}
+.PopularPlaylists .PopularAdCont {
+    float: right;
+    width: 728px;
+    height: 90px;
+    background-color: #667278;
+    border: 3px solid #667278;
+    border-radius: 2px
+}
+.PopularPlaylists .PopularPlstsCont {
+    float: left;
+    width: 324px;
+    margin-top: 0
+}
+.PopularPlstsCont .PlstItm {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    border-radius: 2px;
+    color: #000;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstItmB {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    background-color: #1c1c1c;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstItm_sel {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    background-color: #778085;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstItmB_sel {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    background-color: #677278;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstTitle {
+    float: left;
+    width: 230px;
+    margin-left: 3px;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstLstn {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PopularPlstsCont .PlstViews {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PopularPlstsCont .PlstLikes {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PopularPlstsCont .PlstItmD1 {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    background-color: #303030;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    border-bottom: 1px solid #242424;
+    border-right: 1px solid #242424;
+    overflow: hidden
+}
+.PopularPlstsCont .PlstItmD2 {
+    float: left;
+    width: 314px;
+    height: 28px;
+    line-height: 27px;
+    margin: 11px 10px 0 0;
+    padding: 5px;
+    background-color: #282828;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    border-bottom: 1px solid #222;
+    border-right: 1px solid #222;
+    overflow: hidden
+}
+.FeaturedVideoCont {
+    float: left;
+    width: 100%;
+    height: 100px
+}
+.FeaturedVideoCont #listenSlide2_header {
+    float: left;
+    width: 290px;
+    margin-left: -15px
+}
+.FeaturedVideoCont .FeaturedAdCont {
+    float: right;
+    width: 728px;
+    height: 90px;
+    background-color: #1c1c1c;
+    border: 3px solid #1c1c1c;
+    border-radius: 2px;
+    overflow: hidden
+}
+.FeaturedVideoCont .FeaturedHeaderBack {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    background: #eee url('http://hypster.com/imgs/home/featuredVideo_HeaderBack.png') no-repeat right;
+    cursor: pointer
+}
+.FeaturedVideoCont .FeaturedHeaderBack div {
+    float: right;
+    min-width: 130px;
+    overflow: hidden;
+    margin: 3px 115px 0 0;
+    font-size: 23px;
+    color: #d4ae52
+}
+.FeaturedVideoCont .FeaturedSubHeader {
+    float: right;
+    width: 250px;
+    color: #313537;
+    font-size: 14px;
+    margin: 3px 0 0 20px;
+    text-align: left
+}
+.popRadioStationsBtmCH1 {
+    float: left;
+    width: 102%;
+    height: 39px;
+    line-height: 39px;
+    overflow: hidden;
+    background-color: #3d4345;
+    border-bottom: 1px solid #2c3133;
+    border-right: 1px solid #2c3133;
+    border-radius: 3px;
+    margin: 20px 0 0 -2%;
+    font-size: 18px;
+    color: #d4ae52
+}
+.popRadioStButtonCH1 {
+    float: right;
+    margin-right: 5px;
+    margin-left: 5px
+}
+.popRadioStButtonCH1 #txtSearchString_JR {
+    width: 250px;
+    height: 29px;
+    float: left;
+    margin: 4px 0 0 0;
+    border-radius: 3px;
+    border: none;
+    font-size: 14px
+}
+.popRadioStButtonCH1 #btnSearch_JR {
+    float: left;
+    width: 70px;
+    height: 32px;
+    line-height: 31px;
+    margin: 4px 0 0 7px;
+    background-color: #1d2223;
+    border-radius: 3px;
+    cursor: pointer;
+    text-align: center
+}
+.PopularPlaylists #PopularPlaylistsSlide2_header {
+    float: left;
+    width: 290px;
+    margin-left: -15px
+}
+.PopularPlaylists .FeaturedHeaderBack {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    background: #eee url('http://hypster.com/imgs/home/featuredVideo_HeaderBack.png') no-repeat right
+}
+.PopularPlaylists .FeaturedHeaderBack div {
+    float: right;
+    margin: 3px 90px 0 0;
+    font-size: 22px;
+    color: #d4ae52
+}
+.PopularPlaylists .FeaturedHeaderBack a {
+    float: right;
+    margin: 3px 90px 0 0;
+    font-size: 22px;
+    color: #d4ae52
+}
+.PopularPlaylists .FeaturedSubHeader {
+    float: right;
+    width: 250px;
+    color: #313537;
+    font-size: 14px;
+    margin: 3px 0 0 20px;
+    text-align: left
+}
+.PopularHeaderCont #CompToolHeader2_header {
+    float: left;
+    width: 290px;
+    margin-left: -15px
+}
+.PopularMusicOnHypster #PopularMusicSlide2_header {
+    float: left;
+    width: 290px;
+    margin-left: -15px
+}
+.PopularMusicOnHypster .FeaturedHeaderBack {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    background: #eee url('http://hypster.com/imgs/home/featuredVideo_HeaderBack.png') no-repeat right
+}
+.PopularMusicOnHypster .FeaturedHeaderBack div {
+    float: right;
+    margin: 3px 120px 0 0;
+    font-size: 22px;
+    color: #d4ae52
+}
+.PopularMusicOnHypster .FeaturedSubHeader {
+    float: right;
+    width: 250px;
+    color: #313537;
+    font-size: 14px;
+    margin: 3px 0 0 20px;
+    text-align: left
+}
+.AboutUsCont {
+    float: left;
+    width: 1000px;
+    padding: 15px 0 15px 15px;
+    background-color: #202121;
+    border-radius: 2px;
+    text-align: left
+}
+.ContactsThanksCont {
+    float: left;
+    width: 950px;
+    min-height: 100px;
+    margin: 15px 0 0 15px;
+    color: #000
+}
+.ContactUsCont {
+    float: left;
+    width: 1000px;
+    padding: 15px 0 15px 15px;
+    border-radius: 2px;
+    text-align: left
+}
+.PrivacyPolicyCont {
+    float: left;
+    width: 700px;
+    padding: 0 0 5px 5px;
+    border-radius: 2px;
+    text-align: left
+}
+.TermsOfServiceCont {
+    float: left;
+    width: 700px;
+    padding: 0 0 5px 5px;
+    border-radius: 2px;
+    text-align: left
+}
+.NewsInnrContHldr {
+    float: left;
+    width: 420px
+}
+.LatestNewsHeader {
+    float: left;
+    width: 100%
+}
+.LatestNewsHeader .ltstNInner {
+    float: left;
+    width: 360px;
+    height: 35px;
+    margin: 10px 0 0 0;
+    padding: 2px;
+    background: #313537 url('http://hypster.com/imgs/home/news_header_1.png') no-repeat right
+}
+.LatestNewsHeader .ltstNInner div {
+    float: left;
+    margin: 7px 0 0 20px;
+    font-size: 22px;
+    color: #d4ae52
+}
+.LatestNewsHeader .ltstNInner a {
+    float: left;
+    margin: 7px 0 0 20px;
+    font-size: 22px;
+    color: #d4ae52
+}
+.newsImage {
+    display: block;
+    float: left;
+    width: 185px;
+    max-height: 150px;
+    overflow: hidden
+}
+.NewsItm1 {
+    float: left;
+    width: 100%;
+    height: 160px
+}
+.NewsItm2 {
+    float: left;
+    width: 100%;
+    height: 160px;
+    margin-top: 17px
+}
+.NewsReadMoreCont {
+    float: left;
+    width: 400px;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 0;
+    padding: 2px;
+    background-color: none;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px
+}
+.NewsReadMoreCont a {
+    float: right;
+    margin-left: 7px;
+    cursor: pointer
+}
+.NewsInnrContHldr #simTContH {
+    display: block;
+    float: left;
+    width: 400px;
+    height: 500px;
+    margin: 10px 0 0 14px
+}
+#PublicPSectionMenu1 {
+    float: left;
+    width: 335px;
+    height: 150px;
+    overflow: hidden;
+    margin: 0;
+    background-color: #181818;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #cdcdcd;
+    cursor: pointer
+}
+#PublicPSectionMenu2 {
+    float: left;
+    width: 335px;
+    height: 150px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #292929;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #cdcdcd;
+    cursor: pointer
+}
+#PublicPSectionMenu3 {
+    float: left;
+    width: 335px;
+    height: 150px;
+    overflow: hidden;
+    margin-left: 5px;
+    background-color: #292929;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 29px;
+    color: #cdcdcd;
+    cursor: pointer
+}
+#PublicPSectionMenu1 .PublicPMenuInner {
+    float: left;
+    width: 100%;
+    line-height: 14px;
+    text-align: center
+}
+#PublicPSectionMenu2 .PublicPMenuInner {
+    float: left;
+    width: 100%;
+    line-height: 14px;
+    text-align: center
+}
+#PublicPSectionMenu3 .PublicPMenuInner {
+    float: left;
+    width: 100%;
+    line-height: 14px;
+    text-align: center
+}
+#PublicPSectionMenu1 img {
+    margin: 20px 0 10px 0
+}
+#PublicPSectionMenu2 img {
+    margin: 20px 0 10px 0
+}
+#PublicPSectionMenu3 img {
+    margin: 20px 0 10px 0
+}
+#PublicPSection_1 .PerInfHeader {
+    float: right;
+    width: 1024px;
+    color: #404040;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 0 0 0 0
+}
+#PublicPSection_1 .NameTxtCont {
+    float: left;
+    width: 400px;
+    height: 30px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.NameTxtCont .lbl1 {
+    float: left;
+    width: 60px;
+    margin: 3px 0 0 0;
+    text-align: right;
+    color: #2f5262
+}
+.NameTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .UsNameTxtCont {
+    float: left;
+    width: 400px;
+    height: 30px;
+    margin-left: 20px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.UsNameTxtCont .lbl1 {
+    float: left;
+    width: 90px;
+    margin: 3px 0 0 0;
+    text-align: right;
+    color: #2f5262
+}
+.UsNameTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .MemberTxtCont {
+    float: left;
+    width: 275px;
+    height: 30px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.MemberTxtCont .lbl1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #2f5262
+}
+.MemberTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .CityTxtCont {
+    float: left;
+    width: 300px;
+    height: 30px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.CityTxtCont .lbl1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #2f5262
+}
+.CityTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .CountryTxtCont {
+    float: left;
+    width: 300px;
+    height: 30px;
+    margin-left: 20px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.CountryTxtCont .lbl1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #2f5262
+}
+.CountryTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .ZipTxtCont {
+    float: left;
+    width: 170px;
+    height: 30px;
+    margin-left: 20px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+.ZipTxtCont .lbl1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #2f5262
+}
+.ZipTxtCont .txt1 {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .BirthDateHeader {
+    float: left;
+    width: 100px;
+    height: 30px;
+    border: 1px solid #dedede;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+#PublicPSection_1 .BirthDateHeader div {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #2f5262
+}
+#PublicPSection_1 .DOBmHeader {
+    float: left;
+    width: 60px;
+    height: 30px;
+    border: 1px solid #dedede;
+    margin-left: 20px;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+#PublicPSection_1 .DOBmHeader div {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .DOBdHeader {
+    float: left;
+    width: 60px;
+    height: 30px;
+    border: 1px solid #dedede;
+    margin-left: 20px;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+#PublicPSection_1 .DOBdHeader div {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .DOByHeader {
+    float: left;
+    width: 90px;
+    height: 30px;
+    border: 1px solid #dedede;
+    margin-left: 20px;
+    background-color: #dedede;
+    border-radius: 2px;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 18px
+}
+#PublicPSection_1 .DOByHeader div {
+    float: left;
+    margin: 3px 0 0 7px;
+    color: #000
+}
+#PublicPSection_1 .photoCont {
+    float: left;
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    margin: 5px;
+    background-color: #555;
+    border-radius: 2px;
+    cursor: pointer
+}
+#PublicPSection_1 .photoCont img {
+    float: left;
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    background-color: #333;
+    border-radius: 2px
+}
+#PublicPSection_1 .photoHeader {
+    float: left;
+    width: 100%;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 10px 0 10px 0
+}
+#PublicPSection_2 .FavoriteGenresHeader {
+    float: left;
+    width: 100%;
+    color: #2e3335;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 10px 0 10px 0
+}
+#PublicPSection_2 .FavoriteGenresCont {
+    float: left;
+    width: 100%;
+    color: #2e3335
+}
+#PublicPSection_2 .FavoriteGenresItm {
+    float: left;
+    width: 220px;
+    margin: 7px 0 0 10px;
+    font-size: 16px
+}
+#PublicPSection_2 .FavoriteGenresItmN {
+    float: left;
+    width: 220px;
+    margin: 7px 0 0 10px;
+    font-size: 16px
+}
+#PublicPSection_2 .playlistsHeader {
+    float: left;
+    width: 100%;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 10px 0 10px 0
+}
+#PublicPSection_2 .playlistItm {
+    float: left;
+    width: 700px;
+    height: 30px;
+    margin-bottom: 4px;
+    margin-top: 3px
+}
+#PublicPSection_2 .ItmTitle {
+    float: left;
+    width: 610px;
+    height: 27px;
+    line-height: 27px;
+    padding: 3px 3px 3px 10px;
+    background-color: #555;
+    color: #fff;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 2px
+}
+#PublicPSection_2 .ItmPlay {
+    float: left;
+    height: 27px;
+    line-height: 27px;
+    margin: 0 4px 0 4px;
+    padding: 3px;
+    text-align: left;
+    background-color: #555;
+    color: #fff;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 2px
+}
+#PublicPSection_2 .ItmPlay img {
+    margin: 7px 7px 0 7px
+}
+#PublicPSection_2 .songsHeader {
+    float: left;
+    width: 100%;
+    color: #2e3335;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 10px 0 10px 0
+}
+#PublicPSection_2 .songItm {
+    float: left;
+    width: 100%
+}
+#PublicPSection_2 .songItmTitle {
+    float: left;
+    width: 800px;
+    height: 27px;
+    line-height: 27px;
+    padding: 3px 3px 3px 10px;
+    margin-bottom: 4px;
+    background-color: #858c90
+}
+#PublicPSection_2 .songItmTitleB {
+    float: left;
+    width: 800px;
+    height: 27px;
+    line-height: 27px;
+    padding: 3px 3px 3px 10px;
+    margin-bottom: 4px;
+    background-color: #747e83
+}
+#PublicPSection_2 .songItmPlay {
+    float: left;
+    width: 35px;
+    height: 27px;
+    line-height: 27px;
+    padding: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    background-color: #858c90
+}
+#PublicPSection_2 .songItmPlayB {
+    float: left;
+    width: 35px;
+    height: 27px;
+    line-height: 27px;
+    padding: 3px;
+    margin-left: 5px;
+    cursor: pointer;
+    background-color: #747e83
+}
+#PublicPSection_2 .style_1122 {
+    float: left;
+    font-size: 16px;
+    color: #fff
+}
+#PublicPSection_2 .style_1133 {
+    float: left;
+    margin: 7px 7px 0 10px
+}
+#PublicPSection_2 .StationsHeader {
+    float: left;
+    width: 100%;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    margin: 10px 0 10px 0
+}
+#PublicPSection_2 .RadioStItm {
+    float: left;
+    width: 100%;
+    margin-bottom: 4px
+}
+#PublicPSection_2 .RadioItmTitle {
+    float: left;
+    width: 420px;
+    height: 27px;
+    line-height: 26px;
+    background-color: #767676;
+    padding: 3px 3px 3px 10px;
+    margin-left: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 2px
+}
+#PublicPSection_2 .RadioItmPlay {
+    float: left;
+    height: 27px;
+    line-height: 26px;
+    padding: 3px;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    background-color: #767676;
+    cursor: pointer;
+    margin-left: 4px;
+    border-radius: 2px
+}
+#PublicPSection_2 .RadioItmPlay img {
+    margin: 7px 7px 0 7px
+}
+#PublicPSection_3 .MembersIFollowHeader {
+    float: left;
+    width: 98%;
+    height: 25px;
+    line-height: 25px;
+    color: #454545;
+    font-size: 22px;
+    overflow: hidden;
+    margin: 5px 0 5px 7px
+}
+#PublicPSection_3 .MIF_Itm {
+    float: left;
+    width: 330px;
+    margin-left: 1%;
+    margin-top: 5px
+}
+#PublicPSection_3 .MIF_Itm a {
+    display: block;
+    float: left;
+    width: 330px;
+    height: 48px;
+    background-color: #68747a;
+    border-radius: 2px;
+    text-align: left;
+    cursor: pointer
+}
+#PublicPSection_3 .MIF_img {
+    float: left;
+    width: 47px;
+    height: 44px;
+    margin: 2px 0 0 2px
+}
+#PublicPSection_3 .MIF_title {
+    float: left;
+    margin: 13px 0 0 7px;
+    font-size: 15px
+}
+#PublicPSection_3 .MyFollowersHeader {
+    float: left;
+    width: 98%;
+    height: 25px;
+    line-height: 25px;
+    color: #ababab;
+    font-size: 22px;
+    overflow: hidden;
+    margin: 5px 0 5px 7px
+}
+#PublicPSection_3 .MF_Itm {
+    float: left;
+    width: 330px;
+    margin-left: 1%;
+    margin-top: 5px
+}
+#PublicPSection_3 .MF_Itm a {
+    display: block;
+    float: left;
+    width: 330px;
+    height: 48px;
+    background-color: #454545;
+    border-radius: 2px;
+    text-align: left;
+    cursor: pointer
+}
+#PublicPSection_3 .MF_img {
+    float: left;
+    width: 47px;
+    height: 44px;
+    margin: 2px 0 0 2px
+}
+#PublicPSection_3 .MF_title {
+    float: left;
+    margin: 13px 0 0 7px;
+    font-size: 15px
+}
+.CreatePlaylistCont {
+    float: left;
+    width: 98%;
+    margin-top: 7px;
+    margin-left: 5px
+}
+.MainHeadCont {
+    float: left;
+    width: 100%;
+    height: 43px;
+    overflow: hidden;
+    margin: 5px 0 0 0
+}
+.MainHeadPlaylist {
+    float: left;
+    width: 705px;
+    height: 34px;
+    line-height: 34px;
+    text-align: left;
+    color: #000;
+    line-height: 35px;
+    margin: 0 0 0 10px;
+    padding: 3px;
+    font-size: 23px;
+    border: 1px solid #47bb90;
+    border-radius: 7px;
+    font-weight: bold
+}
+.MainHeadPlaylist img {
+    cursor: pointer
+}
+.MainHeadPlaylist span {
+    color: #d4ae52;
+    font-size: 22px;
+    margin-left: 3px
+}
+.MainHeadSongs {
+    float: left;
+    width: 96%;
+    min-width: 350px;
+    height: 34px;
+    line-height: 34px;
+    text-align: left;
+    color: #000;
+    padding: 3px;
+    font-size: 23px;
+    border: 1px solid #47bb90;
+    border-radius: 7px;
+    font-weight: bold
+}
+.MainHeadSongs img {
+    float: left;
+    margin: 11px 7px 0 5px;
+    cursor: pointer
+}
+.MainHeadSongs div {
+    float: left;
+    width: 100%;
+    height: 33px;
+    overflow: hidden;
+    font-size: 22px;
+    cursor: pointer
+}
+.CreatePlaylistCont .PlstItm_Act {
+    float: left;
+    width: 100%;
+    height: 31px;
+    line-height: 31px;
+    text-align: left;
+    padding: 2px 0 2px 0;
+    color: #fff;
+    margin-top: 0;
+    margin-left: 1%;
+    cursor: pointer
+}
+.CreatePlaylistCont .PlstItm_ActTitle {
+    float: left;
+    width: 87%;
+    padding-left: 4px;
+    color: #d4ae52;
+    font-size: 16px;
+    height: 27px;
+    overflow: hidden
+}
+.CreatePlaylistCont .PlstItm_ActTitle img {
+    float: left;
+    margin-top: 8px
+}
+.CreatePlaylistCont .PlstItm_ActTitle div {
+    float: left;
+    width: 280px;
+    height: 29px;
+    line-height: 28px;
+    overflow: hidden;
+    padding-left: 4px;
+    margin-top: 1px
+}
+.CreatePlaylistCont .PlstItm {
+    float: left;
+    width: 100%;
+    height: 31px;
+    line-height: 31px;
+    text-align: left;
+    padding: 2px 0 2px 0;
+    color: #fff;
+    margin-top: 0;
+    margin-left: 1%;
+    cursor: pointer;
+    overflow: hidden
+}
+.CreatePlaylistCont .PlstItm_Edt {
+    float: left;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 15px;
+    border: 1px solid #47bb90;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    margin-left: 4px;
+    cursor: pointer;
+    background: url('http://hypster.com/imgs/action_icons/edit_icon_s.png') no-repeat center
+}
+.CreatePlaylistCont .PlstItm_Del {
+    float: left;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 15px;
+    border: 1px solid #47bb90;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    margin-left: 1%;
+    cursor: pointer;
+    background: url('http://hypster.com/imgs/action_icons/delete_icon_s.png') no-repeat center
+}
+.CreatePlaylistCont .PlstItm_MkActive {
+    float: left;
+    height: 35px;
+    line-height: 35px;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    background-color: #1d1d1c;
+    border: none;
+    margin-left: 1%;
+    cursor: pointer
+}
+.CreatePlaylistCont .PlstItm_PlName {
+    float: left;
+    width: 225px;
+    height: 27px;
+    border: 1px solid #656565;
+    font-size: 14px;
+    margin-left: 2px
+}
+.CreatePlaylistCont .PlstItm_PlSave {
+    float: left;
+    width: 50px;
+    height: 31px;
+    margin-left: 2px;
+    background-color: #47bb90;
+    border: 1px solid #47bb90
+}
+.CreatePlaylistCont .PlstItm .plstII {
+    float: left;
+    width: 82%;
+    height: 27px;
+    line-height: 25px;
+    overflow: hidden;
+    padding-left: 4px
+}
+.CreatePlaylistCont .PlstItm .plstII img {
+    float: left;
+    margin-top: 8px
+}
+.CreatePlaylistCont .PlstItm .plstII div {
+    float: left;
+    width: 270px;
+    height: 29px;
+    line-height: 28px;
+    overflow: hidden;
+    padding-left: 4px;
+    margin-top: 1px;
+    color: #000
+}
+.CreatePlaylistCont .AddNewPlstItm {
+    float: left;
+    width: 190px;
+    height: 22px;
+    line-height: 21px;
+    margin: 5px 4px 16px 4px;
+    padding-left: 3px;
+    color: #000;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer
+}
+.CreatePlaylistCont .AddNewPlstItm div {
+    float: left;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 21px;
+    background-color: #47bb90;
+    border-radius: 15px;
+    color: #fff;
+    font-weight: bold
+}
+.CreatePlaylistCont .AddNewPlstItm span {
+    float: left;
+    font-size: 16px;
+    margin: 3px 0 0 5px
+}
+.CreatePlaylistCont #AddNewPlaylist_Container {
+    display: none;
+    float: left;
+    width: 98%;
+    text-align: left;
+    margin: 3px
+}
+.CreatePlaylistCont #AddPlaylist_Name {
+    float: left;
+    width: 197px;
+    height: 29px;
+    border: 1px solid #656565;
+    font-size: 14px
+}
+.CreatePlaylistCont #AddPlaylist_Save {
+    float: left;
+    width: 125px;
+    height: 33px;
+    margin-left: 3px
+}
+.CreatePlaylistCont #AddPlaylist_Cancel {
+    float: left;
+    width: 65px;
+    height: 33px;
+    margin-left: 3px
+}
+.CreatePlaylistCont .PlaylistsInnrCont {
+    float: left;
+    width: 100%;
+    min-height: 80px;
+    margin-top: 3px;
+    overflow: hidden
+}
+.CreatePlaylistCont .SongsInnrCont {
+    float: left;
+    width: 100%;
+    min-height: 400px;
+    overflow: hidden;
+    padding: 2px 0 0 9px
+}
+.CreatePlaylistCont .SongImg {
+    float: left;
+    width: 67px;
+    height: 50px;
+    margin: 0 0 0 0;
+    padding-right: 8px;
+    border-radius: 2px
+}
+.CreatePlaylistCont .SongTitle {
+    float: left;
+    width: 90%;
+    height: 50px;
+    line-height: 24px;
+    margin-left: 5px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #000
+}
+.CreatePlaylistCont .SongTitle span {
+    color: #d4ae52;
+    font-size: 13px
+}
+.CreatePlaylistCont .SongItm_Edt {
+    float: left;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+    border-radius: 15px;
+    border: 1px solid #47bb90;
+    margin: 10px 0 0 2px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+.CreatePlaylistCont .SongItm_Del {
+    float: left;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+    border-radius: 15px;
+    border: 1px solid #47bb90;
+    margin: 10px 0 0 2px;
+    background: url('http://hypster.com/imgs/action_icons/delete_icon_s.png') no-repeat center
+}
+.CreatePlaylistCont .EmptyPlCont {
+    float: left;
+    width: 600px;
+    height: 70px;
+    cursor: pointer;
+    overflow: hidden;
+    margin-top: 4px
+}
+.CreatePlaylistCont .EmptyPlCont div {
+    font-size: 20px;
+    color: #000;
+    margin: 5px 0 0 5px
+}
+.CreatePlaylistCont .AddNewSong_Container {
+    float: left;
+    width: 230px;
+    height: 22px;
+    line-height: 21px;
+    overflow: hidden;
+    color: #000;
+    border-radius: 2px;
+    margin-left: 0;
+    margin-top: 5px;
+    margin-bottom: 13px;
+    cursor: pointer;
+    text-align: center
+}
+.CreatePlaylistCont .AddNewTag_Container {
+    float: left;
+    width: 130px;
+    height: 22px;
+    line-height: 21px;
+    overflow: hidden;
+    color: #000;
+    border-radius: 2px;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 13px;
+    cursor: pointer;
+    text-align: center
+}
+.CreatePlaylistCont .CleanDeadLinks_Container {
+    float: left;
+    width: 130px;
+    height: 22px;
+    line-height: 21px;
+    overflow: hidden;
+    color: #000;
+    border-radius: 2px;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 13px;
+    cursor: pointer;
+    text-align: center
+}
+.CreatePlaylistCont #AddNewTag_InnrContainer {
+    float: left;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    overflow: hidden;
+    margin-bottom: 8px
+}
+.CreatePlaylistCont #AddNewTag_InnrContainer {
+    display: none
+}
+.CreatePlaylistCont #tagsConHldr1 {
+    float: left;
+    width: 100%;
+    min-height: 35px;
+    margin-bottom: 17px
+}
+.CreatePlaylistCont .tagsCHHeader1 {
+    float: left;
+    width: 100%;
+    color: #d4ae52;
+    margin-bottom: 5px
+}
+.CreatePlaylistCont .TagI {
+    display: block;
+    float: left;
+    padding: 2px 5px 2px 5px;
+    margin: 0 3px 2px 0;
+    background-color: #131313;
+    border-radius: 2px;
+    color: #fff
+}
+.CreatePlaylistCont #tagsMCH1 {
+    float: left;
+    width: 100%
+}
+.CreatePlaylistCont #tagsEditBtn {
+    float: left;
+    background-color: #4a4a4a;
+    border-radius: 2px;
+    padding: 1px 5px 1px 5px;
+    margin-left: 2px;
+    cursor: pointer;
+    text-align: center;
+    color: #fff
+}
+.CreatePlaylistCont .delTagSpn {
+    background-color: #4a4a4a;
+    border-radius: 2px;
+    font-size: 11px;
+    cursor: pointer
+}
+.CreateRadioContHolder {
+    float: left;
+    width: 70%
+}
+.CreateRadioContHolder .rdoStationsCH1 {
+    float: left;
+    width: 700px;
+    margin: 0 0 17px 20px
+}
+.CreateRadioContHolder .rdoStationsCH1 .rdoItem1 {
+    float: left;
+    width: 100%;
+    margin-bottom: 4px
+}
+.CreateRadioContHolder .rdoStationsCH1 .plBtn2 {
+    float: left;
+    width: 45px;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    background-color: #000;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid #42bc91
+}
+.CreateRadioContHolder .rdoStationsCH1 .plBtn2 div {
+    float: left;
+    width: 30px;
+    height: 30px;
+    border-radius: 17px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center;
+    margin: 3px 0 0 6px;
+    border: 2px solid #42bc91
+}
+.CreateRadioContHolder .rdoStationsCH1 .itmBtn2 {
+    float: left;
+    width: 563px;
+    height: 36px;
+    line-height: 35px;
+    color: #fff;
+    background-color: #000;
+    padding: 2px 2px 2px 10px;
+    border-radius: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    border: 1px solid #42bc91
+}
+.CreateRadioContHolder .rdoStationsCH1 .actBtn2 {
+    float: left;
+    width: 45px;
+    height: 40px;
+    line-height: 40px;
+    text-align: left;
+    color: #fff;
+    font-size: 11px;
+    background-color: #000;
+    border-radius: 2px;
+    margin-left: 4px;
+    cursor: pointer;
+    border: 1px solid #42bc91
+}
+.CreateRadioContHolder .rdoStationsCH1 .actBtn2 div {
+    float: left;
+    width: 30px;
+    height: 30px;
+    border-radius: 17px;
+    background: url('http://hypster.com/imgs/action_icons/delete_icon_s.png') no-repeat center;
+    margin: 3px 0 0 5px;
+    border: 2px solid #42bc91
+}
+.CreateRadioContHolder .StatNameCont {
+    float: left;
+    width: 100%;
+    margin-top: 7px
+}
+.CreateRadioContHolder #RadioStationName {
+    float: left;
+    width: 310px;
+    height: 31px;
+    margin: 10px 0 0 20px;
+    padding: 0 7px 0 7px;
+    background-color: #eee;
+    border: 3px solid #fefefe;
+    border-radius: 5px
+}
+.CreateRadioContHolder .StatSearchCont {
+    float: left;
+    width: 50%;
+    margin-top: 7px
+}
+.CreateRadioContHolder #RadioStationSearchTerm {
+    float: left;
+    width: 310px;
+    height: 31px;
+    margin: 10px 0 0 20px;
+    padding: 0 7px 0 7px;
+    background-color: #c9c8c9;
+    border: 3px solid #c9c8c9;
+    border-radius: 7px;
+    color: #fff
+}
+.CreateRadioContHolder .StatSaveCont {
+    float: left;
+    width: 100%;
+    height: 10px;
+    margin-top: 3px
+}
+.CreateRadioContHolder #RadioStationSave {
+    float: left;
+    width: 270px;
+    height: 40px;
+    line-height: 33px;
+    margin: 10px 0 0 20px;
+    background-color: #47bb90;
+    border: 1px solid #47bb90;
+    border-radius: 7px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer
+}
+.CreateRadioContHolder .errMsg1 {
+    float: left;
+    margin: 10px 0 0 20px;
+    color: #d4ae52;
+    font-size: 14px
+}
+.CreateRadioContHolder .VisSearchCont {
+    float: left;
+    min-width: 2200px;
+    height: 250px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden
+}
+.CreateRadioContHolder .AdCont {
+    float: left;
+    width: 300px;
+    height: 250px;
+    margin-left: 20px
+}
+.CreateRadioContHolder .VisSerItm {
+    float: left;
+    height: 125px;
+    cursor: pointer
+}
+.SongLandingCont {
+    float: left;
+    width: 1024px
+}
+.SongLandingCont .ImgCont {
+    float: left;
+    width: 360px
+}
+.SongLandingCont .ImgCont img {
+    float: left;
+    border: 2px solid #454545;
+    width: 340px;
+    height: 255px
+}
+.SongLandingCont .ItmDetailsCont {
+    float: left;
+    width: 600px
+}
+.SongLandingCont .SongTitle {
+    float: left;
+    width: 100%;
+    height: 33px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-align: left;
+    font-size: 24px;
+    color: #fff
+}
+.SongLandingCont .SongAddDetails {
+    float: left;
+    width: 100%;
+    height: 170px;
+    text-align: left;
+    font-size: 16px;
+    line-height: 24px;
+    color: #fff
+}
+.SongLandingCont .SongAddDetails .witm {
+    float: left;
+    width: 100%
+}
+.SongLandingCont .ActionsCont {
+    float: left;
+    width: 100%;
+    margin-top: 13px
+}
+.SongLandingCont .ActPlayBtn {
+    float: left;
+    width: 34px;
+    height: 33px;
+    background-color: #454545;
+    margin: 0 0 0 0;
+    cursor: pointer;
+    text-align: center
+}
+.SongLandingCont .AddPlayBtn {
+    float: left;
+    width: 34px;
+    height: 33px;
+    background-color: #454545;
+    margin: 0 0 0 0;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 8px
+}
+.SongLandingCont .ActAddBtn {
+    float: left;
+    width: 140px;
+    height: 33px;
+    line-height: 33px;
+    margin-left: 8px;
+    background-color: #454545;
+    cursor: pointer;
+    text-align: center
+}
+.SongLandingCont .ActGetRingtone {
+    display: block;
+    float: left;
+    width: 140px;
+    height: 33px;
+    line-height: 33px;
+    margin-left: 8px;
+    background-color: #454545;
+    text-align: center
+}
+.SongCommentsCont {
+    float: right;
+    width: 1040px;
+    text-align: left
+}
+.SongCommentsCont .CommHeader {
+    float: left;
+    width: 100%;
+    font-size: 26px;
+    color: #555
+}
+.SongCommentsCont .CommItm {
+    float: left;
+    width: 97%;
+    min-height: 30px;
+    margin-top: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #858c90;
+    border-radius: 2px
+}
+.SongCommentsCont .CommItm .CommComment {
+    float: left;
+    color: #eee;
+    font-size: 15px;
+    line-height: 19px
+}
+.SongCommentsCont .CommItm .CommDate {
+    float: right;
+    margin-top: 10px;
+    font-size: 15px
+}
+.SongCommentsCont .CommV1 {
+    float: left;
+    width: 97%;
+    height: 30px;
+    margin-top: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #858c90;
+    border-radius: 2px
+}
+.SongCommentsCont .CommV2 {
+    float: left;
+    width: 97%;
+    height: 20px;
+    margin-top: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #909699;
+    border-radius: 2px
+}
+.SongCommentsCont .CommV3 {
+    float: left;
+    width: 97%;
+    height: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #969b9e;
+    border-radius: 2px
+}
+.SongCommentsCont #songComment {
+    float: left;
+    width: 98%;
+    height: 80px;
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 16px;
+    background-color: #747e83;
+    border: 1px solid #747e83;
+    color: #fff
+}
+.SongCommentsCont .CommSubmCont {
+    float: left;
+    width: 99%;
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+.SongCommentsCont #PostNewComm {
+    float: right;
+    width: 220px;
+    height: 27px;
+    line-height: 26px;
+    background-color: #858c90;
+    border: 1px solid #858c90;
+    border-radius: 2px;
+    color: #323232;
+    text-align: center;
+    font-size: 16px
+}
+#AddToPlaylistCont1 {
+    float: left;
+    margin-top: 90px;
+    width: 850px;
+    height: 565px;
+    background-color: #fff;
+    padding: 3px;
+    border-radius: 2px
+}
+#AddToPlaylistCont1 .ExitBtnCont {
+    float: left;
+    width: 100%;
+    height: 1px
+}
+#AddToPlaylistCont1 .ExitBtnCont img {
+    float: right;
+    margin: -22px -22px 0 0;
+    cursor: pointer
+}
+#AddToPlaylistCont1 .LeftCont {
+    float: left;
+    width: 435px;
+    height: 515px;
+    overflow: hidden;
+    padding: 2px;
+    margin-top: 0
+}
+#AddToPlaylistCont1 .RightCont {
+    float: left;
+    width: 400px;
+    height: 515px;
+    padding: 2px;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 5px
+}
+#AddToPlaylistCont1 .LeftCont .LeftContInnr {
+    float: left;
+    width: 98%;
+    margin: 1%
+}
+#AddToPlaylistCont1 .RightCont #PlaylistContHoder1 {
+    float: left;
+    width: 98%;
+    height: 505px;
+    margin: 1%;
+    text-align: left;
+    overflow: auto
+}
+#AddToPlaylistCont1 .PlaylistTitle {
+    float: left;
+    width: 100%;
+    text-align: left;
+    color: #d4ae52;
+    font-size: 17px
+}
+#AddToPlaylistCont1 .PlaylistItm {
+    float: left;
+    width: 100%;
+    text-align: left
+}
+#AddToPlaylistCont1 .PlaylistItm div {
+    float: left;
+    width: 99%;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    margin-left: 1%;
+    margin-top: 3px;
+    border-radius: 2px;
+    cursor: pointer
+}
+#AddToPlaylistCont1 .SongTitle {
+    float: left;
+    margin: 0 0 0 5px;
+    color: #d4ae52;
+    font-size: 20px;
+    text-align: left
+}
+#AddToPlaylistCont1 .SongDetails {
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px
+}
+#AddToPlaylistCont1 .SongImg {
+    width: 120px;
+    height: 90px;
+    float: left;
+    border: 1px solid #656565;
+    margin: 0 0 0 3px
+}
+#AddToPlaylistCont1 .SongVerCont {
+    float: left;
+    width: 100%;
+    text-align: left
+}
+#AddToPlaylistCont1 .VerSong {
+    width: 350px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #333;
+    border-radius: 2px;
+    margin: 5px 2px 2px 2px;
+    padding: 1px 2px 2px 2px;
+    font-size: 11px;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden
+}
+#AddToPlaylistCont1 .VerSongExt {
+    display: block;
+    width: 350px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #333;
+    border-radius: 2px;
+    margin: 5px 2px 2px 2px;
+    padding: 1px 2px 2px 2px;
+    font-size: 11px;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden
+}
+#AddToPlaylistCont1 .AddBtn1 {
+    float: left;
+    width: 230px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #333;
+    border: 1px solid #656565;
+    padding: 1px 2px 2px 2px;
+    font-size: 12px;
+    color: #d4ae52
+}
+#AddToPlaylistCont1 .AddBtn2 {
+    float: right;
+    width: 300px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #42bc90;
+    border: 1px solid #42bc90;
+    border-radius: 6px;
+    padding: 1px 2px 2px 2px;
+    font-size: 12px;
+    color: #fff;
+    margin-left: 10px
+}
+#AddToPlaylistCont1 .AddBtn3 {
+    float: right;
+    width: 260px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #333;
+    border: 1px solid #656565;
+    padding: 1px 2px 2px 2px;
+    font-size: 12px;
+    color: #fff;
+    margin-top: 8px
+}
+#AddToPlaylistContPopup1 {
+    float: left;
+    margin-top: 30px;
+    width: 850px;
+    height: 500px;
+    background-color: #fff;
+    border: 5px solid #fff;
+    border-radius: 2px
+}
+#AddToPlaylistContPopup1 .ExitBtnCont {
+    float: left;
+    width: 100%;
+    height: 1px
+}
+#AddToPlaylistContPopup1 .ExitBtnCont img {
+    float: right;
+    margin: -22px -22px 0 0;
+    cursor: pointer
+}
+#AddToPlaylistContPopup1 .LeftCont {
+    float: left;
+    width: 435px;
+    height: 495px;
+    overflow: hidden;
+    padding: 2px;
+    margin-top: 0
+}
+#AddToPlaylistContPopup1 .RightCont {
+    float: left;
+    width: 400px;
+    height: 495px;
+    padding: 2px;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 5px
+}
+#AddToPlaylistContPopup1 .LeftCont .LeftContInnr {
+    float: left;
+    width: 98%;
+    margin: 1%
+}
+#AddToPlaylistContPopup1 .RightCont #PlaylistContHoder1 {
+    float: left;
+    width: 98%;
+    height: 485px;
+    margin: 1%;
+    text-align: left;
+    overflow: auto
+}
+#AddToPlaylistContPopup1 .PlaylistTitle {
+    float: left;
+    width: 100%;
+    text-align: left;
+    color: #d4ae52;
+    font-size: 17px
+}
+#AddToPlaylistContPopup1 .PlaylistItm {
+    float: left;
+    width: 100%;
+    text-align: left
+}
+#AddToPlaylistContPopup1 .PlaylistItm div {
+    float: left;
+    width: 99%;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    margin-left: 1%;
+    margin-top: 3px;
+    border-radius: 2px;
+    cursor: pointer
+}
+#AddToPlaylistContPopup1 .SongTitle {
+    float: left;
+    margin: 0 0 0 5px;
+    color: #d4ae52;
+    font-size: 20px;
+    text-align: left
+}
+#AddToPlaylistContPopup1 .SongDetails {
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px
+}
+#AddToPlaylistContPopup1 .SongImg {
+    width: 120px;
+    height: 90px;
+    float: left;
+    border: 1px solid #656565
+}
+#AddToPlaylistContPopup1 .AddBtn1 {
+    float: right;
+    width: 300px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #42bc90;
+    border: 1px solid #42bc90;
+    padding: 1px 2px 2px 2px;
+    font-size: 12px;
+    color: #fff;
+    border-radius: 7px
+}
+#SendFeedbackContPopup1 {
+    float: left;
+    margin-top: 30px;
+    width: 660px;
+    height: 330px;
+    background-color: #43616f;
+    border: 5px solid #43616f;
+    border-radius: 2px
+}
+#SendFeedbackContPopup1 .ExitBtnCont {
+    float: left;
+    width: 100%;
+    height: 1px
+}
+#SendFeedbackContPopup1 .ExitBtnCont img {
+    float: right;
+    margin: -22px -22px 0 0;
+    cursor: pointer
+}
+.SearchSongsAdCont {
+    float: right;
+    width: 728px;
+    height: 90px;
+    margin: 3px 0 9px 0
+}
+.SlideshowBultesCont {
+    float: left;
+    min-width: 100%;
+    height: 23px;
+    margin: -23px 0 0 0;
+    padding-right: 10px;
+    background-color: rgba(10, 10, 10, .65)
+}
+.SlideshowBultesCont .slideBulet {
+    float: left;
+    width: 10px;
+    height: 10px;
+    background-color: #cdcdcd;
+    border-radius: 9px;
+    margin: 7px 0 0 7px;
+    cursor: pointer
+}
+.SlideshowBultesCont .slideBuletSel {
+    float: left;
+    width: 9px;
+    height: 9px;
+    background-color: #cdcdcd;
+    border-radius: 9px;
+    margin: 7px 0 0 7px;
+    cursor: pointer
+}
+#HomeSlide1 {
+    float: left;
+    width: 100%
+}
+#HomeSlide2 {
+    float: left;
+    width: 100%
+}
+#HomeSlide3 {
+    float: left;
+    width: 100%
+}
+#HomeSlide4 {
+    float: left;
+    width: 100%
+}
+#HomeSlide5 {
+    float: left;
+    width: 100%
+}
+#HomeSlide6 {
+    float: left;
+    width: 100%
+}
+#HomeSlide7 {
+    float: left;
+    width: 100%
+}
+#HomeSlide1 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide2 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide3 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide4 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide5 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide6 img {
+    float: left;
+    cursor: pointer
+}
+#HomeSlide7 img {
+    float: left;
+    cursor: pointer
+}
+.HomeSldShow {
+    float: left;
+    width: 100%
+}
+.HomeSldShow img {
+    float: left;
+    cursor: pointer
+}
+.NPFT_TopAd {
+    float: right;
+    width: 728px;
+    height: 90px;
+    border-radius: 2px
+}
+.NPFT_BottomAd {
+    float: left;
+    width: 728px;
+    height: 90px;
+    border-radius: 2px
+}
+.NPFT_GoOnTop {
+    float: left;
+    width: 273px;
+    height: 90px;
+    line-height: 90px;
+    margin: 0 0 0 10px;
+    padding: 3px;
+    background-color: #1c1c1c;
+    border-radius: 3px;
+    font-size: 25px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer
+}
+.NPFT_Head {
+    float: right;
+    width: 760px;
+    text-align: left
+}
+.NPFT_BHead {
+    float: right;
+    width: 1024px;
+    text-align: left
+}
+.NPFT_Head .ffHeader {
+    float: left;
+    width: 230px;
+    margin-top: 0;
+    color: #2e3335;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 32px
+}
+.NPFT_ContHolder {
+    float: left;
+    width: 730px;
+    padding: 0
+}
+.NPFT_PP_ContHolder {
+    float: left;
+    width: 1024px;
+    padding: 0;
+    min-height: 200px
+}
+.NPFT_PP_ContHolder .NewPlayerForTumblr {
+    float: left;
+    width: 300px;
+    height: 60px;
+    margin-left: 10px;
+    cursor: pointer;
+    text-align: center
+}
+.NPFT_PP_ContHolder .GetCodeBtn {
+    float: left;
+    width: 300px;
+    height: 60px;
+    margin-left: 10px;
+    cursor: pointer;
+    text-align: center
+}
+.NPFT_PP_ContHolder #CPL_Tab1 {
+    float: left;
+    width: 1013px;
+    padding: 13px;
+    min-height: 1000px;
+    border-radius: 2px
+}
+.NPFT_PP_ContHolder .topHeader {
+    float: left;
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 13px
+}
+.NPFT_PP_ContHolder .middleCont {
+    float: left;
+    width: 828px;
+    min-height: 200px;
+    max-height: 2375px;
+    overflow: hidden;
+    border-radius: 2px
+}
+.NPFT_PP_ContHolder .AdCont {
+    float: right;
+    width: 166px;
+    min-height: 1800px
+}
+.AddUnit {
+    float: left;
+    width: 160px;
+    height: 600px;
+    margin: 0 0 20px 0;
+    background-color: #2e2e2e;
+    border: 3px solid #2e2e2e;
+    border-radius: 3px
+}
+.middleCont img {
+    float: left;
+    width: 260px;
+    margin: 0 0 12px 10px
+}
+.NPFT_ContHolder .SettingItm {
+    float: left;
+    width: 100%;
+    text-align: right;
+    margin-top: 10px;
+    color: #d4ae52;
+    font-size: 16px
+}
+.NPFT_ContHolder #cp_MainBackColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #000;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_ButtonsColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #2488ba;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #CPL_Tab2 {
+    float: left;
+    width: 695px;
+    padding: 20px
+}
+.NPFT_ContHolder #SampleSettingsHolder {
+    float: left;
+    width: 275px;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 3px
+}
+.NPFT_ContHolder #SampleContHolder {
+    float: right;
+    width: 360px;
+    margin-bottom: 10px;
+    color: #bcbcbc;
+    padding: 10px;
+    border-radius: 3px
+}
+.NPFT_ContHolder #SampleCodeHolder {
+    float: left;
+    width: 960px;
+    margin-bottom: 5px;
+    padding: 13px;
+    border-radius: 3px
+}
+.NPFT_ContHolder #hypPlayer_Playlist_ID {
+    width: 220px;
+    height: 22px;
+    margin-top: 2px
+}
+.NPFT_ContHolder .HeaderCompText {
+    float: left;
+    font-size: 14px;
+    line-height: 13px;
+    text-align: left;
+    color: #000;
+    border: 1px solid #d4ae52;
+    margin-bottom: 5px;
+    font-weight: bold
+}
+.NPFT_ContHolder #PlayerCodeArea {
+    width: 96%;
+    margin: 2%;
+    height: 200px;
+    background-color: #fff;
+    border: none;
+    border: 1px solid #757575
+}
+.NPFT_ContHolder #PlayerControlsCodeArea {
+    width: 96%;
+    margin: 2%;
+    height: 80px;
+    background-color: #fff;
+    border: none;
+    border: 1px solid #757575
+}
+.NPFT_ContHolder .BottomMsgCont {
+    float: left;
+    width: 98%;
+    padding: 10px;
+    margin: 20px 0 0 0;
+    min-height: 70px;
+    line-height: 19px;
+    background-color: #282828;
+    border-radius: 2px;
+    font-size: 16px
+}
+.NPFT_ContHolder .GetCodeBtn {
+    float: left;
+    width: 300px;
+    height: 60px;
+    margin-left: 10px;
+    cursor: pointer;
+    text-align: center
+}
+.NPFT_ContHolder .MoreSkinsBtn {
+    float: left;
+    width: 300px;
+    height: 60px;
+    margin-left: 10px;
+    cursor: pointer;
+    text-align: center
+}
+.BenContHolder {
+    float: left;
+    width: 100%;
+    min-height: 80px
+}
+.BenContHolder .BenItem {
+    width: 740px;
+    margin: 10px 10px 10px 0;
+    padding: 5px;
+    min-height: 28px;
+    line-height: 27px;
+    background-color: #fff;
+    border-radius: 1px;
+    color: #353535;
+    font-size: 18px;
+    border: 1px solid #3fbc91
+}
+.NPFT_ContHolder #cp_PlayPauseButtonColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #50846b;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_PrevButtonColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #0e1211;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_NextButtonColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #1d2624;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_ShuffleButtonColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #415158;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_HypsterButtonColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #2488ba;
+    border-radius: 2px;
+    cursor: pointer
+}
+.NPFT_ContHolder #cp_BorderColor {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background-color: #454545;
+    border-radius: 2px;
+    cursor: pointer
+}
+.HomeVideoRootCont {
+    float: left;
+    width: 636px;
+    height: 280px
+}
+.HomeVideoHeader {
+    float: left;
+    width: 100%;
+    height: 40px;
+    background-color: #173860
+}
+.HomeVideoHeader div {
+    float: left;
+    margin: 5px 0 0 10px;
+    color: #eee;
+    font: 21px/1.5 Hypster-Font, Arial, sans-serif
+}
+.HomeVideoHeader a {
+    display: block;
+    float: right;
+    margin: 5px 10px 0 0;
+    color: #eee;
+    font: 19px/1.5 Hypster-Font, Arial, sans-serif
+}
+.videoSlideshow {
+    float: left;
+    width: 100%;
+    height: 240px
+}
+.videoSlideshow .VidSlide {
+    float: left;
+    width: 100%;
+    margin-top: 3px
+}
+.VidSlide .VidLeft {
+    float: left;
+    width: 316px;
+    height: 235px;
+    background-color: #999
+}
+.VidSlide .VidRight {
+    float: right;
+    width: 316px;
+    height: 195px;
+    background-color: #999
+}
+.VidSlide .vidMcont {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 235px;
+    cursor: pointer
+}
+.vidMcont span {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 45px;
+    margin-top: 186px;
+    background-color: #232323;
+    overflow: hidden;
+    opacity: .75;
+    filter: alpha(opacity=85);
+    color: #fff;
+    font-family: Hypster-Font, Tahoma, Arial, Verdana, sans-serif;
+    font-size: 18px;
+    line-height: 48px;
+    text-align: left;
+    border-top: 4px solid #7a7a84
+}
+.vidMcont span img {
+    float: left;
+    margin: 8px 0 0 15px
+}
+.videoSlideshow_navBtns {
+    position: relative;
+    float: left;
+    display: none;
+    width: 1px;
+    height: 1px
+}
+.videoSlideshow_navBtns {
+    position: relative;
+    float: left;
+    display: none;
+    width: 1px;
+    height: 1px
+}
+.videoSlideshow_navBtns img {
+    width: 16px;
+    height: 18px;
+    cursor: pointer
+}
+.HomeRootCont {
+    float: left;
+    width: 100%
+}
+#HomeRow1 {
+    float: left;
+    width: 100%;
+    height: 250px;
+    margin-top: 25px
+}
+#HomeRow2 {
+    float: left;
+    width: 100%;
+    height: 280px;
+    margin-top: 40px
+}
+#HomeRow3 {
+    float: left;
+    width: 100%;
+    height: 260px;
+    margin-top: 40px
+}
+#HomeRow4 {
+    float: left;
+    width: 100%;
+    height: 280px;
+    margin-top: 40px
+}
+.HPSlideshow {
+    float: left;
+    width: 636px;
+    height: 250px;
+    overflow: hidden
+}
+.HomeRootCont .BtnsCont {
+    float: right;
+    width: 100px;
+    margin: 220px 0 0 0
+}
+.HomeRootCont .SlideCont {
+    width: 636px;
+    height: 250px
+}
+#HomePageSlide1 {
+    background: url('http://hypster.com/imgs/home/slideshow/1.png') no-repeat
+}
+#HomePageSlide2 {
+    background: url('http://hypster.com/imgs/home/slideshow/2.png') no-repeat
+}
+#HomePageSlide3 {
+    background: url('http://hypster.com/imgs/home/slideshow/3.png') no-repeat
+}
+.HomeRootCont .Bullet {
+    float: left;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 10px;
+    margin-left: 5px;
+    cursor: pointer
+}
+.HomeRootCont .Bullet .Sel {
+    background: #122c4b
+}
+.HomeRootCont .HomeTopAdd {
+    float: right;
+    width: 300px;
+    height: 250px;
+    margin: 0
+}
+#PlayerCont {
+    float: right;
+    width: 300px;
+    height: 280px;
+    margin: 0;
+    background: url('http://hypster.com/imgs/home/hypster_player.png') no-repeat;
+    cursor: pointer
+}
+.MostPopularSongsRootCont {
+    float: left;
+    width: 100%;
+    height: 220px;
+    overflow: hidden
+}
+.MostPopularSongsRootCont .LeftArrow {
+    float: left;
+    width: 2%;
+    height: 220px;
+    overflow: hidden
+}
+.MostPopularSongsRootCont .LeftArrow img {
+    width: 16px;
+    height: 18px;
+    margin-top: 90px;
+    cursor: pointer
+}
+.RightArrow {
+    float: left;
+    width: 2%;
+    height: 220px;
+    overflow: hidden
+}
+.MostPopularSongsRootCont .RightArrow img {
+    width: 16px;
+    height: 18px;
+    margin-top: 90px;
+    cursor: pointer
+}
+.MostPopularSongsRootCont .MiddleCont {
+    float: left;
+    width: 96%;
+    height: 220px;
+    overflow: hidden
+}
+#MostPopularSongInner {
+    float: left;
+    margin: 0
+}
+.MostPopularSongsRootCont .ItemSong {
+    float: left;
+    width: 140px;
+    margin: 25px 35px 25px 10px
+}
+.MostPopularSongsRootCont .ItemSong .ItemImg {
+    float: left;
+    width: 140px;
+    height: 140px;
+    background-size: Auto 188px;
+    border: 1px solid #676767;
+    cursor: pointer
+}
+.MostPopularSongsRootCont .ItemSong .ItemNav {
+    float: right;
+    width: 56px;
+    height: 27px;
+    line-height: 24px;
+    background-color: #e0e0e0;
+    margin: -32px 4px 0 0;
+    cursor: pointer
+}
+.MostPopularSongsRootCont .ItemSong .ItemTitle {
+    float: left;
+    width: 100%;
+    height: 40px;
+    line-height: 20px;
+    overflow: hidden;
+    padding: 1px;
+    margin: 8px 0 0 2px;
+    font: 17px/1.2 Arial, sans-serif;
+    color: #363636;
+    text-align: left;
+    cursor: pointer
+}
+.MostPopularSongsRootCont .ItemSong .ItemNav .Play {
+    float: left;
+    display: block;
+    width: 27px;
+    height: 27px;
+    background: url('http://hypster.com/imgs/items/play_btn.png')
+}
+.MostPopularSongsRootCont .ItemSong .ItemNav .AddPl {
+    float: left;
+    display: block;
+    width: 27px;
+    height: 27px;
+    background: url('http://hypster.com/imgs/items/add_to_pls_btn.png')
+}
+.ChartHeader {
+    margin-top: 5px;
+    color: #d4ae52;
+    height: 35px;
+    padding: 0 0 7px 10px;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    font-weight: 300
+}
+.chartIntr {
+    float: right;
+    margin-right: 20px;
+    margin-top: 10px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: lighter;
+    color: #999
+}
+.ChartScrlArea {
+    float: left;
+    width: 100%;
+    overflow: hidden;
+    height: 278px
+}
+.MainChartCont {
+    float: left;
+    margin: 10px 0 0 -3px;
+    height: 300px
+}
+.chartplPlay {
+    display: block;
+    float: left;
+    width: 15px;
+    height: 17px;
+    margin: 4px 2px 0 5px;
+    padding: 4px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center;
+    cursor: pointer
+}
+.MainChartCont .chartItem {
+    float: left;
+    width: 150px;
+    height: 280px;
+    margin: 0 0 0 13px
+}
+.chartItem .chrtImage {
+    float: left;
+    width: 100%;
+    text-align: center;
+    border-radius: 2px;
+    border-radius: 100px
+}
+.chartItem .chrtImage div {
+    float: left;
+    width: 35px;
+    height: 35px;
+    line-height: 29px;
+    background-color: #3fbc91;
+    margin-top: -5px;
+    margin-left: -0;
+    border-radius: 20px;
+    font-size: 22px;
+    color: #fff
+}
+.chartItem .chrtTitle {
+    float: left;
+    width: 96%;
+    height: 72px;
+    line-height: 25px;
+    padding: 2%;
+    overflow: hidden;
+    font-size: 16px;
+    margin-top: -1px;
+    text-align: center
+}
+.radioButton {
+    float: left;
+    min-width: 115px;
+    height: 33px;
+    margin: 4px 0 0 0;
+    background-color: #d4ae52;
+    color: #fff;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 19px;
+    cursor: pointer
+}
+.HOM_Ad1 {
+    float: left;
+    width: 300px;
+    height: 250px;
+    margin-top: 25px;
+    background-color: #1c1c1c;
+    border: 3px solid #1c1c1c;
+    border-radius: 4px
+}
+.HOM_Ad2 {
+    float: left;
+    width: 300px;
+    height: 250px;
+    margin-top: 15px;
+    background-color: #1c1c1c;
+    border: 3px solid #1c1c1c;
+    border-radius: 4px
+}
+.chartHoldCont {
+    float: left;
+    width: 100%;
+    margin: 5px 0 50px 0
+}
+#Charts_PrevPage {
+    float: left;
+    width: 280px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #3fbc91;
+    border: 1px solid #3fbc91;
+    border-radius: 3px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 26px;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 20px
+}
+#Charts_NextPage {
+    float: left;
+    width: 280px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #3fbc91;
+    border: 1px solid #3fbc91;
+    border-radius: 3px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 26px;
+    text-align: center;
+    cursor: pointer
+}
+.chartMainCont {
+    float: right;
+    width: 728px;
+    height: 90px;
+    background-color: #1c1c1c;
+    border: 2px solid #1c1c1c;
+    border-radius: 2px;
+    overflow: hidden
+}
+.chartContHldr {
+    float: left;
+    width: 100%;
+    padding-top: 1px
+}
+.ListenChartContH {
+    float: left;
+    width: 100%;
+    margin-top: 10px
+}
+.PostNav_cont {
+    float: left;
+    width: 98%;
+    padding: 0 2% 0% 0%;
+    margin: 35px 0 13px 0;
+    border-radius: 2px;
+    text-align: left
+}
+.PostNav_cont .PrevPost {
+    float: left;
+    width: 120px;
+    height: 25px;
+    line-height: 25px;
+    margin-top: 10px;
+    background-color: #47bb90;
+    border-radius: 7px;
+    color: #fff;
+    font: 300 15px/1.8 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center
+}
+.PostNav_cont .HomePost {
+    float: left;
+    width: 120px;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 130px;
+    margin-top: 10px;
+    background-color: #47bb90;
+    border-radius: 7px;
+    color: #fff;
+    font: 300 15px/1.8 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center
+}
+.PostNav_cont .NextPost {
+    float: right;
+    width: 120px;
+    height: 25px;
+    line-height: 25px;
+    margin-top: 10px;
+    background-color: #47bb90;
+    border-radius: 7px;
+    color: #fff;
+    font: 300 15px/1.8 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: center
+}
+.PostComm_cont {
+    float: left;
+    width: 100%;
+    padding: 0;
+    min-height: 145px;
+    border-radius: 2px;
+    text-align: left
+}
+.PostComm_cont .CommHeader {
+    float: left;
+    width: 100%;
+    margin-top: 6px;
+    font: 300 17px/1.8 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: left
+}
+.AdCont300x250 {
+    float: left;
+    width: 300px;
+    height: 250px;
+    background-color: #444;
+    border: 2px solid #444;
+    border-radius: 2px
+}
+.AdCont300x250_Drk {
+    float: left;
+    width: 300px;
+    height: 250px;
+    background-color: #292929;
+    border: 2px solid #292929;
+    border-radius: 2px
+}
+.videWid_cont {
+    float: left;
+    width: 300px;
+    min-height: 350px;
+    margin-top: 13px;
+    text-align: center
+}
+.videWid_cont H2 {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    color: #eee;
+    font: 200 21px/1.5 'Helvetica Neue', Helvetica, Arial, sans-serif
+}
+.videWid_cont .vidMcont {
+    display: block;
+    float: left;
+    width: 282px;
+    height: 172px;
+    background-color: #757575;
+    margin-left: 9px;
+    margin-bottom: 9px;
+    border-radius: 1px;
+    cursor: pointer
+}
+.vidMcont img {
+    width: 278px;
+    height: 168px;
+    float: left;
+    margin: 2px;
+    border: 0
+}
+.vidMcont div {
+    float: left;
+    width: 278px;
+    height: 35px;
+    margin-left: 2px;
+    margin-top: -37px;
+    background-color: #232323;
+    overflow: hidden;
+    opacity: .75;
+    filter: alpha(opacity=85);
+    color: #fff;
+    font-size: 15px;
+    font-family: Segoe UI Light, Segoe UI, Tahoma, Arial, Verdana, sans-serif;
+    line-height: 35px;
+    text-align: left
+}
+.PostImgSt_Left {
+    float: left;
+    border: none;
+    margin: 5px 15px 0 0
+}
+.PostImgSt_Right {
+    float: right;
+    border: none;
+    margin: 5px 0 0 10px
+}
+.PostVideoCont {
+    float: right;
+    display: block;
+    background-color: #565656;
+    padding: 2px;
+    border-radius: 2px
+}
+.boxContRight #sosialHolder1 {
+    float: right;
+    width: 80px
+}
+.boxContRight .SI_Cont_google {
+    width: 75px;
+    height: 22px;
+    background: #313537 url('../imgs/social_icons/google_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContRight .SI_Cont_twitter {
+    width: 75px;
+    height: 22px;
+    background: #313537 url('../imgs/social_icons/twitter_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContRight .SI_Cont_facebook {
+    width: 75px;
+    height: 22px;
+    background: #313537 url('../imgs/social_icons/facebook_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContRight .SI_Cont_facebook1 {
+    width: 90px;
+    height: 22px;
+    margin-top: 6px
+}
+.boxContRight .SI_Cont_twitter1 {
+    width: 90px;
+    height: 22px;
+    margin-top: 5px
+}
+.boxContRight .SI_Cont_google1 {
+    width: 80px;
+    height: 22px;
+    margin-top: 5px
+}
+.boxContLeft #sosialHolder1 {
+    float: right;
+    width: 80px
+}
+.boxContLeft .SI_Cont_google {
+    width: 75px;
+    height: 22px;
+    background: #747e83 url('../imgs/social_icons/google_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContLeft .SI_Cont_twitter {
+    width: 75px;
+    height: 22px;
+    background: #747e83 url('../imgs/social_icons/twitter_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContLeft .SI_Cont_facebook {
+    width: 75px;
+    height: 22px;
+    background: #747e83 url('../imgs/social_icons/facebook_icon.png') no-repeat center;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px
+}
+.boxContLeft .SI_Cont_facebook1 {
+    width: 90px;
+    height: 22px;
+    margin-top: 6px
+}
+.boxContLeft .SI_Cont_twitter1 {
+    width: 90px;
+    height: 22px;
+    margin-top: 5px
+}
+.boxContLeft .SI_Cont_google1 {
+    width: 80px;
+    height: 22px;
+    margin-top: 5px
+}
+.boxContRight .PostTitle {
+    color: #d4ae52
+}
+.boxContLeft .PostTitle {
+    color: #d4ae52
+}
+.boxContRight .PostCont {
+    font-size: 16px;
+    font-weight: lighter;
+    margin-top: 5px;
+    height: 295px;
+    overflow: hidden;
+    line-height: 23px
+}
+.boxContLeft .PostCont {
+    color: #fff;
+    font-size: 16px;
+    font-weight: lighter;
+    margin-top: 5px;
+    height: 295px;
+    overflow: hidden;
+    line-height: 23px
+}
+.boxContRight .PostReadMore {
+    display: block;
+    float: right;
+    width: 130px;
+    height: 20px;
+    line-height: 18px;
+    margin-top: 10px;
+    color: #d4ae52;
+    background-color: #444;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer
+}
+.boxContLeft .PostReadMore {
+    display: block;
+    float: right;
+    width: 130px;
+    height: 20px;
+    line-height: 18px;
+    margin-top: 10px;
+    color: #d4ae52;
+    background-color: #444;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer
+}
+.paging_Page {
+    float: left;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    margin-right: 5px;
+    text-align: center;
+    border: 1px solid #d4ae52;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #d4ae52
+}
+.chartArrowsCont {
+    float: left;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px
+}
+.MoveRight_arrow {
+    float: right;
+    margin: 10px 25px 0 0;
+    cursor: pointer
+}
+.MoveLeft_arrow {
+    float: right;
+    margin: 10px 15px 0 0;
+    cursor: pointer
+}
+.ChartSongItm_play {
+    display: block;
+    float: left;
+    width: 15px;
+    height: 17px;
+    margin: 0 1px 0 2px;
+    padding: 2px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+.Chart_PLK {
+    display: none;
+    float: left;
+    width: 100%;
+    height: 23px;
+    line-height: 20px;
+    background-color: #d4ae52;
+    color: #dedede;
+    cursor: pointer;
+    border-radius: 3px;
+    margin-top: -22px
+}
+.HTUH_GoOnTop {
+    float: right;
+    width: 260px;
+    height: 84px;
+    line-height: 84px;
+    margin: 0 5px 0 0;
+    padding: 3px;
+    background-color: #1c1c1c;
+    border-radius: 1px;
+    font-size: 25px;
+    color: #fff;
+    text-align: center;
+    cursor: pointer
+}
+#ContNextItm {
+    display: none;
+    float: right;
+    width: 48px;
+    height: 48px;
+    border-radius: 27px;
+    background: #2c3133 url(/imgs/refresh_icon.png) center no-repeat;
+    margin: 170px 15px 0 10px;
+    cursor: pointer
+}
+#ChngRadioSt {
+    display: none;
+    float: left;
+    width: 48px;
+    height: 48px;
+    margin: 120px 0 0 10px;
+    border-radius: 27px;
+    background: #1c1c1c url(/imgs/refresh_icon.png) center no-repeat;
+    cursor: pointer
+}
+.radioCustStN {
+    float: right;
+    height: 31px;
+    line-height: 31px;
+    margin: 4px 0 0 4px;
+    background-color: #2d3134;
+    border-radius: 3px;
+    color: #fff;
+    padding: 0 8px 0 8px;
+    cursor: pointer;
+    font-size: 16px
+}
+.ManualArCont {
+    float: left;
+    width: 1024px
+}
+.ManualArCont .MAcont {
+    float: left;
+    width: 705px;
+    height: 250px;
+    overflow: hidden;
+    cursor: pointer
+}
+.ManualArCont .MAheader {
+    float: left;
+    float: left;
+    font-size: 23px
+}
+.ManualArCont .MAimg {
+    float: left;
+    width: 700px;
+    height: 209px;
+    margin: 10px 5px 0 0
+}
+.ManualDtHeader {
+    float: right;
+    width: 100%;
+    font-size: 34px;
+    color: #d4ae52;
+    margin-top: 12px;
+    font-weight: 300
+}
+.ManualDtShare {
+    float: right;
+    width: 100%
+}
+.ManualDtSlideHdr {
+    width: 95%;
+    font-size: 23px;
+    line-height: 30px;
+    margin: 5px 0 5px 0;
+    font-weight: 300
+}
+.ManualDtSlideHdr a {
+    font-weight: 300;
+    color: #d4ae52
+}
+.ManualDtAdCont {
+    float: right;
+    width: 1024px;
+    margin-top: 3px
+}
+.MainCompContH {
+    float: right;
+    width: 1024px;
+    min-height: 350px
+}
+.MainCompContH .ComLeftS {
+    float: left;
+    width: 359px;
+    height: 429px;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 17px;
+    background-color: #1c1c1c;
+    border-bottom: 1px solid #1c1c1c;
+    border-right: 1px solid #1c1c1c
+}
+.MainCompContH .ComMidS {
+    float: left;
+    width: 299px;
+    height: 429px;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 17px;
+    background-color: #1c1c1c;
+    border-bottom: 1px solid #1c1c1c;
+    border-right: 1px solid #1c1c1c
+}
+.MainCompContH .ComRightS {
+    float: left;
+    width: 295px;
+    height: 429px;
+    padding: 5px;
+    border-radius: 3px;
+    margin-top: 17px;
+    background-color: #1c1c1c;
+    overflow: auto;
+    border-bottom: 1px solid #1c1c1c;
+    border-right: 1px solid #1c1c1c
+}
+.MainCompContH .CompCSep {
+    float: left;
+    width: 17px;
+    height: 430px;
+    margin-top: 25px
+}
+.plst_song_itm {
+    float: left;
+    width: 98%;
+    height: 27px;
+    line-height: 27px;
+    margin: 1.5% 1% 0 1%;
+    background-color: #333;
+    border-radius: 2px;
+    cursor: pointer;
+    overflow: hidden
+}
+.plst_song_itm img {
+    float: left;
+    width: 33px;
+    height: 25px;
+    margin: 1px
+}
+.FndPlsItm {
+    float: left;
+    width: 94%;
+    height: 23px;
+    line-height: 21px;
+    background: #5a676d url("/imgs/play_icon.png") no-repeat left center;
+    cursor: pointer;
+    border-left: 3px solid #5a676d;
+    margin-bottom: 2px;
+    font-size: 16px;
+    padding: 0 0 0 5%
+}
+.MainCompContH #ChoosePlaylist {
+    float: left;
+    width: 97%;
+    height: 27px;
+    line-height: 27px;
+    margin: 5px 0 0 5px
+}
+.MainCompContH #UserCompPlstHolder1 {
+    float: left;
+    width: 97%;
+    height: 386px;
+    margin: 5px 0 0 5px;
+    margin-top: 7px;
+    overflow: auto
+}
+.MainCompContH .CompCirCont {
+    float: left;
+    width: 100%;
+    margin-top: 13px
+}
+.MainCompContH #CompCir1 {
+    float: left;
+    width: 120px;
+    height: 120px;
+    background-color: #184e39;
+    border: 1px solid #343434;
+    border-radius: 70px;
+    margin-left: 35px;
+    opacity: .6;
+    filter: alpha(opacity=60)
+}
+.MainCompContH #CompCir2 {
+    float: left;
+    width: 120px;
+    height: 120px;
+    background-color: #184e39;
+    border: 1px solid #343434;
+    border-radius: 70px;
+    margin-left: -0;
+    opacity: .6;
+    filter: alpha(opacity=60)
+}
+.MainCompContH .CompTxtD {
+    width: 96%;
+    margin: 10px 0 0 2%;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    font-size: 16px
+}
+.MainCompContH #SongsCompContHolder1 {
+    float: left;
+    width: 100%;
+    height: 213px;
+    margin-top: 17px;
+    overflow: auto
+}
+.CompSocHlrd {
+    float: right;
+    min-width: 345px;
+    height: 22px;
+    padding: 8px;
+    margin: 1px 3px 0 0;
+    border-radius: 3px;
+    background-color: #667278
+}
+.CompCheckC #PopularPlaylistsSlide2_header {
+    float: left;
+    width: 290px;
+    margin-left: -15px
+}
+.CompCheckC .FeaturedHeaderBack {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    background: #eee url('http://hypster.com/imgs/home/featuredVideo_HeaderBack.png') no-repeat right
+}
+.CompCheckC .FeaturedHeaderBack div {
+    float: right;
+    margin: 0 88px 0 0;
+    font-size: 22px;
+    color: #d4ae52;
+    overflow: hidden;
+    height: 31px
+}
+.CompCheckC .FeaturedHeaderBack a {
+    float: right;
+    margin: 0 88px 0 0;
+    font-size: 22px;
+    color: #d4ae52;
+    overflow: hidden;
+    height: 31px
+}
+.CompCheckC .FeaturedSubHeader {
+    float: right;
+    width: 250px;
+    color: #313537;
+    font-size: 14px;
+    margin: 3px 0 0 20px;
+    text-align: left
+}
+.FAQHeaderBack {
+    float: right;
+    width: 805px;
+    height: 39px;
+    line-height: 39px
+}
+.FAQHeaderBack a {
+    background: #eee url('http://hypster.com/imgs/home/featuredVideo_HeaderBack.png') no-repeat right;
+    float: left;
+    width: 280px;
+    margin: 0 0 0 0;
+    font-size: 22px;
+    color: #d4ae52;
+    overflow: hidden;
+    height: 39px
+}
+.mFollowUsCont1 {
+    float: right;
+    margin: 0 10px 0 0;
+    background-color: none;
+    padding: 8px;
+    border-radius: 3px;
+    min-width: 140px;
+    height: 32px;
+    overflow: hidden
+}
+.mFollowUsCont1 .fuText {
+    float: left;
+    color: #000;
+    font-size: 22px;
+    margin: 4px 10px 0 0
+}
+.exploreMoreBtn {
+    display: block;
+    float: left;
+    width: 300px;
+    height: 250px;
+    background-color: #131313;
+    line-height: 250px;
+    color: #fff;
+    margin: 0 0 0 20px;
+    text-align: center;
+    font-size: 21px;
+    cursor: pointer
+}
+.ExploreHomeBtn {
+    display: block;
+    float: right;
+    margin: 0 10px 0 0;
+    color: #d4ae52
+}
+.PMmCont {
+    float: left;
+    width: 270px;
+    height: 410px;
+    margin: 0 0 15px 15px;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer
+}
+.PMmCont .PMhead {
+    float: left;
+    width: 100%;
+    height: 25px
+}
+.PMmCont .PMhypster {
+    float: left;
+    margin: 15px 0 0 28px;
+    font-size: 6px
+}
+.PMmCont .PMBtn {
+    float: left;
+    margin: 15px 0 0 10px;
+    font-size: 5px
+}
+.PMmCont .PMbdy {
+    float: right;
+    width: 91%;
+    height: 240px;
+    margin-top: 15px
+}
+.PMmCont .PMrSng {
+    float: left;
+    margin: 5px 0 0 5px;
+    width: 65px;
+    height: 53px;
+    overflow: hidden
+}
+.PMmCont .PMrSng img {
+    width: 65px;
+    min-height: 55px
+}
+.PMmCont .PMrSngBPlay {
+    float: left;
+    margin: 5px 0 0 5px;
+    width: 205px;
+    height: 72px;
+    border-radius: 1px;
+    overflow: hidden
+}
+.PMmCont .PMrSngBPlay img {
+    float: left;
+    margin: 30px 0 0 95px
+}
+.PMmCont .PMrSngB {
+    float: left;
+    margin: 3px 0 0 5px;
+    width: 205px;
+    height: 17px;
+    border-radius: 1px;
+    overflow: hidden
+}
+.PMmCont .PMrSngB img {
+    height: 15px;
+    float: left;
+    margin: 1px
+}
+.PMmCont .PMrSngB div {
+    float: left;
+    margin: 5px 0 0 10px;
+    font-size: 5px
+}
+.PMmCont .PMcntrls {
+    float: left;
+    width: 91%;
+    height: 25px;
+    margin-top: 15px
+}
+.PMmCont .PMcntrls_play {
+    float: left;
+    width: 35px;
+    height: 13px;
+    margin: 6px 0 0 30px;
+    border-radius: 1px;
+    font-size: 5px;
+    line-height: 13px;
+    text-align: center
+}
+.PMmCont .PMcntrls_like {
+    float: left;
+    width: 35px;
+    height: 13px;
+    margin: 6px 0 0 7px;
+    border-radius: 1px;
+    font-size: 5px;
+    line-height: 13px;
+    text-align: center
+}
+.PMmCont .PMcntrls_info {
+    float: left;
+    width: 35px;
+    height: 13px;
+    margin: 6px 0 0 7px;
+    border-radius: 1px;
+    font-size: 5px;
+    line-height: 13px;
+    text-align: center
+}
+.PMmCont .PMfooter {
+    float: left;
+    width: 100%;
+    height: 75px;
+    margin-top: 15px
+}
+.PMmCont .PMfooterb1 {
+    float: left;
+    width: 50px;
+    margin: 10px 0 0 30px
+}
+.PMmCont .PMfooterb1 div {
+    float: left;
+    width: 100%;
+    font-size: 5px
+}
+.PMmCont .PMfooterb2 {
+    float: left;
+    width: 50px;
+    margin: 10px 0 0 10px
+}
+.PMmCont .PMfooterb2 div {
+    float: left;
+    width: 100%;
+    font-size: 5px
+}
+.TBsimilar {
+    float: left;
+    width: 400px;
+    min-height: 357px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+    background-color: #1c1c1c;
+    padding: 4px;
+    border-bottom: 1px solid #1c1c1c;
+    border-right: 1px solid #1c1c1c
+}
+.TBIndieAmy {
+    float: left;
+    width: 318px;
+    min-height: 357px;
+    margin-left: 20px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+    background-color: #59666c;
+    padding: 4px
+}
+.TBCharts {
+    float: left;
+    width: 400px;
+    min-height: 357px;
+    margin-left: 20px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+    background-color: #1c1c1c;
+    padding: 4px;
+    border-bottom: 1px solid #1c1c1c;
+    border-right: 1px solid #1c1c1c
+}
+.TBsimilar .TBHead {
+    float: left;
+    width: 100%;
+    height: 80px;
+    background-color: #333;
+    margin-top: 30px
+}
+.TBsimilar .TBHead H2 {
+    font-size: 30px;
+    margin-top: 15px
+}
+.TBsimilar .TBBody {
+    float: left;
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+    font-size: 17px
+}
+.TBsimilar .TBBodyT {
+    float: left;
+    width: 90%;
+    margin-left: 5%
+}
+.TBsimilar .TBReadMore {
+    background-color: #333;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    float: right;
+    font-size: 14px;
+    height: 19px;
+    line-height: 18px;
+    margin: 7px 26px 0 0;
+    text-align: center;
+    width: 77px
+}
+.TBsimilar .TBBtm {
+    float: left;
+    width: 100%;
+    height: 25px;
+    margin-top: 55px;
+    background: #59666c url(/imgs/home/home_ban/smallbanner_discovery_feature.jpg) no-repeat top;
+    border-top: 1px solid #434f55
+}
+.TBIndieAmy .TBHead {
+    float: left;
+    width: 100%;
+    height: 80px;
+    background-color: #333;
+    margin-top: 30px
+}
+.TBIndieAmy .TBBody {
+    float: left;
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+    font-size: 17px
+}
+.TBIndieAmy .TBBodyT {
+    float: left;
+    width: 100%
+}
+.TBIndieAmy .TBReadMore {
+    background-color: #333;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    float: right;
+    font-size: 14px;
+    height: 19px;
+    line-height: 18px;
+    margin: 7px 26px 0 0;
+    text-align: center;
+    width: 77px
+}
+.TBIndieAmy .TBBtm {
+    float: left;
+    width: 100%;
+    height: 25px;
+    margin-top: 55px;
+    background: #59666c url(/imgs/home/home_ban/SmallBanner_Indie_Amy.jpg) no-repeat top;
+    border-top: 1px solid #434f55
+}
+.TBCharts .TBHead {
+    float: left;
+    width: 100%;
+    height: 80px;
+    background-color: #333;
+    margin-top: 30px
+}
+.TBCharts .TBHead H2 {
+    font-size: 30px;
+    margin-top: 15px
+}
+.TBCharts .TBBody {
+    float: left;
+    width: 100%;
+    height: 150px;
+    margin-top: 30px;
+    font-size: 17px
+}
+.TBCharts .TBBodyT {
+    float: left;
+    width: 90%;
+    margin-left: 5%
+}
+.TBCharts .TBReadMore {
+    background-color: #333;
+    border-radius: 3px 3px 3px 3px;
+    cursor: pointer;
+    float: right;
+    font-size: 14px;
+    height: 19px;
+    line-height: 18px;
+    margin: 7px 26px 0 0;
+    text-align: center;
+    width: 77px
+}
+.TBCharts .TBBtm {
+    float: left;
+    width: 100%;
+    height: 25px;
+    margin-top: 55px;
+    background: #59666c url(/imgs/home/home_ban/SmallBanner_Popular_Charts.jpg) no-repeat top;
+    border-top: 1px solid #434f55
+}
+.TBMArrows {
+    float: left;
+    width: 164px;
+    height: 380px;
+    margin-left: 20px
+}
+.TBMArrows img {
+    margin-top: 20px
+}
+.plsIPreview {
+    float: left;
+    width: 100%;
+    height: 35px;
+    overflow: hidden;
+    background-color: #fff;
+    border: 1px solid #292929;
+    margin: 0 0 -1px 0;
+    border-radius: 9px
+}
+.plsIPreview img {
+    float: left;
+    width: 38px;
+    height: 28px;
+    margin: 4px 0 0 4px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.plsIPreview div {
+    float: left;
+    width: 240px;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    margin-left: 10px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000
+}
+#GMVP_PlstPreview {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 310px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    color: #ababab;
+    border-radius: 3px
+}
+#GMVP_PlstPreview .LdingPrev {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+#PP_PlstPreview {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 315px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    color: #ababab;
+    border-radius: 3px
+}
+#PP_PlstPreview .LdingPrev {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+.plsIPPreview {
+    float: left;
+    width: 100%;
+    height: 35px;
+    overflow: hidden;
+    margin: 0 0 0 0;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background-color: #fff
+}
+.plsIPPreview img {
+    float: left;
+    width: 38px;
+    height: 28px;
+    margin: 4px 0 0 4px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.plsIPPreview div {
+    float: left;
+    width: 240px;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    margin-left: 10px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #000
+}
+#PP_PlstPreviewDG {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 410px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    background-color: #585a5d;
+    color: #ababab;
+    border-radius: 3px
+}
+#PP_PlstPreviewDG .LdingPrevDG {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+.plsIPPreviewDG {
+    float: left;
+    width: 100%;
+    height: 35px;
+    overflow: hidden;
+    background-color: #4b5052;
+    margin: 0 0 4px 0
+}
+.plsIPPreviewDG img {
+    float: left;
+    width: 38px;
+    height: 28px;
+    margin: 4px 0 0 4px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.plsIPPreviewDG div {
+    float: left;
+    width: 335px;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    margin-left: 10px;
+    margin-top: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #dedede
+}
+#Radio_PlstPreview {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 310px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    color: #ababab;
+    border-radius: 3px
+}
+#Radio_PlstPreview .LdingPrev {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+#PMYLIKE_PlstPreview {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 310px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    color: #ababab;
+    border-radius: 3px
+}
+#PMYLIKE_PlstPreview .LdingPrev {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+#MAG_PlstPreview {
+    display: none;
+    position: absolute;
+    z-index: 100000;
+    top: 10px;
+    left: 10px;
+    width: 310px;
+    min-height: 15px;
+    font-size: 12px;
+    line-height: 16px;
+    padding: 5px;
+    background-color: #333;
+    color: #ababab;
+    border-radius: 3px
+}
+#MAG_PlstPreview .LdingPrev {
+    float: left;
+    width: 100%;
+    color: #fff
+}
+.ContUsSdeArt {
+    display: block;
+    float: left;
+    width: 300px;
+    height: 27px;
+    line-height: 27px;
+    border: 1px solid #000;
+    margin-top: 6px;
+    border-radius: 2px;
+    color: #000
+}
+.vtTopH {
+    float: left;
+    width: 100%;
+    background-color: #232323
+}
+.vtTopH H2 {
+    color: #d4ae52;
+    margin: 7px 0 7px 15px;
+    font-size: 23px
+}
+.vtTopC {
+    float: left;
+    width: 1010px
+}
+.vtTopC .vtLeftC {
+    float: left;
+    width: 370px
+}
+.vtTopC .vtLeftM {
+    float: left;
+    width: 210px;
+    height: 210px;
+    line-height: 210px;
+    background-color: #42606e;
+    border-radius: 100px;
+    text-align: center;
+    margin: 120px 15px 0 30px;
+    font-size: 35px
+}
+.vtTopC .vtLeftR {
+    float: right;
+    width: 370px
+}
+.vtTopC .vtSongH {
+    float: left;
+    width: 100%;
+    margin: 10px 0 10px 0
+}
+.vtTopC #Song1VC {
+    float: left;
+    border-radius: 30px;
+    background-color: #ffa910;
+    padding: 7px;
+    color: #000;
+    font-size: 22px
+}
+.vtTopC .vtSongH h2 {
+    float: left;
+    margin: 3px 0 0 5px
+}
+.vtTopC #Song2VC {
+    float: left;
+    border-radius: 30px;
+    background-color: #ffa910;
+    padding: 7px;
+    color: #000;
+    font-size: 22px
+}
+.vtTopC .vtListenBtn {
+    float: left;
+    width: 120px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #42606e;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    margin: 0 5px 0 0;
+    font-size: 16px
+}
+.vtTopC .vtVoteBtn {
+    float: left;
+    width: 120px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #42606e;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    margin: 0 5px 0 0;
+    font-size: 16px
+}
+.vtTopC .vtVoteLoginBtn {
+    float: left;
+    width: 120px;
+    height: 23px;
+    line-height: 23px;
+    background-color: #42606e;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    margin: 0 0 0 5px;
+    font-size: 16px
+}
+.plItemFp {
+    float: left;
+    width: 313px;
+    height: 33px;
+    line-height: 33px;
+    margin: 2px 15px 7px 0;
+    padding: 2px 5px 2px 5px;
+    border-radius: 2px;
+    color: #000;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 17px;
+    cursor: pointer;
+    overflow: hidden
+}
+.plNameFp {
+    float: left;
+    width: 230px;
+    height: 27px;
+    line-height: 27px;
+    margin-left: 0;
+    padding-left: 2px;
+    overflow: hidden;
+    font-size: 15px;
+    margin-top: 2px
+}
+.plPlayFp {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    margin: 6px 0 0 0;
+    padding: 3px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+.PlstViewsFp {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 8px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PlstLikesFp {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 8px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.plItemFp .innrFp {
+    float: left;
+    width: 110%;
+    height: 33px;
+    overflow: hidden
+}
+.prPlstP {
+    float: left;
+    height: 47px;
+    margin-top: -7px
+}
+.hypDesktop_back {
+    background: #03ad4f;
+    background: -moz-linear-gradient(top, #03ad4f 0%, #049545 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #03ad4f), color-stop(100%, #049545));
+    background: -webkit-linear-gradient(top, #03ad4f 0%, #049545 100%);
+    background: -o-linear-gradient(top, #03ad4f 0%, #049545 100%);
+    background: -ms-linear-gradient(top, #03ad4f 0%, #049545 100%);
+    background: linear-gradient(to bottom, #03ad4f 0%, #049545 100%);
+    //filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#03ad4f', endColorstr='#049545', GradientType=0)
+}
+.AddBtn3 {
+    margin: 17px 0 0 0;
+    width: 99%;
+    height: 23px;
+    float: left
+}
+#getThumbSeed {
+    float: left;
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    background: #555 url('http://hypster.com/imgs/box_back.png') repeat;
+    border-radius: 2px;
+    margin-top: 5px;
+    margin-left: 0;
+    color: #eee;
+    font-size: 18px
+}
+.ppSeedsVC {
+    float: left;
+    margin: 5px 10px 0 10px;
+    width: 140px;
+    cursor: pointer
+}
+.ppSeedsVC img {
+    float: left;
+    width: 135px
+}
+.ppSeedsVC div {
+    float: left;
+    width: 100%;
+    height: 50px;
+    line-height: 17px;
+    overflow: hidden;
+    font-size: 16px;
+    margin-top: -2px;
+    color: #dedede
+}
+.rlVidCont {
+    float: right;
+    width: 1024px
+}
+.rlVidCont .rvSeedsVC {
+    float: left;
+    margin: 10px 13px 0 10px;
+    width: 140px;
+    height: 160px;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 3px;
+    background-color: #747e83
+}
+.rlVidCont .rvSeedsVC img {
+    float: left;
+    width: 140px;
+    border-radius: 2px
+}
+.rlVidCont .rvSeedsVC div {
+    float: left;
+    width: 100%;
+    height: 58px;
+    line-height: 18px;
+    overflow: hidden;
+    font-size: 15px;
+    margin-top: 2px;
+    text-align: center;
+    color: #e3e3e3
+}
+#AccountSub {
+    display: none;
+    position: relative;
+    top: 0;
+    left: -27px;
+    float: left;
+    width: 160px;
+    height: 130px;
+    background-color: #383838;
+    border-top: 2px solid #191919;
+    border-right: 1px solid #232323;
+    border-bottom: 1px solid #232323;
+    border-radius: 1px
+}
+#AccountSub .asub_1 {
+    float: left;
+    width: 100%;
+    height: 25px;
+    line-height: 23px;
+    border-bottom: 1px solid #191919;
+    text-align: center
+}
+#AccountSub .asub_2 {
+    float: left;
+    width: 100%;
+    height: 25px;
+    line-height: 23px;
+    border-bottom: 1px solid #191919;
+    text-align: center
+}
+#AccountSub .asub_3 {
+    float: left;
+    width: 100%;
+    height: 25px;
+    line-height: 23px;
+    border-bottom: 1px solid #191919;
+    text-align: center
+}
+#AccountSub .asub_4 {
+    float: left;
+    width: 100%;
+    height: 25px;
+    line-height: 23px;
+    border-bottom: 1px solid #191919;
+    text-align: center
+}
+#AccountSub .asub_5 {
+    float: left;
+    width: 100%;
+    height: 25px;
+    line-height: 23px;
+    text-align: center
+}
+.MPLPlstsCont {
+    float: left;
+    margin-top: 0
+}
+.MPLPlstsCont .PlstItm {
+    float: left;
+    width: 290px;
+    height: 28px;
+    line-height: 27px;
+    margin: 3px 0 0 5px;
+    padding: 3px;
+    border: 1px solid #fff;
+    border-radius: 2px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden
+}
+.MPLPlstsCont .PlstTitle {
+    float: left;
+    width: 192px;
+    margin-left: 0;
+    overflow: hidden
+}
+.MPLPlstsCont .PlstLstn {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 3px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.MPLPlstsCont .PlstViews {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 5px 3px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.MPLPlstsCont .PlstLikes {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 3px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart_lte.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+#currPlS1 {
+    float: left;
+    width: 1022px;
+    height: 27px;
+    line-height: 27px;
+    border-radius: 3px;
+    background-color: #000;
+    margin: 0 0 0 0;
+    font-size: 16px
+}
+.exPlInnrCH {
+    float: left;
+    width: 1022px;
+    height: 652px;
+    border-radius: 3px;
+    background-color: #000;
+    margin: 6px 0 0 0
+}
+.exPlInnrCH .sliderBtnLR {
+    float: left;
+    width: 18px;
+    height: 645px;
+    line-height: 645px;
+    background-color: #d4ae52;
+    color: #fff;
+    border-radius: 3px;
+    margin: 4px 0 0 4px;
+    text-align: center;
+    cursor: pointer
+}
+.exPlInnrCH #conRMMenu1 {
+    float: left;
+    width: 80px;
+    height: 630px;
+    background-color: #272727;
+    margin: 4px 0 0 5px;
+    border-radius: 3px;
+    padding: 5px;
+    overflow: auto
+}
+.exPlInnrCH .conRMMItem {
+    float: left;
+    width: 98%;
+    height: 33px;
+    line-height: 33px;
+    margin: 1%;
+    background-color: #707070;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer
+}
+.exPlInnrCH .conRMMItemA {
+    float: left;
+    width: 98%;
+    height: 530px;
+    line-height: 33px;
+    margin: 1%;
+    background: url(/imgs/mplArrow.png) no-repeat center;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer
+}
+.exPlInnrCH .PopPlstsCH1 {
+    float: left;
+    width: 905px;
+    height: 640px;
+    margin: 4px 0 0 0;
+    border-radius: 3px;
+    overflow: hidden
+}
+.exPlInnrCH .mcPlstwSong {
+    float: left;
+    width: 100%;
+    height: 638px
+}
+.exPlInnrCH .mcPlstwSong .mcheader {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: #d4ae52;
+    background-color: #131313
+}
+.exPlInnrCH .mcWikiCH {
+    float: left;
+    width: 461px;
+    height: 638px;
+    background-color: #272727;
+    margin: 4px 0 0 4px;
+    border-radius: 3px;
+    padding: 3px;
+    overflow: auto
+}
+.exPlInnrCH #queryTerm {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    margin: 0 0 5px -5px;
+    font-size: 20px;
+    color: #d4ae52;
+    overflow: hidden
+}
+.exPlInnrCH #content {
+    float: left;
+    width: 445px;
+    min-height: 625px;
+    margin: 0 5px 5px 5px;
+    font-size: 16px;
+    line-height: 20px;
+    color: #cdcdcd
+}
+.exPlInnrCH .mcBackBtn {
+    float: left;
+    width: 20px;
+    height: 645px;
+    line-height: 645px;
+    background-color: #d4ae52;
+    color: #fff;
+    border-radius: 3px;
+    margin: 4px 0 0 5px;
+    text-align: center;
+    cursor: pointer
+}
+.exPlInnrCH .mcAddContH {
+    float: left;
+    width: 200px;
+    height: 638px;
+    background-color: #272727;
+    margin: 4px 0 0 4px;
+    border-radius: 3px;
+    padding: 3px;
+    overflow: auto
+}
+.exPlInnrCH .mcAddContH div {
+    float: left;
+    width: 270px;
+    margin-top: 0
+}
+.hypDesktopBMC {
+    float: left;
+    width: 100%;
+    min-height: 170px;
+    background-color: #1d1d1c
+}
+.hypDesktopBMC .hypDesktop_back {
+    float: left;
+    width: 1012px;
+    height: 170px;
+    margin: 12px;
+    margin-top: 10px;
+    border-radius: 3px
+}
+.hypDesktopBMC .hypDesktop_back img {
+    float: left;
+    margin: 40px 0 0 30px
+}
+.hypDesktopBMC .hypD_txt {
+    float: left;
+    color: #231d1f;
+    font-size: 30px;
+    margin: 42px 0 0 20px;
+    line-height: 30px
+}
+.hypDesktopBMC .hypDesktop_back a {
+    display: block;
+    float: right;
+    width: 160px;
+    height: 28px;
+    line-height: 28px;
+    margin: 23px 14px 0 0;
+    background-color: #232323;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer
+}
+#CleanDeadLinksContPopup1 {
+    float: left;
+    margin-top: 30px;
+    width: 850px;
+    height: 530px;
+    background-color: #43616f;
+    border: 5px solid #43616f;
+    border-radius: 2px
+}
+#CleanDeadLinksContPopup1 .ExitBtnCont {
+    float: left;
+    width: 100%;
+    height: 1px
+}
+#CleanDeadLinksContPopup1 .ExitBtnCont img {
+    float: right;
+    margin: -22px -22px 0 0;
+    cursor: pointer
+}
+#CleanDeadLinksContPopup1 .LeftCont {
+    float: left;
+    width: 535px;
+    height: 475px;
+    overflow: hidden;
+    padding: 2px;
+    background: #555 url('http://hypster.com/imgs/box_back.png') repeat;
+    margin-top: 0
+}
+#CleanDeadLinksContPopup1 .RightCont {
+    float: left;
+    width: 300px;
+    height: 475px;
+    padding: 2px;
+    background: #555 url('http://hypster.com/imgs/box_back.png') repeat;
+    border-radius: 2px;
+    margin-top: 0;
+    margin-left: 5px
+}
+#CleanDeadLinksContPopup1 .TopCont {
+    float: left;
+    width: 844px;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    padding: 2px;
+    background: #555 url('http://hypster.com/imgs/box_back.png') repeat;
+    margin-bottom: 5px;
+    text-align: left;
+    font-size: 18px;
+    color: #d4ae52
+}
+#CleanDeadLinksContPopup1 .LeftCont .LeftContInnr {
+    float: left;
+    width: 98%;
+    margin: 1%
+}
+#CleanDeadLinksContPopup1 .RightCont #PlaylistContHoder1 {
+    float: left;
+    width: 98%;
+    height: 465px;
+    margin: 1%;
+    text-align: left;
+    overflow: auto
+}
+#CleanDeadLinksContPopup1 .PlaylistTitle {
+    float: left;
+    width: 100%;
+    text-align: left;
+    color: #d4ae52;
+    font-size: 17px
+}
+#CleanDeadLinksContPopup1 .PlaylistItm {
+    float: left;
+    width: 100%;
+    text-align: left
+}
+#CleanDeadLinksContPopup1 .PlaylistItm div {
+    float: left;
+    width: 99%;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    background-color: #454545;
+    margin-left: 1%;
+    margin-top: 3px;
+    border-radius: 2px;
+    cursor: pointer
+}
+#CleanDeadLinksContPopup1 .SongTitle {
+    float: left;
+    width: 430px;
+    margin: 0 0 0 5px;
+    color: #fff;
+    font-size: 16px;
+    text-align: left
+}
+#CleanDeadLinksContPopup1 .SongDetails {
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin-top: 10px
+}
+#CleanDeadLinksContPopup1 .SongImg {
+    width: 60px;
+    height: 45px;
+    float: left;
+    border: 1px solid #656565
+}
+#CleanDeadLinksContPopup1 .AddBtn1 {
+    float: left;
+    width: 420px;
+    height: 30px;
+    line-height: 30px;
+    background-color: #333;
+    border: 1px solid #656565;
+    padding: 1px 2px 2px 2px;
+    font-size: 12px;
+    color: #d4ae52
+}
+#CleanDeadLinksContPopup1 .SongItm_Edt {
+    float: left;
+    width: 25px;
+    height: 33px;
+    line-height: 33px;
+    cursor: pointer;
+    margin: 10px 0 0 7px;
+    background: url('http://hypster.com/imgs/play_icon_lte.png') no-repeat center
+}
+#CleanDeadLinksContPopup1 .SongItm_Del {
+    float: left;
+    width: 25px;
+    height: 33px;
+    line-height: 33px;
+    cursor: pointer;
+    margin: 10px 0 0 3px;
+    background: url('http://hypster.com/imgs/action_icons/delete_icon_s.png') no-repeat center
+}
+#CleanDeadLinksContPopup1 .CleanDeadLinksBtn {
+    float: left;
+    width: 280px;
+    height: 32px;
+    line-height: 31px;
+    margin: 5px 4px 16px 4px;
+    padding-left: 3px;
+    background-color: #f3a00b;
+    color: #fff;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px
+}
+.HomPopularCont {
+    float: right;
+    width: 1015px
+}
+.HomPopularCont .hpcCol1 {
+    float: left;
+    width: 330px
+}
+.HomPopularCont .hpcCol2 {
+    float: left;
+    width: 330px;
+    margin-left: 12px
+}
+.HomPopularCont .hpcCol3 {
+    float: left;
+    width: 330px;
+    margin-left: 12px
+}
+.HomPopularCont .hpcHeader {
+    float: left;
+    width: 100%;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    background-color: #eee;
+    color: #d4ae52;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 18px
+}
+.HomPopularCont .hpcPlstC {
+    float: left;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    background-color: #1c1c1c;
+    border-radius: 3px;
+    margin: 7px 0 0 0;
+    cursor: pointer
+}
+.HomPopularCont .hpcPlstC div {
+    float: left;
+    font-size: 16px
+}
+.HomPopularCont .hpcPlstC a {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    line-height: 15px;
+    margin: 8px 6px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/play_icon.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.HomPopularCont .hpcPlstC2 {
+    float: left;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    background-color: #1c1c1c;
+    border-radius: 3px;
+    margin: 7px 0 0 0;
+    cursor: pointer
+}
+.HomPopularCont .hpcPlstC2 div {
+    float: left;
+    font-size: 16px
+}
+.HomPopularCont .hpcPlstC2 a {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    line-height: 15px;
+    margin: 8px 6px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/play_icon.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.HomPopularCont .hpcPlstC3 {
+    float: left;
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    background-color: #1c1c1c;
+    border-radius: 3px;
+    margin: 7px 0 0 0;
+    cursor: pointer
+}
+.HomPopularCont .hpcPlstC3 div {
+    float: left;
+    font-size: 16px
+}
+.HomPopularCont .hpcPlstC3 a {
+    display: block;
+    float: right;
+    width: 15px;
+    height: 17px;
+    line-height: 15px;
+    margin: 8px 6px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/play_icon.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.hypDesktop_back {
+    float: left;
+    width: 390px;
+    height: 585px;
+    margin: 12px 0 0 12px;
+    margin-top: 10px;
+    border-radius: 3px;
+    background: #d4ae52
+}
+.hypDesktop_back img {
+    float: left;
+    margin: 60px 0 0 110px
+}
+.hypDesktop_back div {
+    float: left;
+    color: #231d1f;
+    font-size: 33px;
+    margin: 40px 0 0 0;
+    line-height: 33px;
+    text-align: center
+}
+.hypDesktop_back a {
+    display: block;
+    float: right;
+    width: 200px;
+    height: 27px;
+    line-height: 24px;
+    margin: 50px 17px 0 0;
+    background-color: #232323;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer
+}
+.hypDesktop_back2 {
+    float: left;
+    width: 390px;
+    height: 285px;
+    margin: 12px 0 0 12px;
+    margin-top: 10px;
+    border-radius: 3px;
+    background: #d4ae52
+}
+.hypDesktop_back2 img {
+    float: left;
+    margin: 20px 0 0 110px
+}
+.hypDesktop_back2 div {
+    width: 100%;
+    float: left;
+    color: #231d1f;
+    font-size: 30px;
+    margin: 13px 0 0 0;
+    line-height: 20px;
+    text-align: center
+}
+.hypDesktop_back2 a {
+    display: block;
+    float: right;
+    width: 200px;
+    height: 27px;
+    line-height: 24px;
+    margin: 50px 17px 0 0;
+    background-color: #232323;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer
+}
+.advSrchBtn {
+    float: left;
+    width: 170px;
+    height: 34px;
+    line-height: 34px;
+    background-color: #fff;
+    border: none;
+    color: #575757;
+    border-radius: 3px;
+    margin: 5px 0 0 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px
+}
+.lisAdsCont1 {
+    float: left;
+    width: 300px;
+    height: 250px;
+    background: url('http://hypster.com/imgs/drag_arrows.png') no-repeat
+}
+.lisMyPlstsHdr {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    margin: 0 0 10px -12px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    border-bottom: 1px solid #1b1b1b
+}
+.lisMyPlstsLikeHdr {
+    float: left;
+    width: 100%;
+    height: 39px;
+    line-height: 39px;
+    margin: 0 0 10px -12px;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    border-bottom: 1px solid #1b1b1b
+}
+.lisMorePlstsCH {
+    float: left;
+    width: 1024px;
+    margin-bottom: 13px
+}
+.lisMorePlstsBtn {
+    display: block;
+    float: left;
+    width: 260px;
+    height: 98px;
+    margin: 3px 0 0 13px;
+    background-color: #d4ae52;
+    border-radius: 2px;
+    text-align: center;
+    line-height: 98px;
+    font-size: 23px;
+    cursor: pointer
+}
+.lisMorePlstsCH .lisAdsCH1 {
+    float: left;
+    width: 728px;
+    margin-top: 3px;
+    margin-left: 140px
+}
+.topMnBackBH {
+    width: 100%;
+    height: 33px
+}
+.topMnBackBH div {
+    float: right;
+    width: 120px;
+    text-align: center;
+    color: #343434;
+    margin: 5px 8px 0 0;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #d4ae52;
+    padding: 1px 10px 1px 10px;
+    border-radius: 3px
+}
+.SbTop {
+    float: left;
+    width: 100px;
+    height: 125px;
+    overflow: hidden
+}
+.SbBottom {
+    float: left;
+    width: 100px;
+    height: 125px;
+    overflow: hidden
+}
+.ftrdSMenuCH {
+    float: right;
+    width: 1024px
+}
+.ftrdSMenuCH .smenu1 {
+    float: left;
+    width: 327px;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    background-color: #eee;
+    color: #d4ae52;
+    cursor: pointer;
+    margin-left: 12px;
+    border-radius: 3px;
+    font-size: 18px
+}
+.ftrdSMenuCH .smenu2 {
+    float: left;
+    width: 327px;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    background-color: #eee;
+    color: #d4ae52;
+    cursor: pointer;
+    margin-left: 12px;
+    border-radius: 3px;
+    font-size: 18px
+}
+.ftrdSMenuCH .smenu3 {
+    float: left;
+    width: 327px;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    background-color: #eee;
+    color: #d4ae52;
+    cursor: pointer;
+    margin-left: 12px;
+    border-radius: 3px;
+    font-size: 18px
+}
+.ftrdTagsCH1 {
+    float: left;
+    width: 100%;
+    margin: 0 0 0 5px
+}
+.ftrdTagsCH1 a {
+    float: left;
+    min-width: 45px;
+    height: 24px;
+    line-height: 24px;
+    margin: 5px 0 0 5px;
+    background-color: #323232;
+    border-radius: 3px;
+    text-align: center;
+    padding: 0 4px 0 4px;
+    color: #cdcdcd;
+    cursor: pointer
+}
+.ftrdArtistsCH1 {
+    float: left;
+    width: 100%
+}
+.ftrdArtistsCH1 .dvdr1 {
+    float: left;
+    width: 100%;
+    height: 20px;
+    margin: 5px 0 10px 0
+}
+.ftrdArtistsCH1 .fitmH1 {
+    float: left;
+    width: 250px;
+    margin: 0 6px 6px 0;
+    border-radius: 3px
+}
+.ftrdArtistsCH1 .fitmH1 img {
+    float: left;
+    width: 250px;
+    cursor: pointer
+}
+.ftrdArtistsCH1 .fitmH1 div {
+    float: left;
+    width: 99%;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 1%;
+    background-color: #121212;
+    color: #dedede
+}
+*/
+.sconf1 {
+    float: left;
+    width: 98%;
+    height: 15px;
+    margin-top: -10px;
+    font-size: 9px;
+    text-align: right
+}
+/*<
+.newsSResCH .brkngItm {
+    float: left;
+    width: 320px;
+    height: 270px;
+    background-color: none;
+    border-radius: 2px;
+    margin: 2% 1% 0 0;
+    border: 2px solid #d4ae52;
+    cursor: pointer
+}
+.newsSResCH .brkngItm .txtDItem {
+    float: left;
+    width: 97.5%;
+    height: 60px;
+    line-height: 27px;
+    padding: 1% 1% 0 2%;
+    color: #d4ae52;
+    font-weight: bold;
+    margin: 15px 0 0 0;
+    font-size: 18px;
+    text-align: center;
+    overflow: hidden
+}
+.relnewsSResCH .brkngItm {
+    float: left;
+    width: 238px;
+    height: 155px;
+    background-color: #232323;
+    border-radius: 2px;
+    margin: 12px 17px 0 0;
+    border: 2px solid #232323;
+    cursor: pointer
+}
+.relnewsSResCH .brkngItm div {
+    float: left;
+    width: 98%;
+    height: 55px;
+    line-height: 25px;
+    padding: 1% 1% 0 2%;
+    background-color: #232323;
+    color: #fff;
+    margin: 100px 0 0 0;
+    font-size: 16px;
+    text-align: center;
+    overflow: hidden
+}
+#splashCH1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 600px;
+    height: 380px;
+    background-color: #dedede;
+    border-radius: 5px
+}
+#splashCH1 H2 {
+    float: left;
+    width: 100%;
+    color: #343434
+}
+#splashCH1 #splshBottomBtn {
+    float: right;
+    width: 200px;
+    height: 27px;
+    line-height: 27px;
+    background-color: #232323;
+    color: #fff;
+    margin: 0 10px 0 0;
+    font-size: 16px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.captionOrange,
+.captionBlack {
+    color: #fff;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 4px
+}
+.captionOrange {
+    background: #eb5100;
+    background-color: rgba(235, 81, 0, .6)
+}
+.captionBlack {
+    font-size: 16px;
+    background: #000;
+    background-color: rgba(0, 0, 0, .4)
+}
+a.captionOrange,
+A.captionOrange:active,
+A.captionOrange:visited {
+    color: #fff;
+    text-decoration: none
+}
+a.captionOrange:hover {
+    color: #eb5100;
+    text-decoration: underline;
+    background-color: #eee;
+    background-color: rgba(238, 238, 238, .7)
+}
+.bricon {
+    background: url(../img/browser-icons.png)
+}
+.jssorb01 div,
+.jssorb01 div:hover,
+.jssorb01 .av {
+    filter: alpha(opacity=70);
+    opacity: .7;
+    overflow: hidden;
+    cursor: pointer;
+    border: #000 1px solid
+}
+.jssorb01 div {
+    background-color: gray
+}
+.jssorb01 div:hover,
+.jssorb01 .av:hover {
+    background-color: #d3d3d3
+}
+.jssorb01 .av {
+    background-color: #fff
+}
+.jssorb01 .dn,
+.jssorb01 .dn:hover {
+    background-color: #555
+}
+.jssora02l,
+.jssora02r,
+.jssora02ldn,
+.jssora02rdn {
+    position: absolute;
+    cursor: pointer;
+    display: block;
+    background: url(/imgs/img/a02.png) no-repeat;
+    overflow: hidden
+}
+.jssora02l {
+    background-position: -3px -33px
+}
+.jssora02r {
+    background-position: -63px -33px
+}
+.jssora02l:hover {
+    background-position: -123px -33px
+}
+.jssora02r:hover {
+    background-position: -183px -33px
+}
+.jssora02ldn {
+    background-position: -243px -33px
+}
+.jssora02rdn {
+    background-position: -303px -33px
+}
+#lisHistCH1 {
+    float: left;
+    width: 120px;
+    height: 34px;
+    line-height: 34px;
+    background-color: #353535;
+    border: 4px solid #191919;
+    color: #ccc;
+    border-radius: 3px;
+    margin: 11px 0 0 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px
+}
+#lisHistRes1 {
+    display: none
+}
+.resConfTM {
+    float: right;
+    width: 100%;
+    height: 30px;
+    color: #c00;
+    font-size: 16px;
+    text-align: right
+}
+#MagWidCH1 {
+    float: left;
+    width: 100%;
+    height: 60px;
+    background-color: #1d1d1c;
+    overflow: hidden
+}
+#MagWidCH1 .MagWHead {
+    float: left;
+    width: 100%;
+    color: #d4ae52;
+    margin: 3px 0 3px 0
+}
+#MagWidCH1 .MagWHead span {
+    color: #dedede
+}
+#MagWidCH1 .PopularPlstsCont {
+    float: left;
+    width: 100%
+}
+#MagWidCH1 .magItm {
+    float: left;
+    width: 250px;
+    height: 26px;
+    line-height: 26px;
+    background-color: #353535;
+    margin: 3px 0 2px 5px;
+    padding: 2px;
+    border-radius: 2px;
+    cursor: pointer
+}
+#MagWidCH1 .magItm_name {
+    float: left;
+    width: 180px;
+    height: 26px;
+    line-height: 26px;
+    overflow: hidden
+}
+#MagWidCH1 .magItm_views {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+#MagWidCH1 .magItm_likes {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PlstSWid1 {
+    float: left;
+    width: 100%;
+    min-height: 100px;
+    margin-bottom: 18px
+}
+.PlstSWid1 H2 {
+    font-weight: 300
+}
+.PlstSWid1 .PopularPlstsCont {
+    float: left;
+    width: 100%
+}
+.PlstSWid1 .PlstSWid_Itm {
+    float: left;
+    width: 240px;
+    height: 26px;
+    line-height: 26px;
+    background-color: #232323;
+    margin: 3px 5px 2px 0;
+    padding: 2px;
+    border-radius: 2px;
+    cursor: pointer
+}
+.PlstSWid1 .PlstSWid_Itm div {
+    float: left;
+    width: 180px;
+    height: 26px;
+    line-height: 26px;
+    overflow: hidden
+}
+.PlstSWid1 .PlstSWid_Itm .PlstSWid_ItmViews {
+    display: block;
+    float: right;
+    width: 28px;
+    height: 17px;
+    line-height: 16px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_eye.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.PlstSWid1 .PlstSWid_Itm .PlstSWid_ItmLikes {
+    display: block;
+    float: right;
+    width: 17px;
+    height: 17px;
+    line-height: 15px;
+    margin: 5px 4px 0 0;
+    padding: 1px;
+    background: url('http://hypster.com/imgs/plst_heart.png') no-repeat center;
+    font-size: 10px;
+    color: #454545;
+    text-align: center
+}
+.brVideoCont {
+    float: left;
+    width: 686px;
+    height: 386px;
+    margin-right: 9px;
+    margin-top: 7px;
+    margin-bottom: 20px;
+    border: 2px solid #656565;
+    overflow: hidden
+}
+figure {
+    margin: 0
+}
+figure.image img {
+    margin-bottom: 0;
+    display: block
+}
+figure.image figcaption {
+    line-height: 1.4em;
+    text-align: left;
+    font-style: italic;
+    font-family: -webkit-body;
+    font-size: .8em
+}
+*/
+.shrTopC1 {
+    float: left;
+    width: 100%;
+    height: 90px;
+    margin: 0 0 5px 0
+}
+.shrTopC1 span {
+    display: block;
+    width: 728px;
+    margin: auto
+}
+.ContentHeaderInner {
+    float: left;
+    width: 100%;
+    height: 55px;
+    background-position: 0% 60%;
+    background-color: #d5af55
+}
+/*
+.slCH2 {
+    width: 1024px;
+    margin: auto
+}
+.MSCGAM {
+    float: left;
+    width: 200px;
+    height: 25px;
+    margin: 0 0 0 57px;
+    font-size: 16px;
+    color: #000
+}
+*/
+#MainMenu {
+    width: 1024px;
+    margin: 0 auto 0 auto;
+    height: 55px;
+    z-index: 99999
+}
+#MainMenu .mLogo {
+    float: left;
+    margin-top: 0;
+    cursor: pointer
+}
+#MainMenu .LogoCh {
+    float: left;
+    width: 31%
+}
+#MainMenu .MLogo {
+    float: left;
+    width: 100%;
+    font-size: 45px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin: 0 0 0 0;
+    cursor: pointer
+}
+#MainMenu .MenuCh {
+    float: right;
+    width: 69%;
+    margin: 0 0 0 0
+}
+#MainMenu .mListen {
+    float: left;
+    width: 80px;
+    height: 50px;
+    text-align: center;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 0 20px 0 0;
+    cursor: pointer
+}
+#MainMenu #mListenSM1 {
+    display: none;
+    position: relative;
+    width: 120px;
+    min-height: 78px;
+    top: 16px;
+    left: 0;
+    z-index: 10000000;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 7px;
+    padding: 0 7px 0 7px
+}
+#MainMenu #mSearchSM1 {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    background-color: #fff
+}
+#MainMenu #mPlaylistSM1 {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 2px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    background-color: #fff
+}
+#MainMenu #mChartsSM1 {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 2px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    background-color: #fff
+}
+#MainMenu .mCreate {
+    float: left;
+    width: 90px;
+    height: 50px;
+    text-align: center;
+    float: left;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 0 20px 0 0;
+    cursor: pointer
+}
+#MainMenu #mCreateSM1 {
+    display: none;
+    position: relative;
+    width: 120px;
+    height: 53px;
+    top: 16px;
+    left: 0;
+    z-index: 10000000;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 7px;
+    padding: 0 7px 0 7px
+}
+#MainMenu #mPlayerSM1 {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    background-color: #fff
+}
+#MainMenu #mPlstsSM1 {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 2px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    background-color: #fff
+}
+#MainMenu .mBreaking {
+    float: left;
+    width: 100px;
+    height: 40px;
+    text-align: center;
+    float: left;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    cursor: pointer
+}
+#MainMenu .mGamehype {
+    float: left;
+    width: 130px;
+    height: 40px;
+    text-align: center;
+    float: left;
+    font-size: 24px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    cursor: pointer
+}
+#MainMenu .mAcct {
+    float: left;
+    width: 30px;
+    height: 45px;
+    background: url('http://hypster.com/imgs/account/acct_icon_t.png') no-repeat;
+    margin: 0 0 0 10px;
+    cursor: pointer
+}
+#MainMenu .mAcctNL {
+    float: left;
+    width: 30px;
+    height: 45px;
+    background: url('http://hypster.com/imgs/account/acct_icon_t.png') no-repeat;
+    margin: 0 0 0 10px;
+    cursor: pointer
+}
+#MainMenu #mAcctMCH1 {
+    display: none;
+    position: relative;
+    width: 140px;
+    height: 53px;
+    top: 45px;
+    left: -70px;
+    z-index: 10000000;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 7px;
+    padding: 0 7px 0 7px
+}
+#MainMenu #myAcctInfo {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    background-color: #fff;
+    text-align: center
+}
+#MainMenu #mySignOut {
+    float: right;
+    font-size: 18px;
+    color: #d5af55;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin: 2px 0 0 0;
+    cursor: pointer;
+    width: 100%;
+    background-color: #fff;
+    text-align: center
+}
+#MainMenu .mSearch {
+    float: left;
+    width: 30px;
+    height: 34px;
+    background: url('http://hypster.com/imgs/account/search_icon_t.png') no-repeat;
+    margin: 0 0 0 10px;
+    cursor: pointer
+}
+.BottomPane {
+    width: 1050px;
+    clear: both;
+    min-height: 270px;
+    margin-left: 13px
 }
 
-#zergnet-widget-29457 {
-    &:before {
-        content: "Around The Web";
-        margin-left: 5px;
-        text-transform: uppercase;
-    }
+.BottomPane img {
+    float: left;
+    margin: 13px 0 0 15px
 }
+.BottomPaneInnr {
+    float: left;
+    width: 750px;
+    margin: 10px 0 0 0
+}
+.BottomPaneInnr .MenuItmCont {
+    float: left;
+    width: 169px;
+    height: 115px;
+    margin: 12px 0 0 9px;
+    padding-left: 7px
+}
+.BottomPaneInnr .MenuItmCont a {
+    float: left;
+    display: block;
+    width: 96%;
+    padding: 0 1% 2px 3%;
+    text-align: left;
+    font-size: 15px;
+    margin-top: 6px;
+    color: #fff
+}
+/*
+.push {
+    clear: both
+}
+*/
+.BottomPane .BtmLeftCH1 {
+    float: left;
+    width: 290px;
+    height: 150px;
+    margin-top: 10px
+}
+.BottomPane .BtmLeftCH1 .BLLogCH1 {
+    float: left;
+    width: 275px;
+    height: 80px;
+    padding: 0 5px 15px 10px
+}
+.BottomPane .BtmLeftCH1 .BLLogCH1 div {
+    float: left;
+    width: 100%;
+    font-size: 60px;
+    color: #fff;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin: 20px 0 0 0;
+    cursor: pointer
+}
+/*
+.mainSlideshow {
+    float: left;
+    width: 100%;
+    margin: 0 0 7px 0
+}
+.sld1_middleCont {
+    float: left;
+    width: 100%;
+    border-top: 2px solid #d4ae52;
+    border-bottom: 2px solid #d4ae52;
+    margin: 10px 0 10px 0
+}
+.sld1_middleCont .middleC1 {
+    float: left;
+    width: 28%;
+    padding: 4px 1.5% 0 1.5%;
+    height: 120px;
+    margin: 10px 0 10px 0;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52;
+    color: #000;
+    cursor: pointer
+}
+.sld1_middleCont .middleC2 {
+    float: left;
+    width: 29%;
+    padding: 4px 1.5% 0 1.5%;
+    height: 120px;
+    margin: 10px 0 10px 2%;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52;
+    color: #000;
+    cursor: pointer
+}
+.sld1_middleCont .middleC3 {
+    float: left;
+    width: 29%;
+    padding: 4px 1.5% 0 1.5%;
+    height: 120px;
+    margin: 10px 0 10px 2%;
+    border-radius: 2px;
+    text-align: center;
+    border: 1px solid #d4ae52;
+    color: #000;
+    cursor: pointer
+}
+.head11 {
+    font-size: 14px;
+    line-height: 26px;
+    color: #fff;
+    font-weight: bold;
+    text-align: left
+}
+.cont21 {
+    font-size: 16px;
+    line-height: 21px;
+    text-align: left
+}
+.homePopRStations {
+    float: left;
+    width: 100%;
+    height: 370px;
+    margin: auto
+}
+.homeBreakingWidget {
+    float: left;
+    width: 735px;
+    height: 280px;
+    margin: auto
+}
+.homeGamehype {
+    float: left;
+    width: 100%;
+    height: 360px;
+    margin: auto
+}
+.hmRdoTitle {
+    float: left;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    border-bottom: 2px solid #18ae7b;
+    color: #000;
+    font-size: 36px;
+    text-align: left;
+    cursor: pointer
+}
+.FeaturedVideoInner {
+    float: initial;
+    width: 735px
+}
+.VideoThumbBox {
+    display: block;
+    float: right;
+    width: 125px;
+    height: 125px;
+    background: none;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 19px;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 4px;
+    overflow: hidden;
+    border-radius: 180px;
+    background-color: #cdcdcd
+}
+.VideoThumbBox span {
+    display: none;
+    float: left;
+    width: 140px;
+    height: 180px;
+    line-height: 140px;
+    margin: -10px 0 0 -10px;
+    background: url('http://hypster.com/imgs/radio/radio_cover_back.png');
+    color: #fff;
+    text-align: center;
+    font-size: 23px;
+    font-weight: bold
+}
+.breakingMCH_Home {
+    width: 100%;
+    height: 300px;
+    overflow: hidden
+}
+.breakingMCH_Home .hmBrkTitle {
+    float: left;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    border-bottom: 2px solid #18ae7b;
+    color: #000;
+    font-size: 36px;
+    text-align: left;
+    cursor: pointer
+}
+.breakingMCH_Home .breakingMCH_MC {
+    float: initial;
+    width: 100%;
+    margin: 10px 0 0 10px
+}
+.breakingMCH_Home .arrLeft {
+    float: left;
+    width: 7%;
+    font-size: 90px;
+    line-height: 160px;
+    text-align: center;
+    cursor: pointer;
+    color: #d4ae52;
+    background: #fff url(/imgs/brk_arrows.png) no-repeat 10px 100px
+}
+.breakingMCH_Home .arrRight {
+    float: left;
+    width: 7%;
+    font-size: 90px;
+    line-height: 160px;
+    text-align: center;
+    cursor: pointer;
+    color: #d4ae52;
+    background: #fff url(/imgs/brk_arrows.png) no-repeat -44px 100px
+}
+.breakingMCH_Home #newsContHH1 {
+    float: left;
+    width: 86%;
+    height: 260px;
+    overflow: hidden
+}
+.breakingMCH_Home #newsContHHInn {
+    position: relative;
+    width: 3183px;
+    height: 250px;
+    top: 0;
+    left: 0
+}
+.breakingMCH_Home .brkngItm {
+    float: left;
+    width: 197px;
+    height: 230px;
+    border-radius: 2px;
+    margin: 20px 10px 0 3px;
+    border: 1px solid #d4ae52;
+    cursor: pointer;
+    background-size: 100% auto
+}
+.breakingMCH_Home .brkngItmPost {
+    float: left;
+    width: 195px;
+    height: 110px;
+    margin: 1px 0 0 1px;
+    background-repeat: no-repeat
+}
+.breakingMCH_Home .brkngItm .txtBreakingT {
+    float: left;
+    width: 194px;
+    height: 25px;
+    line-height: 25px;
+    color: #000;
+    padding: 1px;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+    font-weight: bold;
+    margin: -27px 0 0 0;
+    background-color: #fff;
+    opacity: .6;
+    overflow: hidden
+}
+.breakingMCH_Home .brkngItm .txtBreakingD {
+    float: left;
+    width: 185px;
+    height: 108px;
+    line-height: 16px;
+    color: #000;
+    margin: 0 0 0 1px;
+    font-size: 14px;
+    text-align: left;
+    overflow: hidden;
+    background-color: #e7e8e7;
+    overflow: hidden;
+    padding: 5px
+}
+.nPostImg {
+    margin: 5px 0 0 45px
+}
+.gamehypeMCH_Home {
+    width: 100%;
+    height: 450px;
+    overflow: hidden
+}
+.gamehypeMCH_Home .hmGmHTitle {
+    float: left;
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    margin: 30px 0 0 0;
+    border-bottom: 2px solid #18ae7b;
+    color: #000;
+    font-size: 36px;
+    text-align: left;
+    cursor: pointer
+}
+.gamehypeMCH_Home .GmhItemsCont {
+    float: left;
+    width: 100%
+}
+.gamehypeMCH_Home .GmhItemsCont img {
+    width: 184px;
+    height: 191px
+}
+.gamehypeMCH_Home .GmhItemsCont div {
+    float: left;
+    margin: 3px 0 0 0;
+    cursor: pointer;
+    width: 182px
+}
+.gamehypeMCH_Home .GmhItemsCont span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold
+}
+.gamehypeMCH_Home .GmhBottomCont {
+    float: left;
+    width: 90%;
+    margin: 35px 0 0 5%;
+    border-top: 1px solid #f1f1f1
+}
+.gamehypeMCH_Home .GmhBottomCont div {
+    margin: auto;
+    margin-top: 30px;
+    width: 450px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background-color: #18ae7b;
+    color: #fff;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 28px
+}
+.gamehypeMCH_Home .GmhBottomCont span {
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+    width: 450px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #444;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 18px
+}
+.GamehypeCh1 .GmhBottomCont {
+    float: left;
+    width: 100%;
+    margin: 20px 0 0 0
+}
+.GamehypeCh1 .GmhBottomCont div {
+    margin: auto;
+    margin-top: 20px;
+    width: 450px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background-color: #18ae7b;
+    color: #fff;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 28px
+}
+.GamehypeCh1 .GmhBottomCont span {
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+    width: 450px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #fff;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 18px
+}
+.mListenTopH {
+    float: left;
+    width: 100%;
+    margin: 0 0 0 0
+}
+.listenMenuCont {
+    float: left;
+    width: 100%;
+    height: 35px;
+    border-bottom: 3px solid #cac9cb
+}
+.listenMenuCont #Menu1 {
+    float: left;
+    width: 200px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 0;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer;
+    border-bottom: 3px solid #47bb90
+}
+.listenMenuCont #Menu2 {
+    float: left;
+    width: 190px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 10px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer
+}
+.listenMenuCont #Menu3 {
+    float: left;
+    width: 190px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 10px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer
+}
+.listenTabCh2 {
+    float: left;
+    width: 100%;
+    min-height: 70px;
+    margin: 10px 0 20px 0
+}
+#listenSlideContHolder {
+    float: right;
+    width: 100%;
+    min-height: 0;
+    margin: 0 0 10px 0;
+    background-color: #000
+}
+.GamehypeCh1 {
+    width: 100%;
+    min-height: 900px
+}
+.GamehypeCh2 {
+    width: 26%;
+    min-height: 900px;
+    float: right;
+    margin-top: 35px
+}
+.GamehypeCh1 .GmhTitle {
+    float: left;
+    width: 100%;
+    border-bottom: 2px solid #3fbc91;
+    font-size: 64px;
+    cursor: pointer;
+    font-weight: 300
+}
+.GamehypeCh1 .GmhTblH {
+    float: left;
+    width: 95%;
+    height: 30px;
+    padding: .4%;
+    margin: 2%;
+    border: 1px solid #cac9cb
+}
+.GamehypeCh1 .GmhTblHC1 {
+    float: left;
+    margin: 0 0 0 60px;
+    font-size: 19px;
+    color: #cac9cb
+}
+.GamehypeCh1 .GmhTblHC2 {
+    float: left;
+    margin: 0 0 0 120px;
+    font-size: 19px;
+    color: #cac9cb
+}
+.GamehypeCh1 .GmhTblHC3 {
+    float: left;
+    margin: 0 0 0 120px;
+    font-size: 19px;
+    color: #cac9cb
+}
+.GamehypeCh1 .GmhTblHC4 {
+    float: left;
+    margin: 0 0 0 120px;
+    font-size: 19px;
+    color: #cac9cb
+}
+.GamehypeCh1 .GmhTblCont {
+    float: left;
+    width: 100%
+}
+.GamehypeCh1 .GmBox1 {
+    float: left;
+    width: 230px;
+    height: 270px;
+    border: 1px solid #d4ae52;
+    margin: 0 0 0 10px;
+    background-color: #fff
+}
+.GamehypeCh1 .GmBox1 img {
+    margin: 5px 0 0 23px
+}
+.GmBox1 .GmBoxHdr {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 0 0;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmBox1 .GmBoxF {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 0 0;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmBox1 .GmBoxSc {
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0 0 0;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmBox1 .GmBoxVS {
+    float: left;
+    width: 150px;
+    height: 22px;
+    margin: 5px 0 0 40px;
+    text-align: center;
+    background-color: #3fbc91;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.GamehypeCh1 .GmBoxFrst {
+    margin-left: 100px
+}
+.GamehypeCh1 .GmLnBox1 {
+    float: left;
+    width: 95%;
+    height: 30px;
+    padding: .4%;
+    margin: 2px 2% 2px 2%;
+    border: 1px solid #cac9cb
+}
+.GmLnBox1 .GmBoxHdr {
+    float: left;
+    width: 30%;
+    text-align: left;
+    margin: 0 0 0 5%;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmLnBox1 .GmBoxF {
+    float: left;
+    width: 25%;
+    text-align: left;
+    margin: 0 0 0 0;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmLnBox1 .GmBoxSc {
+    float: left;
+    width: 20%;
+    text-align: left;
+    margin: 0 0 0 0;
+    font-size: 19px;
+    color: #d4ae52
+}
+.GmLnBox1 .GmBoxVS {
+    float: left;
+    width: 150px;
+    height: 22px;
+    margin: 5px 0 0 0;
+    text-align: center;
+    background-color: #3fbc91;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 3px;
+    cursor: pointer
+}
+.GmhStmLeft1 {
+    float: left;
+    width: 720px
+}
+.GmhStmRight1 {
+    float: right;
+    margin: 20px 0 5px 0
+}
+.GmhStmLeft1 .StmHdr1 {
+    float: left;
+    width: 100%;
+    height: 40px;
+    margin: 20px 0 0 0
+}
+.GmhStmLeft1 .StmHdrInn1 {
+    float: right;
+    width: 200px;
+    border-bottom: 2px solid #cac9cb;
+    font-size: 18px;
+    color: #cac9cb
+}
+.GmhStmLeft1 .profileBtn1 {
+    float: left;
+    margin: 0 0 0 20px;
+    cursor: pointer
+}
+.GmhStmLeft1 .plstBtn1 {
+    position: relative;
+    top: 2px;
+    display: block;
+    float: left;
+    margin: 0 0 0 0;
+    cursor: pointer;
+    font-weight: bold;
+    border-bottom: 2px solid #3fbc91
+}
+.GmhStmLeft1 .hpStrmBtn1 {
+    float: left;
+    margin: 0 20px 0 20px;
+    cursor: pointer
+}
+.GmhStmLeft1 .StmCnt1 {
+    float: left;
+    width: 700px;
+    border: 1px solid #d4ae52;
+    padding: 5px
+}
+.GmhStmLeft1 .StmCnt1 div {
+    float: left;
+    width: 100%;
+    height: 100px;
+    background-color: #fff;
+    margin: 0 0 0 0
+}
+.GmhStmLeft1 .StmCnt1 H2 {
+    color: #d4ae52;
+    margin: 20px 0 0 20px
+}
+.breakingMCH {
+    float: left;
+    width: 100%;
+    background: none
+}
+.breakingMCH .brkngHDR {
+    display: block;
+    float: left;
+    width: 100%;
+    margin: 0;
+    font-size: 62px;
+    font-weight: 300;
+    border-bottom: 2px solid #3fbc91;
+    background: none
+}
+.brkngHDR1 {
+    display: block;
+    float: left;
+    width: 98%;
+    background-color: #232323;
+    color: #d4ae52;
+    height: 42px;
+    line-height: 40px;
+    margin: 0;
+    padding: 1%;
+    font-size: 32px
+}
+.breakingMCH #tagsHolder {
+    float: left;
+    width: 100%;
+    padding-bottom: 10px;
+    height: 60px;
+    overflow: hidden;
+    background: none;
+    margin: 10px 0 0 0
+}
+.breakingMCH .brkngItm {
+    float: left;
+    width: 320px;
+    height: 270px;
+    background-color: none;
+    border-radius: 2px;
+    margin: 2% 1% 0 0;
+    border: 2px solid #d4ae52;
+    cursor: pointer
+}
+.breakingMCH .brkngImg {
+    width: 100%;
+    height: 180px;
+    background-repeat: no-repeat
+}
+.breakingMCH .brkngItm .txtDItem {
+    float: left;
+    width: 97.5%;
+    height: 60px;
+    line-height: 27px;
+    padding: 1% 1% 0 2%;
+    color: #d4ae52;
+    font-weight: bold;
+    margin: 15px 0 0 0;
+    font-size: 18px;
+    text-align: center;
+    overflow: hidden
+}
+.breakingMCH .brkngPagingCH {
+    float: left;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    overflow: hidden
+}
+#searchStr {
+    float: left;
+    width: 100%
+}
+.brkSrchHolder1 {
+    float: left;
+    width: 655px;
+    height: 35px;
+    border: 1px solid #d4ae52;
+    border-radius: 6px
+}
+.brkPagingCH1 {
+    float: right;
+    width: 724px;
+    margin: 20px 0 30px 0
+}
+.listenTabCh2 .srchListBox {
+    float: left;
+    width: 650px;
+    height: 50px;
+    border: 1px solid #d4ae52;
+    border-radius: 6px
+}
+.listenTabCh2 #searchStr {
+    float: left;
+    width: 100%;
+    font-size: 24px;
+    color: #000
+}
+.crtHdr1 {
+    float: left;
+    width: 100%;
+    height: 45px;
+    margin: 0 0 0 0
+}
+.crtMCh1 {
+    float: left;
+    width: 100%
+}
+.crtMCh1 #CreateSection1_ST2 {
+    display: none;
+    width: 98%;
+    margin-left: 1%;
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 30px
+}
+.crtMCh1 .crtLgnBtn1 {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    background-color: #47bb8f;
+    border-radius: 7px;
+    margin: 10px 0 0 0;
+    color: #fff
+}
+.crtMCh1 #CreateSection2_ST2 {
+    display: none;
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 30px
+}
+.crtMCh1 #CreateSection3_ST2 {
+    display: none;
+    margin-top: 10px;
+    font-size: 18px;
+    line-height: 30px
+}
+.crtPlstHdr1 {
+    float: left;
+    width: 100%;
+    margin: 0 0 0 0
+}
+.crtPlstHdr1 .listenMenuCont {
+    margin: 50px 0 0 0;
+    height: 35px;
+    border-bottom: 3px solid #cac9cb
+}
+.createMenuCont {
+    float: left;
+    width: 100%;
+    height: 35px;
+    border-bottom: 3px solid #cac9cb
+}
+.createMenuCont #CreatePlaylistSection1,
+.listenMenuCont #CreatePlaylistSection1 {
+    float: left;
+    width: 200px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 10px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer
+}
+.createMenuCont #CreatePlaylistSection2,
+.listenMenuCont #CreatePlaylistSection2 {
+    float: left;
+    width: 200px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 10px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer
+}
+.createMenuCont #CreatePlaylistSection3,
+.listenMenuCont #CreatePlaylistSection3 {
+    float: left;
+    width: 200px;
+    height: 30px;
+    line-height: 34px;
+    margin: 5px 0 0 10px;
+    border-radius: 2px;
+    text-align: center;
+    font-family: 'Lato', sans-serif;
+    font-weight: lighter;
+    font-size: 24px;
+    color: #cac9cb;
+    cursor: pointer
+}
+.crtPlstCnt1 {
+    float: left;
+    width: 100%
+}
+.crtPlstCnt1 .CreateContHolder {
+    float: left;
+    width: 100%
+}
+.crtPlstCnt1 .TopBtnsCH1 {
+    float: left;
+    width: 100%
+}
+.crtPlstCnt1 .TopBtnsCH1 div {
+    float: right;
+    margin: 0 40px 0 0;
+    cursor: pointer
+}
+.brkPlrWPR {
+    float: left;
+    width: 100%;
+    margin: 10px 0 0 0;
+    background-color: #fff;
+    border-radius: 3px;
+    cursor: pointer
+}
+.brkPlrWPR .brkPlrWPRImg {
+    display: block;
+    float: left;
+    width: 100%;
+    height: 200px;
+    background-repeat: no-repeat
+}
+.brkPlrWPR .brkPlrWPRTxt {
+    display: block;
+    float: left;
+    width: 100%;
+    margin: 10px 0 10px 0;
+    font-size: 16px;
+    text-align: left;
+    color: #d4ae52
+}
+*/
+.flwUs_yw_fbk {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url('http://hypster.com/imgs/follow_us_btns.png') no-repeat -6px -237px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_yw_twr {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url('http://hypster.com/imgs/follow_us_btns.png') no-repeat -54px -237px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_yw_tum {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url('http://hypster.com/imgs/follow_us_btns.png') no-repeat -101px -237px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+/*
+.flwUs_bk_fbk {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -7px -127px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_bk_twr {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -55px -127px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_bk_tum {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -101px -127px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_wt_fbk {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -6px -14px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_wt_twr {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -54px -14px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.flwUs_wt_tum {
+    display: block;
+    float: left;
+    width: 40px;
+    height: 39px;
+    background: url(/imgs/follow_us_btns.png) no-repeat -101px -14px;
+    cursor: pointer;
+    margin: 0 0 0 10px
+}
+.Post_mainCont {
+    line-height: 21px;
+    float: left;
+    width: 98%;
+    padding: 0 0% 0% 0%;
+    min-height: 245px;
+    margin-bottom: 3px;
+    border-radius: 2px;
+    text-align: left
+}
+.Post_mainCont h1 {
+    width: 95%;
+    margin: 10px 0 0 0;
+    font-weight: 300;
+    margin-top: 32px;
+    font-size: 38px;
+    line-height: 40px;
+    color: #000
+}
+.Post_mainCont .h1o {
+    width: 95%;
+    margin: 10px 0 0 0;
+    font-weight: 300;
+    margin-top: 28px;
+    font-size: 38px;
+    line-height: 40px;
+    color: #000
+}
+.CommV1 {
+    float: left;
+    width: 98%;
+    height: 20px;
+    margin-top: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #858c90;
+    border-radius: 2px
+}
+.CommV2 {
+    float: left;
+    width: 98%;
+    height: 8px;
+    margin-top: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #909699;
+    border-radius: 2px
+}
+.CommV3 {
+    float: left;
+    width: 98%;
+    height: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 1%;
+    font-size: 16px;
+    background-color: #969b9e;
+    border-radius: 2px
+}
+.pst_BackCh1 {
+    float: left;
+    width: 100%;
+    min-height: 620px
+}
+.pst_leftCH1 {
+    float: left;
+    width: 685px
+}
+.pst_rightCH1 {
+    float: left;
+    width: 330px;
+    min-height: 400px
+}
+.pst_MainCH1 {
+    min-height: 175px;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: lighter;
+    margin-top: 10px
+}
+.pst_BottomCH1 {
+    float: left;
+    width: 100%;
+    margin-top: 12px
+}
+#relVideosCth {
+    float: left;
+    border: 1px solid #d5af55;
+    padding: 3px;
+    background-color: #fff
+}
+.pst_BottomCH1 .plShareCntr1 {
+    float: left;
+    width: 500px
+}
+.pst_BottomCH1 .plShareIcn {
+    float: left;
+    width: 150px;
+    height: 38px;
+    margin: 5px 0 0 0;
+    background: url(/imgs/follow_us_btns.png) no-repeat -3px -14px
+}
+.pst_BottomCH1 .pstBtmDate {
+    float: left;
+    margin: 17px 0 0 0;
+    color: #d4ae52
+}
+.activeTab {
+    height: 33px;
+    color: #47bb90;
+    border-bottom: 3px solid #47bb90;
+    margin-top: 2px
+}
+*/

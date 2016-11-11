@@ -1,4 +1,5 @@
-<header>
+<div class="ContentHeaderCont">
+  <div class="shrTopC1"> <!-- ad above header --> </div>
   <div class="ContentHeaderInner">
     <div id="MainMenu">
       <div class="LogoCh" onclick="window.location='http://hypster.com/';">
@@ -42,4 +43,4 @@
       </div>
     </div>
   </div>
-</header>
+</div>
