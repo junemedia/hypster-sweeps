@@ -22,7 +22,7 @@
   <script type="text/javascript">
     function solvemedia()
     {
-      ACPuzzle.create('ym7RhIOhnKDH44Vt.atFOnHyicq2FVs6', 'acwidget', { size: 'standard' });
+      ACPuzzle.create('SgHeNZ1Ptolp5AJ4xs2o0OcMj523jRjk', 'acwidget', { size: 'standard' });
     }
 
     function closeSolve()

@@ -10,12 +10,6 @@
 |
  */
 
-switch (@$_SERVER['HTTP_HOST']) {
-
-  case 'stage.win.hypster.com':
-  case 'win.hypster.com':
-    $config['public']  = 'ym7RhIOhnKDH44Vt.atFOnHyicq2FVs6';
-    $config['private'] = '-ki9FiWGRSsHjl-QV5k-d2qML43hfHwQ';
-    $config['verify']  = 'fJCQQ3WPIPZCX26rqBOyM5v41q2lKQRt';
-    break;
-}
+$config['public']  = 'SgHeNZ1Ptolp5AJ4xs2o0OcMj523jRjk';
+$config['private'] = '4Liq6GYjzM1tkYwYzfdf917E7j0mhPY-';
+$config['verify']  = '-Zz2zt9DEDpofod4BhGc0VrgVmZEPNUE';
