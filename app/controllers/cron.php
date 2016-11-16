@@ -46,86 +46,88 @@ class Cron extends CI_Controller
      *
      * @return void
      */
-    public function daily()
-    {
-        $date = $this->yesterday;
+    public function daily() {
+      $date = $this->yesterday;
 
-        $this->load->model('adminModel');
-        $this->load->model('prizeModel');
+      $this->load->model('adminModel');
+      $this->load->model('prizeModel');
 
-        $user = $this->adminModel->pickWinner($date);
-	//var_dump($user);
-        if($user == -1){
-			return $this->error($this->ERROR, 'No contest exists on ' . $date . '.');
-		}elseif($user == -2){
-			return $this->error($this->ERROR, 'We do not have any other entries on ' . $date . '.');
-		}elseif(@$user['id'] >= 1){
-                // grab all of the information for this contest:
-                $winner = $this->prizeModel->getWinnersByDateRange($date);
-                if (!$winner) {
-                    return $this->error($this->ERROR, 'Winner picked, but then $this->getWinnersByDateRange(' . $date . ') failed.');
-                }
-                $winner = array_shift($winner);
-                $this->sendMail($winner);
-        }else{
-                return $this->error($this->ERROR, 'Unexpected error from $this->adminModel->pickWinner(' . $date . ').');
+      $user = $this->adminModel->pickWinner($date);
+      //var_dump($user);
+
+      if ($user == -1) {
+        return $this->error($this->ERROR, 'No contest exists on ' . $date . '.');
+      }
+      elseif ($user == -2) {
+        return $this->error($this->ERROR, 'We do not have any other entries on ' . $date . '.');
+      }
+      elseif (@$user['id'] >= 1) {
+        // grab all of the information for this contest:
+        $winner = $this->prizeModel->getWinnersByDateRange($date);
+        if (!$winner) {
+            return $this->error($this->ERROR, 'Winner picked, but then $this->getWinnersByDateRange(' . $date . ') failed.');
         }
+        $winner = array_shift($winner);
+        $this->sendMail($winner);
+      }
+      else{
+        return $this->error($this->ERROR, 'Unexpected error from $this->adminModel->pickWinner(' . $date . ').');
+      }
     }
 
-    protected function error($msg, $status = 3)
-    {
-        $trace  = debug_backtrace();
-        $caller = (@$trace[1]['class'] ? $trace[1]['class'] . '::' : '') . $trace[1]['function'];
-        if ($status < 3) {
-            $this->error_log .= '[' . date('Y-m-d H:i:s') . '] ' . $this->ERROR_STATUS_BY_INT[$status] . ' ' . $caller . PHP_EOL . $msg . PHP_EOL;
-        }
-        if ($this->debug) {
-            print_r($msg);
-        }
-        if ($status == 1) {
-            // FATAL
-            exit;
-        }
+    protected function error($status = 3, $msg) {
+      $trace  = debug_backtrace();
+      $caller = (@$trace[1]['class'] ? $trace[1]['class'] . '::' : '') . $trace[1]['function'];
+      if ($status < 3) {
+        $this->error_log .= '[' . date('Y-m-d H:i:s') . '] ' . $this->ERROR_STATUS_BY_INT[$status] . ' ' . $caller . PHP_EOL . $msg . PHP_EOL;
+      }
+      if ($this->debug) {
+        print_r($msg);
+      }
+      if ($status == 1) {
+        // FATAL
+        exit;
+      }
     }
 
-    protected function sendMail($params)
-    {
-        $this->load->library('email');
-        $this->load->library('parser');
+    protected function sendMail($params) {
 
-        $params['date_pretty'] = date('F j, Y', strtotime($params['date']));
+      $this->load->library('email');
+      $this->load->library('parser');
 
-        // find correct "From:" in config/project.php:
-        $froms = config_item('from');
-        if (@$froms[$params['site_slug']]) {
-            $from_email = $froms[$params['site_slug']]['email'];
-            $from_name  = $froms[$params['site_slug']]['name'];
-        } else {
-            $from_email = $froms['default']['email'];
-            $from_name  = $froms['default']['name'];
-        }
+      $params['date_pretty'] = date('F j, Y', strtotime($params['date']));
 
-        // winner email
-        $this->email->from($from_email, $from_name);
-        $this->email->to($params['user_email']);
-        $this->email->bcc(config_item('admin_emails'));
-        $this->email->subject($params['site_name'] . ' Winner Notification');
+      // find correct "From:" in config/project.php:
+      $froms = config_item('from');
+      if (@$froms[$params['site_slug']]) {
+        $from_email = $froms[$params['site_slug']]['email'];
+        $from_name  = $froms[$params['site_slug']]['name'];
+      } else {
+        $from_email = $froms['default']['email'];
+        $from_name  = $froms['default']['name'];
+      }
 
-        switch ($params['prize_type']) {
-            case "giftcard":
-                $tpl = 'winner_giftcard';
-                break;
-            case "prize":
-            default:
-                $tpl = 'winner_prize';
-        }
+      // winner email
+      $this->email->from($from_email, $from_name);
+      $this->email->to($params['user_email']);
+      $this->email->bcc(config_item('admin_emails'));
+      $this->email->subject($params['site_name'] . ' Winner Notification');
 
-        // remove any HTML tags in the prize title
-        $params['prize_title'] = safeTitle($params['prize_title']);
+      switch ($params['prize_type']) {
+        case "giftcard":
+          $tpl = 'winner_giftcard';
+          break;
+        case "prize":
+        default:
+          $tpl = 'winner_prize';
+      }
 
-        $body = $this->parser->parse('../templates/' . $tpl, $params, true);
-        $this->email->message($body);
-        $this->email->send();
+      // remove any HTML tags in the prize title
+      $params['prize_title'] = safeTitle($params['prize_title']);
+
+      $body = $this->parser->parse('../templates/' . $tpl, $params, true);
+
+      $this->email->message($body);
+      $this->email->send();
     }
-
 }
