@@ -93,6 +93,7 @@ input[type=button] {
     color: #fff;
     cursor: pointer
 }
+/*
 input[type=submit] {
     height: 22px;
     line-height: 19px;
@@ -101,6 +102,7 @@ input[type=submit] {
     color: #fff;
     cursor: pointer
 }
+*/
 a {
     color: #000;
     text-decoration: none
@@ -126,8 +128,8 @@ a:visited {
     min-width: 1040px;
     width: 100%;
     height: 280px;
-    background-color: #d5af55;
-    border-top: 4px solid #d5af55;
+    background-color: $primary-bg-color;
+    border-top: 4px solid $primary-bg-color;
     margin-top: 0
 }
 /*
@@ -506,7 +508,7 @@ a:visited {
     margin-top: 7px;
     width: 342px;
     height: 25px;
-    border: 1px solid #d5af55;
+    border: 1px solid $primary-bg-color;
     border-radius: 8px
 }
 .txtLogin {
@@ -514,7 +516,7 @@ a:visited {
     margin-top: 7px;
     width: 242px;
     height: 25px;
-    border: 1px solid #d5af55;
+    border: 1px solid $primary-bg-color;
     border-radius: 8px
 }
 .txtValidator {
@@ -7376,7 +7378,7 @@ figure.image figcaption {
     width: 100%;
     height: 55px;
     background-position: 0% 60%;
-    background-color: #d5af55
+    background-color: $primary-bg-color
 }
 /*
 .slCH2 {
@@ -7452,7 +7454,7 @@ figure.image figcaption {
 #MainMenu #mSearchSM1 {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7465,7 +7467,7 @@ figure.image figcaption {
 #MainMenu #mPlaylistSM1 {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7477,7 +7479,7 @@ figure.image figcaption {
 #MainMenu #mChartsSM1 {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7516,7 +7518,7 @@ figure.image figcaption {
 #MainMenu #mPlayerSM1 {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7529,7 +7531,7 @@ figure.image figcaption {
 #MainMenu #mPlstsSM1 {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7597,7 +7599,7 @@ figure.image figcaption {
 #MainMenu #myAcctInfo {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -7611,7 +7613,7 @@ figure.image figcaption {
 #MainMenu #mySignOut {
     float: right;
     font-size: 18px;
-    color: #d5af55;
+    color: $primary-bg-color;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: -1px;
@@ -8704,7 +8706,7 @@ figure.image figcaption {
 }
 #relVideosCth {
     float: left;
-    border: 1px solid #d5af55;
+    border: 1px solid $primary-bg-color;
     padding: 3px;
     background-color: #fff
 }

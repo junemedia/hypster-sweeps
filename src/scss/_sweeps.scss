@@ -119,9 +119,11 @@
         margin-top: 2.5em;
         // ugly way of lining up with firstname input field
         padding: 1.5em 1.5em 2em;
-        background-color: #e6dae5;
-        h4 {
-            margin-bottom: 1em;
+        color: #fff;
+        background-color: $primary-bg-color;
+        h2 {
+          font-weight: normal;
+          margin-bottom: 1em;
         }
     }
     form {
@@ -448,7 +450,7 @@
             display: none;
             text-align: center;
             margin: 0;
-            background: rgba(102, 0, 102, 0.79);
+            background: $primary-bg-color;
             width: 100%;
             padding: .3em;
             position: absolute;

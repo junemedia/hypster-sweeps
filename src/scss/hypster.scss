@@ -2,10 +2,9 @@ $debug-browser-support: true;
 
 @charset "UTF-8";
 
+@import "variables";
 @import "shell/hypster";
-
 @import "sweeps";
-
 @import "new";
 
 #jds.hypster {
@@ -38,7 +37,7 @@ $debug-browser-support: true;
     }
     h1 {
         font-size: 1.8em;
-        color: #83af1b;
+        color: $primary-bg-color;
         font-weight: normal;
     }
     #calendar > header,
