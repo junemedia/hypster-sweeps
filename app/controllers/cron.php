@@ -91,43 +91,21 @@ class Cron extends CI_Controller
     }
 
     protected function sendMail($params) {
-
-      $this->load->library('email');
-      $this->load->library('parser');
+      $this->load->library('maropost', config_item('maropost'));
 
       $params['date_pretty'] = date('F j, Y', strtotime($params['date']));
-
-      // find correct "From:" in config/project.php:
-      $froms = config_item('from');
-      if (@$froms[$params['site_slug']]) {
-        $from_email = $froms[$params['site_slug']]['email'];
-        $from_name  = $froms[$params['site_slug']]['name'];
-      } else {
-        $from_email = $froms['default']['email'];
-        $from_name  = $froms['default']['name'];
-      }
-
-      // winner email
-      $this->email->from($from_email, $from_name);
-      $this->email->to($params['user_email']);
-      $this->email->bcc(config_item('admin_emails'));
-      $this->email->subject($params['site_name'] . ' Winner Notification');
-
-      switch ($params['prize_type']) {
-        case "giftcard":
-          $tpl = 'winner_giftcard';
-          break;
-        case "prize":
-        default:
-          $tpl = 'winner_prize';
-      }
-
       // remove any HTML tags in the prize title
       $params['prize_title'] = safeTitle($params['prize_title']);
 
-      $body = $this->parser->parse('../templates/' . $tpl, $params, true);
+      // winner email
+      $this->maropost->from(config_item('from')).
+      $this->maropost->to($params['user_email']);
+      $this->maropost->bcc(config_item('admin_emails'));
+      // tags
+      $this->maropost->tags('prize_title', $params['prize_title']);
+      $this->maropost->tags('prize_value', $params['prize_value']);
+      $this->maropost->tags('prize_date', $params['date_pretty']);
 
-      $this->email->message($body);
-      $this->email->send();
+      $this->maropost->send_transaction();
     }
 }

@@ -384,14 +384,9 @@ class Api extends FrontendController
         $this->load->library('parser');
 
         // find correct "From:" in config/project.php:
-        $froms = config_item('from');
-        if (@$froms[$this->site_slug]) {
-            $from_email = $froms[$this->site_slug]['email'];
-            $from_name  = $froms[$this->site_slug]['name'];
-        } else {
-            $from_email = $froms['default']['email'];
-            $from_name  = $froms['default']['name'];
-        }
+        $from = config_item('from');
+        $from_email = $from['email'];
+        $from_name  = $from['name'];
 
         $params = array('link' => 'http://' . $_SERVER['HTTP_HOST'] . '/verify/' . $token);
         $this->email->clear();

@@ -7,20 +7,19 @@
 */
 
 // How long will password reset token and email verification tokens live?
-$config['token_ttl']                      = 86400; // 1 day
-$config['human_ttl']                      = 86400; // 1 day
+$config['token_ttl']        = 86400; // 1 day
+$config['human_ttl']        = 86400; // 1 day
 
 // Who will be BCC’d on winner emails:
-$config['admin_emails'][]                 = 'contestadmin@junemedia.com';
-$config['admin_emails'][]                 = 'johns@junemedia.com';
+$config['admin_emails'][]   = 'johns@junemedia.com';
 
 // The "From:" address for the winner emails:
-// Organized by "site_slug" (`site`.`slug`);
-// If no site slugs match, then "default" will be used.
-$config['from']['hypster']['name']  = '';
-$config['from']['hypster']['email'] = '';
-$config['from']['default']['name']        = '';
-$config['from']['default']['email']       = '';
+$config['from']['name']     = '';
+$config['from']['email']    = '';
 
-$config['prize_image_dir']                = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/pimg';
-$config['prize_image_uri']                = '/pimg';
+$config['prize_image_dir']  = rtrim($_SERVER['DOCUMENT_ROOT'], '/') . '/pimg';
+$config['prize_image_uri']  = '/pimg';
+
+// Maropost account info
+$config['maropost']['account'] = '';
+$config['maropost']['apiKey']  = '';
