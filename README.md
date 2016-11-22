@@ -42,8 +42,31 @@
 | [win.**betterrecipes**.com](http://win.betterrecipes.com/)     | [**betterrecipes**.dailysweeps.white.resolute.com](http://betterrecipes.dailysweeps.white.resolute.com/) |
 | [win.**recipe4living**.com](http://win.recipe4living.com/)     | [**recipe4living**.dailysweeps.white.resolute.com](http://recipe4living.dailysweeps.white.resolute.com/) |
 
+## Holland backup
+Install Holland package:
+
+    sudo yum install holland holland-common holland-mysqldump
+
+Move `default.conf` to Holland configuration
+
+    sudo cp /srv/sites/dailysweeps/etc/holland/backupsets/default.conf /etc/holland/backupsets
+    chown root:root /etc/holland/backupsets/default.conf
+    chomod 0644 /etc/holland/backupsets/default.conf
+
+Create `/root/.my.cnf`:
+
+    [client]
+    user=root
+    password=root_mysql_password_here
+
 
 ## Crontab Entries
+
+##### Database backups
+Add to `root` `crontab`
+
+    # Holland backups of database
+    20   7 * * * /usr/sbin/holland bk
 
 ##### Daily Winner Selection
 
@@ -139,3 +162,4 @@ Add any files that were inadvertently deleted with the `find` commands and commi
 1. Remove conditional on `app/controllers/main.php:77`.
 2. Remove `temporarilyAddMeredithWinners()` method in `app/models/prizemodel.php:86-213`.
 3. Update `getWinnersByDateRange()` to simply return $winners in `app/models/prizemodel.php:80-83`.
+
