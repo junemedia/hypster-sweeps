@@ -83,6 +83,13 @@ class Maropost
    *
    */
   public function send_transaction() {
+    $data = array(
+      'recd' => '',
+      'sent' => array(
+        'info' => array(),
+        'postfields' => ''
+      )
+    );
     $endpoint = 'emails/deliver.json';
 
     $apiHeaders = array(
@@ -102,13 +109,19 @@ class Maropost
       )
     );
     $payload = json_encode($payload);
+    $data['sent']['postfields'] = $payload;
 
     $ch = curl_init(self::API_ROOT .'/'. $this->account_id .'/'. $endpoint .'?auth_token=' . $this->api_key);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $apiHeaders);
-    $response = curl_exec($ch);
+    curl_setopt($ch, CURLINFO_HEADER_OUT, true);
+
+    $data['recd'] = curl_exec($ch);
+    $data['sent']['info'] = curl_getinfo($ch);
+
     curl_close($ch);
+    return $data;
   }
 }

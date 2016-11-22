@@ -3,17 +3,20 @@
 class Cron extends CI_Controller
 {
     protected $debug               = true;
-    protected $error_log           = '';
-    protected $error_log_email     = null;
-    protected $error_log_file      = '/tmp/dailysweeps-cron-error.log';
+    protected $log                 = '';
+    protected $log_email           = null;
+    protected $log_dir             = '/srv/sites/dailysweeps/bin/logs';
+    protected $log_file            = '';
+    protected $INFO                = 4;
     protected $WARN                = 3;
     protected $ERROR               = 2;
     protected $FATAL               = 1;
     protected $ERROR_STATUS_BY_INT = array(
-        1 => 'FATAL',
-        2 => 'ERROR',
-        3 => 'WARN',
-    );
+                                       1 => 'FATAL',
+                                       2 => 'ERROR',
+                                       3 => 'WARN',
+                                       4 => 'INFO',
+                                     );
     protected $yesterday;
     protected $today;
 
@@ -27,22 +30,19 @@ class Cron extends CI_Controller
 
         $this->yesterday = date('Y-m-d', strtotime('-1 day'));
         $this->today     = date('Y-m-d');
+        $this->log_file  = $this->log_dir . '/' . $this->today . '.log';
     }
 
     public function __destruct()
     {
-        if (!$this->error_log) {
-            return;
+        if ($this->log) {
+          @file_put_contents($this->log_file, $this->log, FILE_APPEND);
         }
-        @file_put_contents($this->error_log_file, $this->error_log, FILE_APPEND);
     }
 
     /**
-     * Performs daily winner selection for the previous day on every rule_id that is active.
-     * Sends emails to the winner and to Meredith about the winner selection.
-     *
-     * Should be invoked with the following crontab entry (should be midnight on the dot)
-     * 0    0 * * * root /srv/sites/dailysweeps/bin/cron daily
+     * Performs daily winner selection for the previous day.
+     * Sends emails to the winner and the contest admin about the winner selection.
      *
      * @return void
      */
@@ -53,36 +53,42 @@ class Cron extends CI_Controller
       $this->load->model('prizeModel');
 
       $user = $this->adminModel->pickWinner($date);
-      //var_dump($user);
-
+      /*
+       * possible values for $user:
+       *   -1: no contest set for this $date
+       *   -2: no eligible entries for this $date
+       *   array of user data: `id`, `firstname`, `lastname`, `email`, `city`, `state`
+       *
+       */
       if ($user == -1) {
-        return $this->error($this->ERROR, 'No contest exists on ' . $date . '.');
+        return $this->logItem($this->ERROR, 'No contest exists on ' . $date . '.');
       }
       elseif ($user == -2) {
-        return $this->error($this->ERROR, 'We do not have any other entries on ' . $date . '.');
+        return $this->logItem($this->ERROR, 'We do not have any other entries on ' . $date . '.');
       }
       elseif (@$user['id'] >= 1) {
+        $this->logItem($this->INFO, 'Winner email chosen: ' . $user['email']);
+
         // grab all of the information for this contest:
         $winner = $this->prizeModel->getWinnersByDateRange($date);
         if (!$winner) {
-            return $this->error($this->ERROR, 'Winner picked, but then $this->getWinnersByDateRange(' . $date . ') failed.');
+            return $this->logItem($this->ERROR, 'Winner picked, but then $this->getWinnersByDateRange(' . $date . ') failed.');
         }
         $winner = array_shift($winner);
         $this->sendMail($winner);
       }
-      else{
-        return $this->error($this->ERROR, 'Unexpected error from $this->adminModel->pickWinner(' . $date . ').');
+      else {
+        return $this->logItem($this->ERROR, 'Unexpected error from $this->adminModel->pickWinner(' . $date . ').');
       }
     }
 
-    protected function error($status = 3, $msg) {
+    protected function logItem($status = 3, $msg) {
       $trace  = debug_backtrace();
       $caller = (@$trace[1]['class'] ? $trace[1]['class'] . '::' : '') . $trace[1]['function'];
-      if ($status < 3) {
-        $this->error_log .= '[' . date('Y-m-d H:i:s') . '] ' . $this->ERROR_STATUS_BY_INT[$status] . ' ' . $caller . PHP_EOL . $msg . PHP_EOL;
-      }
-      if ($this->debug) {
-        print_r($msg);
+
+      // log item if error or fatal, or if debug is true
+      if ($status < 3 || $this->debug) {
+        $this->log .= '[' . date('Y-m-d H:i:s') . '] ' . $this->ERROR_STATUS_BY_INT[$status] . ' ' . $caller . PHP_EOL . $msg . PHP_EOL;
       }
       if ($status == 1) {
         // FATAL
@@ -106,6 +112,14 @@ class Cron extends CI_Controller
       $this->maropost->tags('prize_value', $params['prize_value']);
       $this->maropost->tags('prize_date', $params['date_pretty']);
 
-      $this->maropost->send_transaction();
+      $response = $this->maropost->send_transaction();
+
+      $recd = $response['recd'];
+      $postfields = print_r($response['sent']['postfields'], true);
+      $info = print_r($response['sent']['info'], true);
+
+      $this->logItem($this->INFO, "POST data: $postfields");
+      $this->logItem($this->INFO, "cURL info: $info");
+      $this->logItem($this->INFO, "cuRL response: $recd");
     }
 }
