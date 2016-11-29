@@ -23,3 +23,6 @@ web/js/*.min.js
 web/css/*.min.css
 
 app/config/project.php
+
+
+doc/entries.sql
