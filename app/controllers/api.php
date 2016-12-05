@@ -6,6 +6,7 @@
 
 class Api extends FrontendController
 {
+  const USER_VALIDATE_URL = 'http://api.hypster.com/user/validate';
 
     public function __construct()
     {
@@ -260,64 +261,75 @@ class Api extends FrontendController
         return $this->json(XHR_OK, $r);
     }
 
-    /**
-     * POST/json: Authenticate user
-     *
-     * Accept email/password; return JSON of eligible: true/false
-     *
-     * Must return "midnight" in successful JSON response so that
-     * localStorage can expire at the correct time: EST midnight
-     *
-     */
-    public function login()
-    {
 
-        $this->load->library('form_validation');
+  /**
+   * POST/json: Authenticate user
+   *
+   * Accept username/password; return JSON of eligible: true/false
+   *
+   * Must return "midnight" in successful JSON response so that
+   * localStorage can expire at the correct time: EST midnight
+   *
+   */
+  public function login()
+  {
+    // check the inputs
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('username', 'Username', 'trim|required');
+    $this->form_validation->set_rules('password', 'Password', 'required');
 
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|callback_properEmail');
-        $this->form_validation->set_rules('password', 'Password', 'required');
+    // return values
+    $r = array();
 
-        $r = array();
-
-        if (!$this->form_validation->run()) {
-            return $this->json(XHR_INVALID, validation_errors());
-        }
-
-        $this->load->model('userModel');
-
-        $user = $this->userModel->login($this->input->post('email'), $this->input->post('password'));
-
-        // $user === false:
-        if ($user === false) {
-            return $this->json(XHR_INVALID, 'Invalid password. Please try again or reset your password using the Forgot Password link above.');
-        } elseif ($user === null) {
-            return $this->json(XHR_NOT_FOUND, 'We have updated our security settings. Please enter your profile information on the left and click the “Next” button for them to take effect.');
-        }
-
-        // authentication successful, save this in the session
-        // effectively "logging in the user"
-        $this->session->set_userdata('user_id', $user['id']);
-        // set is_admin if applicable (null will delete is_admin = true)
-        $this->session->set_userdata('is_admin', ($user['role'] == 2) ? true : null);
-
-        // eligible for today?
-        $this->load->model('prizeModel');
-        $r['eligible'] = $this->prizeModel->isEligible(
-            $user['id'],
-            $this->site_id);
-        $r['midnight'] = strtotime('tomorrow');
-        $r['name']     = $user['firstname'];
-        $r['user_id']  = $user['id'];
-
-        if (!$r['eligible']) {
-            // include thank you THML if you've already entered today
-            // Thank you page HTML snippet on success;
-            // null if successful but no thank you copy;
-            $r['thanks'] = $this->prizeModel->getThanks($this->site_id);
-        }
-
-        return $this->json(XHR_OK, $r);
+    if (!$this->form_validation->run()) {
+      return $this->json(XHR_INVALID, validation_errors());
     }
+
+    // if all is good, validate the credentials
+    $response = $this->_validate($this->input->post('username'), $this->input->post('password'));
+
+    // should be getting an object containing status, message,
+    // and user properties
+    if ($response->status === XHR_OK) {
+      $user = array();
+      $user['id'] = $response->user->id;
+      $user['role'] = $response->user->adminlevel;
+      $user['firstname'] = $response->user->name;
+
+      // authentication successful, save this in the session
+      // effectively "logging in the user"
+      $this->session->set_userdata('user_id', $user['id']);
+      // set is_admin if applicable (null will delete is_admin = true)
+      $this->session->set_userdata('is_admin', ($user['role'] == 2) ? true : null);
+
+      // eligible for today?
+      $this->load->model('prizeModel');
+      $r['eligible'] = $this->prizeModel->isEligible(
+          $user['id'],
+          $this->site_id);
+      $r['midnight'] = strtotime('tomorrow');
+      $r['name']     = $user['firstname'];
+      $r['user_id']  = $user['id'];
+
+      if (!$r['eligible']) {
+          // include thank you HTML if you've already entered today
+          // Thank you page HTML snippet on success;
+          // null if successful but no thank you copy;
+          $r['thanks'] = $this->prizeModel->getThanks($this->site_id);
+      }
+      return $this->json(XHR_OK, $r);
+    }
+    elseif ($response->status === XHR_INVALID) {
+      return $this->json(XHR_INVALID, 'Invalid password. Please try again or reset your password using the Forgot Password link above.');
+    }
+    elseif ($response->status === XHR_NOT_FOUND) {
+      return $this->json(XHR_NOT_FOUND, 'We have updated our security settings. Please enter your profile information on the left and click the “Next” button for them to take effect.');
+    }
+    else {
+      return $this->json(XHR_ERROR, "There's been an unknown error, please try again");
+    }
+  }
+
 
     /**
      * Destroy the user session
@@ -611,4 +623,26 @@ class Api extends FrontendController
         }
     }
 
+    /**
+     * Make call to api server
+     * $return object
+     */
+    private function _validate($username, $password)
+    {
+      $payload = http_build_query(array(
+        'username' => $username,
+        'password' => $password
+      ));
+
+      $ch = curl_init(self::USER_VALIDATE_URL);
+      /* curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); */
+      curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+      $recd = curl_exec($ch);
+      curl_close($ch);
+
+      return json_decode($recd);
+    }
 }

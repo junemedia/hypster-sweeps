@@ -46,7 +46,7 @@ define([
         if (!logged_in) {
             $('.frame').hide();
             $('#signup').show();
-            $('#login_email').trigger(ON_FOCUS);
+            $('#login_username').trigger(ON_FOCUS);
             events.enterAnonymous();
             return;
         }
@@ -321,7 +321,7 @@ define([
             $forgot_form.find('p').show();
             $forgot_form.find('.success').hide();
             $forgot_form.find('.alert').empty();
-            $('#login_email').trigger(ON_FOCUS);
+            $('#login_username').trigger(ON_FOCUS);
         });
         $verify = $('.verify');
         $verify.find('a').on(ON_CLICK, verify);

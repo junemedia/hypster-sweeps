@@ -29,8 +29,8 @@
  --><form id="login_form" class="login" method="post" action="/api/login">
         <h2>Already a Member?</h2>
         <fieldset class="login">
-            <label for="login_email">Email</label>
-            <input type="email" name="email" id="login_email"/>
+            <label for="login_username">Username</label>
+            <input type="text" name="username" id="login_username"/>
             <label for="login_password">Password</label>
             <input name="password" type="password" id="login_password"/>
         </fieldset>
