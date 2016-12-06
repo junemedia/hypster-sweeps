@@ -295,10 +295,13 @@ class Api extends FrontendController
       $user['id'] = $response->user->id;
       $user['role'] = $response->user->adminlevel;
       $user['firstname'] = $response->user->name;
+      $user['email'] = $response->user->email;
 
       // authentication successful, save this in the session
       // effectively "logging in the user"
       $this->session->set_userdata('user_id', $user['id']);
+      $this->session->set_userdata('user_email', $user['email']);
+
       // set is_admin if applicable (null will delete is_admin = true)
       $this->session->set_userdata('is_admin', ($user['role'] == 2) ? true : null);
 
@@ -309,6 +312,7 @@ class Api extends FrontendController
           $this->site_id);
       $r['midnight'] = strtotime('tomorrow');
       $r['name']     = $user['firstname'];
+      $r['email']     = $user['email'];
       $r['user_id']  = $user['id'];
 
       if (!$r['eligible']) {

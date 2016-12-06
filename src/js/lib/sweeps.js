@@ -172,131 +172,132 @@ define([
      * Ready methods
      */
     ready(function() {
+      $('#login_form').on(ON_SUBMIT, {
+        success: function(response) {
+          scrollTop(0);
+          // remove any previous roads being unblocked
+          ROADUNBLOCKED = null;
+          // set environment variables
+          db('lis', 1, ONE_YEAR);
+          db('user_id', response.user_id, ONE_YEAR);
+          db('name', response.name, ONE_YEAR);
+          db('email', response.email, ONE_YEAR);
 
-        $('#login_form').on(ON_SUBMIT, {
-            success: function(response) {
-                scrollTop(0);
-                // remove any previous roads being unblocked
-                ROADUNBLOCKED = null;
-                // set environment variables
-                db('lis', 1, ONE_YEAR);
-                db('user_id', response.user_id, ONE_YEAR);
-                // $name.html(response.name);
-                db('name', response.name, ONE_YEAR);
-                // If we get back the thank you HTML, save it.
-                // This should only occur if a user is ineligible,
-                // but let's just store it whenever we get it.
-                if (response.thanks) {
-                    db('thanks', response.thanks, ONE_YEAR);
-                }
-                $profile_bar.show();
-                events.login();
-                if (response.eligible) {
-                    enter();
-                } else {
-                    // already entered
-                    db('ineligible', true, response.midnight * 1000); // mark that we are ineligible until midnight tonight
-                    // shows #thanks, but with "You have ALREADY entered today…"
-                    enter(true);
-                    events.enterDuplicate();
-                }
-                return false;
-            },
-            fail: function() {
-                events.loginFail();
+          // If we get back the thank you HTML, save it.
+          // This should only occur if a user is ineligible,
+          // but let's just store it whenever we get it.
+          if (response.thanks) {
+            db('thanks', response.thanks, ONE_YEAR);
+          }
+
+          $profile_bar.show();
+          events.login();
+          if (response.eligible) {
+            enter();
+          } else {
+            // already entered
+            db('ineligible', true, response.midnight * 1000); // mark that we are ineligible until midnight tonight
+            // shows #thanks, but with "You have ALREADY entered today…"
+            enter(true);
+            events.enterDuplicate();
+          }
+          return false;
+        },
+        fail: function() {
+          events.loginFail();
+        }
+      }, xhr);
+
+      $('#signup_form').on(ON_SUBMIT, {
+        success: function(response) {
+          scrollTop(0);
+          // remove any previous roads being unblocked
+          ROADUNBLOCKED = null;
+          // set environment variables
+          db('lis', 1, ONE_YEAR);
+          db('user_id', response.user_id, ONE_YEAR);
+          // only set the name if given in resposne
+          response.name && db('name', response.name, ONE_YEAR);
+          // show buttons & clear this form
+          // $name.html(db('name'));
+          $profile_bar.show();
+          xhr.$form.trigger(ON_RESET);
+
+          if (xhr.$form.hasClass('profile')) {
+            events.profileUpdate();
+            // // handle the reload on /profile page
+            // W.location.href = W.location.href;
+            // JDS-23: client wants to redirect to homepage
+            W.location.href = '/';
+          } else {
+            events.signup();
+            // show the #prize_form
+            enter();
+          }
+          return false;
+        },
+        fail: function() {
+          // or could be tracked as update fail, but let's not split hairs
+          // or could also be captcha on first signup
+          events.signupFail();
+        }
+      }, xhr);
+
+      $('#forgot_form').on(ON_SUBMIT, {
+        success: function(response) {
+          xhr.$alert.show().html(response.message);
+          xhr.$form.trigger(ON_RESET);
+          xhr.$form.find('fieldset.login').hide();
+          xhr.$form.find('p').hide();
+          xhr.$submit.hide();
+          xhr.$form.find('.forgot_close').html('Dismiss');
+          events.forgot();
+          return false;
+        }
+      }, xhr);
+
+      $('#reset_form').on(ON_SUBMIT, {
+        success: function(response) {
+          scrollTop(0);
+          xhr.$alert.show().html(response.message);
+          xhr.$form.trigger(ON_RESET);
+          xhr.$form.find('fieldset, input').hide();
+          xhr.$form.find('.success').show();
+          events.reset();
+          return false;
+        }
+      }, xhr);
+
+      $('#prize_form').on(ON_SUBMIT, {
+        prereq: function() {
+          if (isLoggedIn()) {
+            if (!db('ineligible')) {
+              // eligible
+              return true;
+            } else {
+              // ineligible
+              enter(true);
+              events.enterDuplicate();
+              return false;
             }
-        }, xhr);
-
-        $('#signup_form').on(ON_SUBMIT, {
-            success: function(response) {
-                scrollTop(0);
-                // remove any previous roads being unblocked
-                ROADUNBLOCKED = null;
-                // set environment variables
-                db('lis', 1, ONE_YEAR);
-                db('user_id', response.user_id, ONE_YEAR);
-                // only set the name if given in resposne
-                response.name && db('name', response.name, ONE_YEAR);
-                // show buttons & clear this form
-                // $name.html(db('name'));
-                $profile_bar.show();
-                xhr.$form.trigger(ON_RESET);
-
-                if (xhr.$form.hasClass('profile')) {
-                    events.profileUpdate();
-                    // // handle the reload on /profile page
-                    // W.location.href = W.location.href;
-                    // JDS-23: client wants to redirect to homepage
-                    W.location.href = '/';
-                } else {
-                    events.signup();
-                    // show the #prize_form
-                    enter();
-                }
-                return false;
-            },
-            fail: function() {
-                // or could be tracked as update fail, but let's not split hairs
-                // or could also be captcha on first signup
-                events.signupFail();
-            }
-        }, xhr);
-
-        $('#forgot_form').on(ON_SUBMIT, {
-            success: function(response) {
-                xhr.$alert.show().html(response.message);
-                xhr.$form.trigger(ON_RESET);
-                xhr.$form.find('fieldset.login').hide();
-                xhr.$form.find('p').hide();
-                xhr.$submit.hide();
-                xhr.$form.find('.forgot_close').html('Dismiss');
-                events.forgot();
-                return false;
-            }
-        }, xhr);
-
-        $('#reset_form').on(ON_SUBMIT, {
-            success: function(response) {
-                scrollTop(0);
-                xhr.$alert.show().html(response.message);
-                xhr.$form.trigger(ON_RESET);
-                xhr.$form.find('fieldset, input').hide();
-                xhr.$form.find('.success').show();
-                events.reset();
-                return false;
-            }
-        }, xhr);
-
-        $('#prize_form').on(ON_SUBMIT, {
-            prereq: function() {
-                if (isLoggedIn()) {
-                    if (!db('ineligible')) {
-                        // eligible
-                        return true;
-                    } else {
-                        // ineligible
-                        enter(true);
-                        events.enterDuplicate();
-                        return false;
-                    }
-                    return true;
-                }
-                enter();
-                return false;
-            },
-            success: function(response) {
-                scrollTop(0);
-                // destroy this now that we won't be needing it anymore
-                ROADUNBLOCKED = null;
-                // we cannot enter this contest until tomorrow
-                db('ineligible', true, response.midnight * 1000);
-                // store the thank you HTML response
-                db('thanks', response.thanks, ONE_YEAR);
-                // this will send us to #thanks since we've set environment variables:
-                enter();
-                events.enter();
-            }
-        }, xhr);
+            return true;
+          }
+          enter();
+          return false;
+        },
+        success: function(response) {
+          scrollTop(0);
+          // destroy this now that we won't be needing it anymore
+          ROADUNBLOCKED = null;
+          // we cannot enter this contest until tomorrow
+          db('ineligible', true, response.midnight * 1000);
+          // store the thank you HTML response
+          db('thanks', response.thanks, ONE_YEAR);
+          // this will send us to #thanks since we've set environment variables:
+          enter();
+          events.enter();
+        }
+      }, xhr);
 
         /**
          * UI Bindings
