@@ -39,6 +39,12 @@ define([
         $(W).scrollTop(i || 0);
     }
 
+    /**
+     *
+     * Update the view when Enter Now button is pushed
+     *   doesn't actually do any entering per se
+     *
+     */
     function enter(already_entered) {
         var entered_contest = !!db('ineligible'),
             logged_in = isLoggedIn();
@@ -177,6 +183,7 @@ define([
           scrollTop(0);
           // remove any previous roads being unblocked
           ROADUNBLOCKED = null;
+
           // set environment variables
           db('lis', 1, ONE_YEAR);
           db('user_id', response.user_id, ONE_YEAR);
@@ -191,7 +198,9 @@ define([
           }
 
           $profile_bar.show();
+          // fire the event callbacks (ads refresh)
           events.login();
+
           if (response.eligible) {
             enter();
           } else {
@@ -274,7 +283,8 @@ define([
             if (!db('ineligible')) {
               // eligible
               return true;
-            } else {
+            }
+            else {
               // ineligible
               enter(true);
               events.enterDuplicate();
@@ -298,6 +308,8 @@ define([
           events.enter();
         }
       }, xhr);
+
+
 
         /**
          * UI Bindings
