@@ -52,22 +52,22 @@ class Cron extends CI_Controller
       $this->load->model('adminModel');
       $this->load->model('prizeModel');
 
-      $user = $this->adminModel->pickWinner($date);
+      $result = $this->adminModel->pickWinner($date);
       /*
-       * possible values for $user:
+       * possible values for $result:
        *   -1: no contest set for this $date
        *   -2: no eligible entries for this $date
-       *   array of user data: `id`, `firstname`, `lastname`, `email`, `city`, `state`
+       *   array of user data: `user_id`, `user_email`
        *
        */
-      if ($user == -1) {
+      if ($result['error'] == -1) {
         return $this->logItem($this->ERROR, 'No contest exists on ' . $date . '.');
       }
-      elseif ($user == -2) {
+      elseif ($result['error'] == -2) {
         return $this->logItem($this->ERROR, 'We do not have any other entries on ' . $date . '.');
       }
-      elseif (@$user['id'] >= 1) {
-        $this->logItem($this->INFO, 'Winner email chosen: ' . $user['email']);
+      elseif (@$result['user_id'] >= 1) {
+        $this->logItem($this->INFO, 'Winner email chosen: ' . $result['user_email']);
 
         // grab all of the information for this contest:
         $winner = $this->prizeModel->getWinnersByDateRange($date);

@@ -234,7 +234,7 @@ class AdminModel extends CI_Model
         $result = $query->row_array();
         $query->free_result();
 
-        return @$result['error'] ? $result['error'] : $result;
+        return $result;
     }
 
     /**

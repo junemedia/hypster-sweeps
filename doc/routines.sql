@@ -160,12 +160,12 @@ PICK_WINNER_SPROC:BEGIN
     -- (int) -2: (IN_DATE) does not have any entries
     -- `user` row of the new winner
 
-    DECLARE existing_contest TINYINT(1) DEFAULT NULL;
+    DECLARE existing_contest TINYINT DEFAULT NULL;
     DECLARE existing_winner_id,
             new_winner_user_id,
-            new_winner_site_id SMALLINT(5) DEFAULT NULL;
+            new_winner_site_id INT DEFAULT NULL;
 
-    -- check if the contest exists
+    -- check if the contest exists, and if there's already a winner
     SELECT
         1,
         IF(`winner_user_id` IS NULL, 0, `winner_user_id`)
@@ -217,6 +217,7 @@ PICK_WINNER_SPROC:BEGIN
         LEAVE PICK_WINNER_SPROC;
     END IF;
 
+    -- update contest table with our new winner
     UPDATE
         `contest`
     SET
@@ -225,17 +226,16 @@ PICK_WINNER_SPROC:BEGIN
     WHERE
         `date` = IN_DATE;
 
+    -- get user info to return
     SELECT
-        `id`,
-        `firstname`,
-        `lastname`,
-        `email`,
-        `city`,
-        `state`
+        `user_id`,
+        `user_email`
     FROM
-        `user`
+        `entry`
     WHERE
-        `id` = new_winner_user_id;
+        `date` = IN_DATE
+    AND
+        `user_id` = new_winner_user_id;
 
 END $$
 DELIMITER ;
