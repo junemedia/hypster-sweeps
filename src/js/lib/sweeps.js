@@ -318,6 +318,7 @@ define([
         // $name = $($profile_bar.find('a')[0]);
         // $name.html(db('name'));
         $('.logout').on(ON_CLICK, logout);
+        /*
         $('a.forgot').on(ON_CLICK, function() {
             $('#signup').addClass('forgot');
             $('#login_form').find('.alert').empty();
@@ -336,6 +337,7 @@ define([
             $forgot_form.find('.alert').empty();
             $('#login_username').trigger(ON_FOCUS);
         });
+        */
         $verify = $('.verify');
         $verify.find('a').on(ON_CLICK, verify);
 
