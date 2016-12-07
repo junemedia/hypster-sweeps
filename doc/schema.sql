@@ -41,11 +41,12 @@ CREATE TABLE `contest` (
 
 
 CREATE TABLE `entry` (
-    `date`      DATE                  NOT NULL, -- 3* bytes
-    `user_id`   MEDIUMINT(8) UNSIGNED NOT NULL, -- 3* bytes
-    `site_id`   TINYINT(3)   UNSIGNED NOT NULL, -- 1* byte
-    `time`      TIME                  NOT NULL, -- 3  bytes
-    PRIMARY KEY (`date`, `user_id`, `site_id`)  -- 7*/10 bytes per index/row
+    `date`        DATE                  NOT NULL,
+    `user_id`     MEDIUMINT(8) UNSIGNED NOT NULL,
+    `user_email`  VARCHAR(70)                     DEFAULT NULL,
+    `site_id`     TINYINT(3)   UNSIGNED NOT NULL,
+    `time`        TIME                  NOT NULL,
+    PRIMARY KEY (`date`, `user_id`, `site_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

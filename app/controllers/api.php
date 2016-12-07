@@ -107,6 +107,7 @@ class Api extends FrontendController
 
         // load user_id from session
         $user_id = $this->session->userdata('user_id');
+        $user_email = $this->session->userdata('user_email');
 
         // logged-in check
         if (!$user_id) {
@@ -127,6 +128,7 @@ class Api extends FrontendController
         // (int) -1 if duplicate
         $success = $this->prizeModel->enter(
             $user_id,
+            $user_email,
             $this->site_id
         );
 

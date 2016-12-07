@@ -117,12 +117,17 @@ CREATE PROCEDURE `RANDOM_ENTRIES` ()
 BEGIN
     DECLARE x INT DEFAULT 1;
     DECLARE y DATE;
+    DECLARE ui INT;
+    DECLARE ue VARCHAR(70);
     WHILE x  <= 1000 DO
         SELECT `date` INTO y FROM `contest` WHERE `date` <= DATE(NOW()) ORDER BY RAND() LIMIT 1;
-        INSERT IGNORE INTO `entry` (`date`, `user_id`, `site_id`, `time`)
+        SELECT `id` into ui FROM `user` WHERE `id` = CEIL(RAND()*(SELECT COUNT(1) FROM `user`)) LIMIT 1;
+        SELECT `email` into ue FROM `user` WHERE `id` = ui LIMIT 1;
+        INSERT IGNORE INTO `entry` (`date`, `user_id`, `user_email`, `site_id`, `time`)
         VALUES (
             y,
-            CEIL(RAND()*(SELECT COUNT(1) FROM `user`)),
+            ui,
+            ue,
             1,
             DATE_ADD(DATE_ADD(DATE_ADD(y, INTERVAL (23*RAND()) HOUR), INTERVAL 59*RAND() MINUTE), INTERVAL 60*RAND() SECOND)
         );
