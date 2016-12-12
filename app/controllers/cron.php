@@ -5,7 +5,7 @@ class Cron extends CI_Controller
     protected $debug               = true;
     protected $log                 = '';
     protected $log_email           = null;
-    protected $log_dir             = '/srv/sites/dailysweeps/bin/logs';
+    protected $log_dir             = '/srv/sites/hypster.com/win/bin/logs';
     protected $log_file            = '';
     protected $INFO                = 4;
     protected $WARN                = 3;

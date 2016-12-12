@@ -19,5 +19,5 @@ function generate {
 
 generate \
     /tmp/dailysweeps-users.csv \
-    /srv/sites/dailysweeps/web/_reports/users.csv \
+    /srv/sites/hypster.com/win/web/_reports/users.csv \
     report_user

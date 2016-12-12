@@ -5,11 +5,11 @@
 
 1. Clone from GitHub
 
-        git clone git@github.com:resolute/dailysweeps.git /srv/sites/dailysweeps
+        git clone git@github.com:resolute/dailysweeps.git /srv/sites/hypster.com/win
 
 2. Create project config file from template and edit acordingly
 
-        cd /srv/sites/dailysweeps/app/config
+        cd /srv/sites/hypster.com/win/app/config
         cp project.php.template project.php
 
 3. Create the database and import fixture data
@@ -49,7 +49,7 @@ Install Holland package:
 
 Move `default.conf` to Holland configuration
 
-    sudo cp /srv/sites/dailysweeps/etc/holland/backupsets/default.conf /etc/holland/backupsets
+    sudo cp /srv/sites/hypster.com/win/etc/holland/backupsets/default.conf /etc/holland/backupsets
     chown root:root /etc/holland/backupsets/default.conf
     chomod 0644 /etc/holland/backupsets/default.conf
 
@@ -71,21 +71,21 @@ Add to `root` `crontab`
 ##### Daily Winner Selection
 
     # dailysweeps: Generate reports every night at midnight PRECISELY
-    0    0 * * * root cd /srv/sites/dailysweeps && ./bin/cron daily
+    0    0 * * * root cd /srv/sites/hypster.com/win && ./bin/cron daily
 
 ##### Reports
 
     # dailysweeps: Generate reports every night at 04:37am
-    37   4 * * * root cd /srv/sites/dailysweeps && ./bin/reports
+    37   4 * * * root cd /srv/sites/hypster.com/win && ./bin/reports
 
 ##### SystemD (CentOS 7) Timers
 
     # symlink unit files and timers
     cd /etc/systemd/system && \
-    ln -s /srv/sites/dailysweeps/etc/jds-reports.service && \
-    ln -s /srv/sites/dailysweeps/etc/jds-reports.timer && \
-    ln -s /srv/sites/dailysweeps/etc/jds-daily.service && \
-    ln -s /srv/sites/dailysweeps/etc/jds-daily.timer
+    ln -s /srv/sites/hypster.com/win/etc/jds-reports.service && \
+    ln -s /srv/sites/hypster.com/win/etc/jds-reports.timer && \
+    ln -s /srv/sites/hypster.com/win/etc/jds-daily.service && \
+    ln -s /srv/sites/hypster.com/win/etc/jds-daily.timer
 
 **NOT FULLY WORKING YET (2015-03-23):**
 
@@ -147,12 +147,12 @@ We use [grunt-filerev](https://www.npmjs.com/package/grunt-filerev) and [grunt-f
 
 In a pinch, you can quickly remove these old compiled CSS/JS files with the following commands:
 
-    find /srv/sites/dailysweeps/web/css -type f -name "*.css" -mtime +7 -exec git rm "{}" \;
-    find /srv/sites/dailysweeps/web/js -type f -name "*.js" -mtime +7 -exec git rm "{}" \;
+    find /srv/sites/hypster.com/win/web/css -type f -name "*.css" -mtime +7 -exec git rm "{}" \;
+    find /srv/sites/hypster.com/win/web/js -type f -name "*.js" -mtime +7 -exec git rm "{}" \;
 
 Then, just to make sure you haven't deleted assets currently being used:
 
-    cd  /srv/sites/dailysweeps/etc && grunt build
+    cd  /srv/sites/hypster.com/win/etc && grunt build
 
 Add any files that were inadvertently deleted with the `find` commands and commit/push.
 
