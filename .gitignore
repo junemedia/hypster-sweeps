@@ -9,6 +9,8 @@ nbproject
 # cron logs
 bin/logs/*
 
+app/log/*
+
 web/*.sql.*
 *.html.gz
 *.js.gz
