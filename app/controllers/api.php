@@ -293,29 +293,20 @@ class Api extends FrontendController
     // should be getting an object containing status, message,
     // and user properties
     if ($response->status === XHR_OK) {
-      $user = array();
-      $user['id'] = $response->user->id;
-      $user['role'] = $response->user->adminlevel;
-      $user['firstname'] = $response->user->name;
-      $user['email'] = $response->user->email;
+      $r = (array) $response->user;
 
       // authentication successful, save this in the session
       // effectively "logging in the user"
-      $this->session->set_userdata('user_id', $user['id']);
-      $this->session->set_userdata('user_email', $user['email']);
+      $this->session->set_userdata('user_id', $r['id']);
+      $this->session->set_userdata('user_email', $r['email']);
 
       // set is_admin if applicable (null will delete is_admin = true)
-      $this->session->set_userdata('is_admin', ($user['role'] == 2) ? true : null);
+      $this->session->set_userdata('is_admin', ($r['adminlevel'] == 2) ? true : null);
 
       // eligible for today?
       $this->load->model('prizeModel');
-      $r['eligible'] = $this->prizeModel->isEligible(
-          $user['id'],
-          $this->site_id);
+      $r['eligible'] = $this->prizeModel->isEligible( $r['id'], $this->site_id );
       $r['midnight'] = strtotime('tomorrow');
-      $r['name']     = $user['firstname'];
-      $r['email']     = $user['email'];
-      $r['user_id']  = $user['id'];
 
       if (!$r['eligible']) {
           // include thank you HTML if you've already entered today

@@ -11,6 +11,8 @@ define(['./jds'], function(jds) {
      */
   function xhr(submitEvent) {
     submitEvent.preventDefault();
+    console.info('xhr');
+    console.debug(submitEvent);
     var callback = submitEvent.data && submitEvent.data.success || function() {},
         callbackFail = submitEvent.data && submitEvent.data.fail || function() {},
         prereq = submitEvent.data && submitEvent.data.prereq || function() {
@@ -21,8 +23,10 @@ define(['./jds'], function(jds) {
         $loader = $form.find('.loader').addClass('on'),
         $alert = xhr.$alert = $form.find('.alert').empty().hide();
 
+    console.info('action: ' + $form.attr('action'));
     // return false if a pre requirement is not met
     if (!prereq(submitEvent)) {
+        console.info('xhr: prereq not met, returning false');
         restore();
         return false;
     }
@@ -34,6 +38,8 @@ define(['./jds'], function(jds) {
     }
 
     function done(data, textStatus, jqXHR) {
+      console.info('xhr.done');
+      console.debug(data);
       restore();
 
       if (!data || !'status' in data || data['status'] !== XHR_OK) {
@@ -53,10 +59,13 @@ define(['./jds'], function(jds) {
         $alert.html(data['message'] || GENERIC_AJAX_ERROR).show();
         return callbackFail(data);
       }
+      console.info('xhr: call success callback');
       return callback(data);
     }
 
     function fail(jqXHR, textStatus, errorThrown) {
+      console.info('xhr.fail');
+      console.debug(jqXHR);
       restore();
 
       $alert.html(GENERIC_AJAX_ERROR).show();

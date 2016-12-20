@@ -46,10 +46,12 @@ define([
      *
      */
     function enter(already_entered) {
+      console.info('enter()');
         var entered_contest = !!db('ineligible'),
             logged_in = isLoggedIn();
 
         if (!logged_in) {
+          console.info('enter: not logged in, show login form');
             $('.frame').hide();
             $('#signup').show();
             $('#login_username').trigger(ON_FOCUS);
@@ -60,6 +62,7 @@ define([
         // do not do tracking here, safer to perform
         // tracking on XHR responses
         if (entered_contest) {
+          console.info('enter: ineligible');
             if (already_entered) {
                 $('#thanks h2').html('You have already entered today.');
             }
@@ -67,6 +70,7 @@ define([
             // add thank you HTML to #thanks
             $('#thanks').append($(db('thanks') || '')).show();
         } else {
+          console.info('eligible');
             $('.frame').hide();
             $('#prize').show();
             // no tracking event here
@@ -104,6 +108,8 @@ define([
             db('lis', null);
             db('user_id', null);
             db('name', null);
+            db('email', null);
+            db('verify_address', null);
             db('ineligible', null);
             cookie('sid', null);
             ROADUNBLOCKED = null;
@@ -180,6 +186,8 @@ define([
     ready(function() {
       $('#login_form').on(ON_SUBMIT, {
         success: function(response) {
+          console.info('login form success callback');
+          console.debug(response);
           scrollTop(0);
           // remove any previous roads being unblocked
           ROADUNBLOCKED = null;
@@ -190,6 +198,19 @@ define([
           db('name', response.name, ONE_YEAR);
           db('email', response.email, ONE_YEAR);
 
+          if (!!response.firstname &&
+              !!response.lastname &&
+              !!response.address &&
+              !!response.city &&
+              !!response.state &&
+              !!response.zipcode) {
+                console.info('profile complete');
+            db('verify_address', null);
+          }
+          else {
+                console.info('profile incomplete');
+            db('verify_address', true, ONE_YEAR);
+          }
           // If we get back the thank you HTML, save it.
           // This should only occur if a user is ineligible,
           // but let's just store it whenever we get it.
@@ -213,6 +234,7 @@ define([
           return false;
         },
         fail: function() {
+          console.info('login form fail callback');
           events.loginFail();
         }
       }, xhr);
@@ -280,11 +302,14 @@ define([
       $('#prize_form').on(ON_SUBMIT, {
         prereq: function() {
           if (isLoggedIn()) {
+            console.info('prereq: is logged in');
             if (!db('ineligible')) {
+              console.info('eligible');
               // eligible
               return true;
             }
             else {
+              console.info('prereq: ineligible');
               // ineligible
               enter(true);
               events.enterDuplicate();
@@ -292,6 +317,7 @@ define([
             }
             return true;
           }
+          console.info('prereq: not logged in');
           enter();
           return false;
         },
