@@ -79,34 +79,6 @@ class UserModel extends CI_Model
         return (int) @$result['result'] ? (int) $result['result'] : 0;
     }
 
-    /**
-     * Retrieve winner objects by date range
-     *
-     * @param  string   $email
-     * @param  string   $password
-     *
-     * @return mixed    user array, (boolean) false, or (null)
-     */
-    public function login($email, $password)
-    {
-        // For SPROCs, you MUST use $query->free_result() to avoid
-        // getting the "2014 Commands out of sync" mysql error.
-        $sql = sprintf('CALL LOGIN(%s,%s)',
-            $this->db->escape($email),
-            $this->db->escape($password)
-        );
-        $query  = $this->db->query($sql);
-        $result = $query->row_array();
-        $query->free_result();
-
-        if (!$result || @$result['error'] == 'USER_NOT_FOUND') {
-            return null;
-        } elseif (@$result['error'] == 'INVALID_PASSWORD') {
-            return false;
-        }
-
-        return (array) $result;
-    }
 
     /**
      * Reset password using reset token
