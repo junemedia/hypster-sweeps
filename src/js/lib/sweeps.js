@@ -304,9 +304,15 @@ define([
           if (isLoggedIn()) {
             console.info('prereq: is logged in');
             if (!db('ineligible')) {
-              console.info('eligible');
-              // eligible
-              return true;
+              if(db('verify_address')) {
+                console.warn('need to verify address info');
+                return false;
+              }
+              else {
+                console.info('eligible');
+                // eligible
+                return true;
+              }
             }
             else {
               console.info('prereq: ineligible');
@@ -317,6 +323,7 @@ define([
             }
             return true;
           }
+          // if user not logged in, change view to login form
           console.info('prereq: not logged in');
           enter();
           return false;
