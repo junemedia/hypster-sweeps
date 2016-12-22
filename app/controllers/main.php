@@ -61,6 +61,7 @@ class Main extends FrontendController
         return $this->loadView(array(
             'partials/prize',
             'partials/signup',
+            'partials/info_form',
             'partials/thankyou',
             'partials/calendar',
             'partials/winners',

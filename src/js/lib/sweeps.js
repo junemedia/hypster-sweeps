@@ -239,6 +239,11 @@ define([
         }
       }, xhr);
 
+      $('#info_form').on(ON_SUBMIT, function () {
+        console.info('address from submission');
+        return false;
+      });
+
       $('#signup_form').on(ON_SUBMIT, {
         success: function(response) {
           scrollTop(0);
