@@ -23,7 +23,7 @@ class User extends FrontendController
      */
     public function profile()
     {
-        // if we're not an admin, bail
+        // if we're not logged-in, bail
         if (!$user_id = $this->session->userdata('user_id')) {
             return redirect('/');
         }
