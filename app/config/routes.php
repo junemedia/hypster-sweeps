@@ -58,6 +58,7 @@ $route['api/eligible']           = 'api/eligible';
 $route['api/enter']              = 'api/enter';
 $route['api/logout']             = 'api/logout';
 $route['api/verify']             = 'api/verify';            // generate a new verification email (logged in)
+$route['api/user/(:any)']        = 'api/user/$1';           // get/set user info
 
 // Public JSON API Requests
 $route['api/captcha']            = 'api/captcha';           // prove your human

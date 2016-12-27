@@ -19,6 +19,20 @@ class Api extends FrontendController
         $this->rdcache->expires(-1);
     }
 
+
+  /**
+   *
+   */
+  public function user($user_id = null) {
+    // could probably use the user controller here with a little tweaking
+    /* $this->load->library('../controllers/user'); */
+    /* $profile = $this->user->profile(); */
+    $this->load->model('userModel');
+    $profile = $this->userModel->getProfile($user_id);
+
+    echo $this->json(XHR_OK, $profile);
+  }
+
     /**
      * POST/json: Evaluate user's response to Solve Media's captcha
      *

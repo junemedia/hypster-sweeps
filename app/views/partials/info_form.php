@@ -5,23 +5,25 @@
 
   <form id="info_form" class="info profile" method="post" action="/api/signup">
     <fieldset class="profile">
+      <input type="hidden" name="user_id" class="user_id" value=""/>
+
       <label for="firstname" class="req">First Name</label>
-      <input type="text" name="firstname" id="firstname" placeholder="<?php echo @$data['firstname'] ?>"/>
+      <input type="text" name="firstname" class="firstname"/>
 
       <label for="lastname" class="req">Last Name</label>
-      <input type="text" name="lastname" id="lastname" placeholder="<?php echo $data['lastname'] ?>"/>
+      <input type="text" name="lastname" class="lastname"/>
 
       <label for="address" class="req">Street Address</label>
-      <input type="text" name="address" id="address" placeholder="<?php echo $data['address'] ?>"/>
+      <input type="text" name="address" class="address"/>
 
       <label for="city" class="req">City</label>
-      <input type="text" name="city" id="city" placeholder="<?php echo $data['city'] ?>"/>
+      <input type="text" name="city" class="city"/>
 
       <label for="state" class="req">State</label>
-      <input type="text" name="state" id="state" placeholder="<?php echo $data['state'] ?>"/>
+      <input type="text" name="state" class="state"/>
 
       <label for="zipcode" class="req">Zip Code</label>
-      <input type="text" name="zipcode" id="zipcode" placeholder="<?php echo $data['zipcode'] ?>"/>
+      <input type="text" name="zipcode" class="zipcode"/>
     </fieldset>
 
     <div class="alert"></div>

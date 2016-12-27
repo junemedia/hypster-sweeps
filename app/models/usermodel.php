@@ -2,6 +2,7 @@
 
 class UserModel extends CI_Model
 {
+  const USER_GET_URL = 'http://api.hypster.com/user';
 
     /**
      * Register a new user
@@ -193,10 +194,15 @@ class UserModel extends CI_Model
      */
     public function getProfile($user_id)
     {
-        return $this->db
-                    ->where('id', $user_id)
-                    ->get('view_profile')
-                    ->row_array();
+      // getting back an array with status, message and a user object
+      $res = $this->_user_get($user_id);
+      if ($res->status === XHR_OK) {
+        return (array) $res->user;
+      }
+      /* return $this->db */
+      /*             ->where('id', $user_id) */
+      /*             ->get('view_profile') */
+      /*             ->row_array(); */
     }
 
     /**
@@ -220,5 +226,17 @@ class UserModel extends CI_Model
                 $r[] = $row;
         }
         return $r;
+    }
+
+    private function _user_get($userid)
+    {
+
+      $ch = curl_init(self::USER_GET_URL.'/'.$userid);
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+      $recd = curl_exec($ch);
+      curl_close($ch);
+
+      return json_decode($recd);
     }
 }

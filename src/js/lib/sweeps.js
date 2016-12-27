@@ -78,6 +78,56 @@ define([
 
     }
 
+    function getUserInfo() {
+      console.log('initiate action to get user info');
+      return $.ajax({
+        type: 'GET',
+        url: '/api/user/' + db('user_id'),
+        datatype: 'json'
+      });
+    }
+
+    function showAddressForm() {
+      var $form = $("#info_form .profile");
+      var address_info;
+
+      console.info('showAddressForm()');
+
+      // pre-fill form with any data we do have on the user
+      if (db('user_id')) {
+        $form.find('.user_id').val(db('user_id'));
+        // if we have user's address info cached in local info, use that
+        if (!!(address_info = db('address_info'))) {
+          console.info('get user info from local cache');
+          for (var key in address_info) {
+            if (address_info.hasOwnProperty(key)) {
+              $form.find('.' + key).val(address_info[key]);
+            }
+          }
+        }
+
+        else {
+          // otherwise request the info from the api
+          getUserInfo().done(function (data) {
+            console.info('get user info from api server');
+            $form.find('.firstname').val(data.firstname);
+            $form.find('.lastname').val(data.lastname);
+            $form.find('.address').val(data.address);
+            $form.find('.city').val(data.city);
+            $form.find('.state').val(data.state);
+            $form.find('.zipcode').val(data.zipcode);
+          });
+        }
+
+        $('.frame').hide();
+        $('#info').show();
+      }
+      else {
+        // TODO: what to do here?
+        console.error('no user_id, can\'t request info');
+      }
+    }
+
     function isLoggedIn() {
         return db('lis') == 1;
     }
@@ -110,6 +160,7 @@ define([
             db('name', null);
             db('email', null);
             db('verify_address', null);
+            db('address_info', null);
             db('ineligible', null);
             cookie('sid', null);
             ROADUNBLOCKED = null;
@@ -186,6 +237,7 @@ define([
     ready(function() {
       $('#login_form').on(ON_SUBMIT, {
         success: function(response) {
+          var address_info = {};
           console.info('login form success callback');
           console.debug(response);
           scrollTop(0);
@@ -194,22 +246,27 @@ define([
 
           // set environment variables
           db('lis', 1, ONE_YEAR);
-          db('user_id', response.user_id, ONE_YEAR);
+          db('user_id', response.id, ONE_YEAR);
           db('name', response.name, ONE_YEAR);
           db('email', response.email, ONE_YEAR);
 
-          if (!!response.firstname &&
-              !!response.lastname &&
-              !!response.address &&
-              !!response.city &&
-              !!response.state &&
-              !!response.zipcode) {
-                console.info('profile complete');
+          // check if all the address fields are set at the same time
+          // as setting the properties on the object
+          if (!!(address_info.firstname = response.firstname) &&
+              !!(address_info.lastname = response.lastname) &&
+              !!(address_info.address = response.address) &&
+              !!(address_info.city = response.city) &&
+              !!(address_info.state = response.state) &&
+              !!(address_info.zipcode = response.zipcode)) {
+            console.info('profile complete');
             db('verify_address', null);
           }
           else {
-                console.info('profile incomplete');
+            console.info('profile incomplete');
             db('verify_address', true, ONE_YEAR);
+            // cache the address info for 5 mins, on the assumption that
+            // if they enter it'll be within that time, if not no big deal
+            db('address_info', address_info, 5 * 60 * 1000);
           }
           // If we get back the thank you HTML, save it.
           // This should only occur if a user is ineligible,
@@ -311,6 +368,7 @@ define([
             if (!db('ineligible')) {
               if(db('verify_address')) {
                 console.warn('need to verify address info');
+                showAddressForm();
                 return false;
               }
               else {
