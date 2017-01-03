@@ -185,52 +185,52 @@ class Api extends FrontendController
      */
     public function enter()
     {
-        $r = array();
+      $r = array();
 
-        // load user_id from session
-        $user_id = $this->session->userdata('user_id');
-        $user_email = $this->session->userdata('user_email');
+      // load user_id from session
+      $user_id = $this->session->userdata('user_id');
+      $user_email = $this->session->userdata('user_email');
 
-        // logged-in check
-        if (!$user_id) {
-            return $this->json(XHR_AUTH, 'You must be logged-in in order to enter this contest.');
-        }
+      // logged-in check
+      if (!$user_id) {
+        return $this->json(XHR_AUTH, 'You must be logged-in in order to enter this contest.');
+      }
 
-        // human check
-        if (!$this->isHuman()) {
-            return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
-        }
+      // human check
+      if (!$this->isHuman()) {
+        return $this->json(XHR_HUMAN, 'Please solve the captcha puzzle before entering this contest.');
+      }
 
-        // Enter the user into the contest
-        $this->load->model('prizeModel');
+      // Enter the user into the contest
+      $this->load->model('prizeModel');
 
-        // Thank you page HTML snippet on success;
-        // null if successful but no thank you copy;
-        // (int) 0 if error;
-        // (int) -1 if duplicate
-        $success = $this->prizeModel->enter(
-            $user_id,
-            $user_email,
-            $this->site_id
-        );
+      // Thank you page HTML snippet on success;
+      // null if successful but no thank you copy;
+      // (int) 0 if error;
+      // (int) -1 if duplicate
+      $success = $this->prizeModel->enter(
+        $user_id,
+        $user_email,
+        $this->site_id
+      );
 
-        switch (true) {
-            case $success === null:
-            case strlen($success) > 0:
-                $r['thanks']   = $success;
-                $r['midnight'] = strtotime('tomorrow');
-                return $this->json(XHR_OK, $r);
-            case $success === -1:
-                // duplicate
-                $r['midnight'] = strtotime('tomorrow');
-                return $this->json(XHR_DUPLICATE, 'You have already entered today.');
-                break;
-            default:
-            case $success === 0:
-                // failed for a reason other than duplicate
-                return $this->json(XHR_ERROR, 'We encountered an error while trying to enter you into this contest. Please try again later.');
-                break;
-        }
+      switch (true) {
+        case $success === null:
+        case strlen($success) > 0:
+          $r['thanks']   = $success;
+          $r['midnight'] = strtotime('tomorrow');
+          return $this->json(XHR_OK, $r);
+        case $success === -1:
+          // duplicate
+          $r['midnight'] = strtotime('tomorrow');
+          return $this->json(XHR_DUPLICATE, 'You have already entered today.');
+          break;
+        default:
+        case $success === 0:
+          // failed for a reason other than duplicate
+          return $this->json(XHR_ERROR, 'We encountered an error while trying to enter you into this contest. Please try again later.');
+          break;
+      }
     }
 
 

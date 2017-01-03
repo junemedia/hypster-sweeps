@@ -25,11 +25,11 @@ define([
     gtm
 ) {
 
-    var
-    // UI elements
-        // $name, // inside the $profile_bar
-        $profile_bar,
-        $verify;
+  var
+  // UI elements
+      // $name, // inside the $profile_bar
+      $profile_bar,
+      $verify;
 
 
     function scrollTop(i) {
@@ -162,6 +162,7 @@ define([
             db('verify_address', null);
             db('address_info', null);
             db('ineligible', null);
+            db('thanks', null);
             cookie('sid', null);
             ROADUNBLOCKED = null;
             // $name.html('');
@@ -234,7 +235,7 @@ define([
     /*
      * Ready methods
      */
-    ready(function() {
+  ready(function() {
       $('#login_form').on(ON_SUBMIT, {
         success: function(response) {
           var address_info = {};
@@ -305,6 +306,8 @@ define([
       $('#info_form').on(ON_SUBMIT, {
         success: function (response) {
           console.info('info form success callback');
+          $('.frame').hide();
+          $('#prize').show();
         },
         fail: function (response) {
           console.info('info form failure callback');
@@ -372,49 +375,49 @@ define([
         }
       }, xhr);
 
-      $('#prize_form').on(ON_SUBMIT, {
-        prereq: function() {
-          if (isLoggedIn()) {
-            console.info('prereq: is logged in');
-            if (!db('ineligible')) {
-              if(db('verify_address')) {
-                console.warn('need to verify address info');
-                showAddressForm();
-                return false;
-              }
-              else {
-                console.info('eligible');
-                // eligible
-                return true;
-              }
-            }
-            else {
-              console.info('prereq: ineligible');
-              // ineligible
-              enter(true);
-              events.enterDuplicate();
+    $('#prize_form').on(ON_SUBMIT, {
+      prereq: function() {
+        if (isLoggedIn()) {
+          console.info('prereq: is logged in');
+          if (!db('ineligible')) {
+            if(db('verify_address')) {
+              console.warn('need to verify address info');
+              showAddressForm();
               return false;
             }
-            return true;
+            else {
+              console.info('eligible');
+              // eligible
+              return true;
+            }
           }
-          // if user not logged in, change view to login form
-          console.info('prereq: not logged in');
-          enter();
-          return false;
-        },
-        success: function(response) {
-          scrollTop(0);
-          // destroy this now that we won't be needing it anymore
-          ROADUNBLOCKED = null;
-          // we cannot enter this contest until tomorrow
-          db('ineligible', true, response.midnight * 1000);
-          // store the thank you HTML response
-          db('thanks', response.thanks, ONE_YEAR);
-          // this will send us to #thanks since we've set environment variables:
-          enter();
-          events.enter();
+          else {
+            console.info('prereq: ineligible');
+            // ineligible
+            enter(true);
+            events.enterDuplicate();
+            return false;
+          }
+          return true;
         }
-      }, xhr);
+        // if user not logged in, change view to login form
+        console.info('prereq: not logged in');
+        enter();
+        return false;
+      },
+      success: function(response) {
+        scrollTop(0);
+        // destroy this now that we won't be needing it anymore
+        ROADUNBLOCKED = null;
+        // we cannot enter this contest until tomorrow
+        db('ineligible', true, response.midnight * 1000);
+        // store the thank you HTML response
+        db('thanks', response.thanks, ONE_YEAR);
+        // this will send us to #thanks since we've set environment variables:
+        enter();
+        events.enter();
+      }
+    }, xhr);
 
 
 
