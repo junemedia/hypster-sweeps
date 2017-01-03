@@ -49,7 +49,8 @@ class UserModel extends CI_Model
     /**
      * Update a user profile
      *
-     * @param   array   $user partial user object
+     * @param   integer $user_id
+     * @param   array   $profile
      *
      * @return  integer -2 on user does not exist,
      *                  -1 on duplicate email,
@@ -58,26 +59,24 @@ class UserModel extends CI_Model
      *                   2 on success with changes,
      *                   3 on success without any changes
      */
-    public function update($user)
+    public function update($user_id, $profile)
     {
-        // For SPROCs, you MUST use $query->free_result() to avoid
-        // getting the "2014 Commands out of sync" mysql error.
-        $sql = sprintf('CALL UPDATE_USER(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-            $this->db->escape(@$user['id']),
-            $this->db->escape(@$user['email']),
-            $this->db->escape(@$user['password']),
-            $this->db->escape(@$user['firstname']),
-            $this->db->escape(@$user['lastname']),
-            $this->db->escape(@$user['address']),
-            $this->db->escape(@$user['city']),
-            $this->db->escape(@$user['state']),
-            $this->db->escape(@$user['zip'])
-        );
-        $query  = $this->db->query($sql);
-        $result = $query->row_array();
-        $query->free_result();
+      log_message('info', 'usermodel:update');
+      log_message('info', "userid: $user_id");
+      log_message('info', $_SERVER['REQUEST_METHOD']);
+      log_message('info', $_SERVER['HTTP_CONTENT_TYPE']);
 
-        return (int) @$result['result'] ? (int) $result['result'] : 0;
+      //return $profile;
+
+      if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $res = $this->_user_put($user_id, $profile);
+        if ($res->status === XHR_OK) {
+          return (array) $res->user;
+        }
+      }
+      if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+      }
     }
 
 
@@ -239,4 +238,25 @@ class UserModel extends CI_Model
 
       return json_decode($recd);
     }
+
+  /**
+    * PUT user profile info to api server
+    *
+    * @param integer $user_id
+    * @param array $profile
+    *
+    * @return object
+    */
+  private function _user_put($userid, $profile)
+  {
+    $ch = curl_init(self::USER_GET_URL.'/'.$userid);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($profile));
+
+    $recd = curl_exec($ch);
+    curl_close($ch);
+    log_message('info', $recd);
+    return json_decode($recd);
+  }
 }

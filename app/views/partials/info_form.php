@@ -3,10 +3,8 @@
 
   <p>Please make sure that your mailing address is up to date.</p>
 
-  <form id="info_form" class="info profile" method="post" action="/api/signup">
+  <form id="info_form" class="info profile" method="post" action="/api/user">
     <fieldset class="profile">
-      <input type="hidden" name="user_id" class="user_id" value=""/>
-
       <label for="firstname" class="req">First Name</label>
       <input type="text" name="firstname" class="firstname"/>
 

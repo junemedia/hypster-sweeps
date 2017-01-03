@@ -12,7 +12,6 @@ define(['./jds'], function(jds) {
   function xhr(submitEvent) {
     submitEvent.preventDefault();
     console.info('xhr');
-    console.debug(submitEvent);
     var callback = submitEvent.data && submitEvent.data.success || function() {},
         callbackFail = submitEvent.data && submitEvent.data.fail || function() {},
         prereq = submitEvent.data && submitEvent.data.prereq || function() {

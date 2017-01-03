@@ -20,18 +20,86 @@ class Api extends FrontendController
     }
 
 
-  /**
-   *
-   */
-  public function user($user_id = null) {
-    // could probably use the user controller here with a little tweaking
-    /* $this->load->library('../controllers/user'); */
-    /* $profile = $this->user->profile(); */
-    $this->load->model('userModel');
-    $profile = $this->userModel->getProfile($user_id);
 
-    echo $this->json(XHR_OK, $profile);
+    /**
+     * Get or set a user's profile info
+     *
+     * @param integer $user_id
+     *
+     * @return  json
+     */
+  public function user($user_id = null) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+      $profile = array();
+
+      /***** debugging **********/
+      if (!$user_id) {
+        $user_id = 5393188;
+      }
+      else {
+        $user_id = $this->session->userdata('user_id');
+      }
+
+      log_message('info', "api/user called");
+      log_message('info', $user_id);
+
+      // just make sure the user is logged in
+      /****** turned off for debugging *******/
+      /* if (!($user_id = $this->session->userdata('user_id'))) { */
+      /*   return $this->json(XHR_ERROR, 'requires logged in user'); */
+      /* } */
+
+      // do form validation
+      $this->load->library('form_validation');
+      $this->form_validation->set_rules('firstname', 'First Name', 'trim|required|callback_properName');
+      $this->form_validation->set_rules('lastname', 'Last Name', 'trim|required|callback_properName');
+      $this->form_validation->set_rules('address', 'Street Address', 'trim|required|callback_properAddress');
+      $this->form_validation->set_rules('city', 'City', 'trim|required|callback_properCity');
+      $this->form_validation->set_rules('state', 'State', 'trim|required|callback_properState');
+      $this->form_validation->set_rules('zipcode', 'Zip Code', 'trim|required|callback_properZip');
+
+      if (!$this->form_validation->run()) {
+        log_message('info', 'form validation failed');
+        return $this->json(XHR_INVALID, validation_errors());
+      }
+
+      log_message('info', 'form validation passed');
+
+      // Set the profile to be passed to user model
+      $profile['firstname'] = $this->input->post('firstname');
+      $profile['lastname']  = $this->input->post('lastname');
+      $profile['address']   = $this->input->post('address');
+      $profile['city']      = $this->input->post('city');
+      $profile['state']     = $this->input->post('state');
+      $profile['zipcode']   = $this->input->post('zipcode');
+
+      log_message('info', 'first: '.$profile['firstname']);
+      log_message('info', 'last: '.$profile['lastname']);
+      log_message('info', 'address: '.$profile['address']);
+
+      // remove empty/null/false values; CAREFUL: removes boolean false values
+      //$profile = array_filter($profile);
+
+      // save in DB
+      $this->load->model('userModel');
+      $result = $this->userModel->update($user_id, $profile);
+      //$result = $profile;
+
+      return $this->json(XHR_OK, array('user'=>$result));
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+      // could probably use the user controller here with a little tweaking
+      /* $this->load->library('../controllers/user'); */
+      /* $profile = $this->user->profile(); */
+      $this->load->model('userModel');
+      $profile = $this->userModel->getProfile($user_id);
+
+      echo $this->json(XHR_OK, $profile);
+    }
   }
+
 
     /**
      * POST/json: Evaluate user's response to Solve Media's captcha
@@ -164,6 +232,7 @@ class Api extends FrontendController
                 break;
         }
     }
+
 
     /**
      * POST/json: Register/update a user
@@ -572,6 +641,16 @@ class Api extends FrontendController
         return $str;
     }
 
+    public function properCity($str)
+    {
+        return $str;
+    }
+
+    public function properState($str)
+    {
+        return $str;
+    }
+
     /**
      * Recall for the register users
      * @param string $name Date to pull out
@@ -648,6 +727,7 @@ class Api extends FrontendController
       $ch = curl_init(self::USER_VALIDATE_URL);
       /* curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); */
       curl_setopt($ch, CURLOPT_POST, 1);
+      curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
       curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 

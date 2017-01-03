@@ -250,14 +250,20 @@ define([
           db('name', response.name, ONE_YEAR);
           db('email', response.email, ONE_YEAR);
 
-          // check if all the address fields are set at the same time
-          // as setting the properties on the object
-          if (!!(address_info.firstname = response.firstname) &&
-              !!(address_info.lastname = response.lastname) &&
-              !!(address_info.address = response.address) &&
-              !!(address_info.city = response.city) &&
-              !!(address_info.state = response.state) &&
-              !!(address_info.zipcode = response.zipcode)) {
+          // make sure the required address fields have been set
+          address_info.firstname = response.firstname;
+          address_info.lastname = response.lastname;
+          address_info.address = response.address;
+          address_info.city = response.city;
+          address_info.state = response.state;
+          address_info.zipcode = response.zipcode;
+
+          if (!!(address_info.firstname) &&
+              !!(address_info.lastname) &&
+              !!(address_info.address) &&
+              !!(address_info.city) &&
+              !!(address_info.state) &&
+              !!(address_info.zipcode)) {
             console.info('profile complete');
             db('verify_address', null);
           }
@@ -296,10 +302,15 @@ define([
         }
       }, xhr);
 
-      $('#info_form').on(ON_SUBMIT, function () {
-        console.info('address from submission');
-        return false;
-      });
+      $('#info_form').on(ON_SUBMIT, {
+        success: function (response) {
+          console.info('info form success callback');
+        },
+        fail: function (response) {
+          console.info('info form failure callback');
+          console.debug(response);
+        },
+      }, xhr);
 
       $('#signup_form').on(ON_SUBMIT, {
         success: function(response) {
