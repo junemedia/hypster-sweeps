@@ -305,9 +305,16 @@ define([
 
       $('#info_form').on(ON_SUBMIT, {
         success: function (response) {
+          // TODO: cache address info
+
           console.info('info form success callback');
+          console.info('clear verify_address from db');
+          db('verify_address', null);
+
           $('.frame').hide();
           $('#prize').show();
+          console.info('go ahead and submit entry');
+          $('#prize_form').submit();
         },
         fail: function (response) {
           console.info('info form failure callback');
