@@ -18,7 +18,10 @@
 ?>
 <div id="prize" class="frame">
 <? if (@$prize): ?>
-    <h3 class="account">Welcome Back<p><a href="/profile">Update Profile</a> | <a class="logout">Logout</a></p></h3>
+    <h3 class="account">Welcome Back
+      <p><!--<a href="/profile">Update Profile</a> | --><a class="logout">Logout</a></p>
+    </h3>
+
     <h3 class="prize_today"><!-- NO GAP
      --><?= date('Y') == date('Y', strtotime($prize['date'])) ? date( "F j", strtotime($prize['date'])) : date( "F j, Y", strtotime($prize['date'])); ?><!-- NO GAP
      --><? if ($is_todays_prize) echo '&nbsp;| <span>Win Today’s Prize</span>'; ?><!-- NO GAP
@@ -34,7 +37,7 @@
              --><input type="submit" value="Enter Now"/><!-- NO GAP
              --><span class="loader"></span><!-- NO GAP
          --></form><!-- NO GAP
-         --><p class="legal">Prizes are shared across June Media sites. <span>See <a href="/rules">Official Rules</a>.</span></p><!-- NO GAP
+         --><p class="legal"><span>See <a href="/rules">Official Rules</a>.</span></p><!-- NO GAP
          --><?php else: ?><!-- NO GAP
          --><a href="/">Back to today’s prize</a><!--
          --><?php endif ?><!-- NO GAP

@@ -10,7 +10,7 @@
             ?><div><?= $img_tag ?><div>
                     <h6><?= date("F j", strtotime($winner['date'])); ?></h6>
                     <h5><?= $a_tag ?></h5>
-                    <?= $winner['site_domain'] ?><br/><?= firstNameLastInitial($winner['user_firstname'], $winner['user_lastname']) ?><br/><?= $winner['user_city'] . ', ' . $winner['user_state'] ?></p>
+                    <?= firstNameLastInitial($winner['user_firstname'], $winner['user_lastname']) ?><br/><?= $winner['user_city'] . ', ' . $winner['user_state'] ?></p>
                 </div
             ></div><?
         endforeach;
