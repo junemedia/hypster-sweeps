@@ -104,20 +104,16 @@ define([
     }
 
     function zergnetSuccess() {
-        // console.log('Zergnet loaded');
+      console.log('Zergnet loaded');
     }
 
     function zergnetFailure() {
-        // console.error('Zergnet failed to load');
+      console.error('Zergnet failed to load');
     }
 
     function zergnet() {
-        // Zergnet ads are independent of Yieldbot/OpenX
-        scriptAsync(
-            'http://www.zergnet.com/zerg.js?id=29457',
-            zergnetSuccess,
-            zergnetFailure
-        );
+      // Zergnet ads are independent of Yieldbot/OpenX
+      scriptAsync('//www.zergnet.com/zerg.js?id=47344', zergnetSuccess, zergnetFailure);
     }
 
     function ourbestbox(callbackString) {
