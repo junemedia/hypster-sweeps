@@ -21,7 +21,6 @@ define([
       // initialize the ad zones
       resetAdZones();
       loadOpenX();
-      ourbestbox();
       zergnet();
     }
 
@@ -102,27 +101,6 @@ define([
       scriptAsync('//www.zergnet.com/zerg.js?id=47344');
     }
 
-    function ourbestbox(callbackString) {
-        if (!callbackString) {
-            callbackString = 'ourbestbox';
-        }
-
-        // define the callback in the global window context
-        W[callbackString] = function (d) {
-            $('#' + callbackString).append(d && d['result'] || '');
-        }
-
-        $.ajax({
-            // url: 'http://brstage.resolute.com/slideshows/ourbestbox_ajax/',
-            url: 'http://www.betterrecipes.com/slideshows/ourbestbox_ajax',
-            jsonp: callbackString,
-            dataType: 'jsonp',
-            data: {
-                format: "json"
-            }
-        });
-    }
-
     /**
      * This is the actual method to refresh ad units.  It will be throttle’d
      * and exposed as refreshAds
@@ -132,7 +110,6 @@ define([
       resetAdZones();
       loadOpenX();
       zergnet();
-      ourbestbox();
     }
 
     // wrap and throttle the actual ad refresh method
