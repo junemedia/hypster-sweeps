@@ -3,16 +3,9 @@ define([
     'lib/jds'
 ], function(debounce, jds) {
 
-    /**
-     * BR context Globals
-     */
-    var
-        BASE_HREF = 'http://hypster.com',
-        FOOTER_LINKS = {},
-        // Do not allow ads to be refreshed more than once every
-        // AD_REFRESH_TIME_LIMIT ms
-        AD_REFRESH_TIME_LIMIT = 4000;
-
+    // Do not allow ads to be refreshed more than once every
+    // AD_REFRESH_TIME_LIMIT ms
+    var AD_REFRESH_TIME_LIMIT = 4000;
 
     /**
      * placeholder, could do something, but doesn't
@@ -157,35 +150,6 @@ define([
     );
 
 
-    function footer() {
-        var $copyright = $('footer nav');
-        for (var heading in FOOTER_LINKS) {
-            var $nav = $('<nav>').append($('<h5>').html(heading)),
-                links = FOOTER_LINKS[heading],
-                links_len = links.length;
-            for (var i = 0; i < links_len; i++) {
-                var link = links[i],
-                    name,
-                    url;
-                if ($.type(link) == 'string') {
-                    // special case for recipe categories
-                    name = link;
-                    url = BASE_HREF.replace(/www/, name.toLowerCase().replace(' ', '')) + '/';
-                    // special case for Copycat recipes
-                    if (name == 'Copycat') {
-                        url = BASE_HREF.replace(/www/, 'restaurant') + '/';
-                    }
-                    name += ' Recipes'
-                } else {
-                    url = link[1].charAt(0) == '/' ? BASE_HREF + link[1] : link[1];
-                    name = link[0];
-                }
-                $nav.append($('<a>').attr('href', url).html(name));
-            }
-            $copyright.before($nav);
-        }
-    }
-
     /*
      * Ready method: runs after DOMContentLoaded and once jQuery is ready
      *
@@ -200,10 +164,6 @@ define([
 
         // ad unit initialization
         initAds();
-
-        // create the footer links
-        footer();
-
     });
 
     // register our refreshAds method with jds
