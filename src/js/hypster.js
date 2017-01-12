@@ -45,7 +45,7 @@ define([
         { 'slot_id': '728x90_BTF',  'auid': '538708065' }
       ];
 
-      scriptAsync('//junemedia-d.openx.net/w/1.0/jstag', OXSuccess, OXFailure);
+      scriptAsync('//junemedia-d.openx.net/w/1.0/jstag');
     }
 
 
@@ -87,33 +87,26 @@ define([
      * Asynchronously load an ad tag (JavaScript) `url` and invoke the
      * `success` and `failure` callbacks accordingly.
      */
-    function scriptAsync(url, success, failure) {
-        $.ajax({
-            url: url,
-            dataType: 'script',
-            cache: true
-        }).done(success).fail(failure);
-    }
-
-    function OXSuccess() {
-      console.log('OpenX loaded');
-    }
-
-    function OXFailure() {
-      console.error('OpenX failed to load');
-    }
-
-    function zergnetSuccess() {
-      console.log('Zergnet loaded');
-    }
-
-    function zergnetFailure() {
-      console.error('Zergnet failed to load');
+    function scriptAsync(url, chain) {
+      $.ajax({
+          url: url,
+          dataType: 'script',
+          cache: true
+        })
+       .fail(function () {
+          console.error(url, 'FAILED to load');
+        })
+       .done(function () {
+          console.info(url, 'loaded');
+          if (chain) {
+            chain();
+          }
+        });
     }
 
     function zergnet() {
       // Zergnet ads are independent of Yieldbot/OpenX
-      scriptAsync('//www.zergnet.com/zerg.js?id=47344', zergnetSuccess, zergnetFailure);
+      scriptAsync('//www.zergnet.com/zerg.js?id=47344');
     }
 
     function ourbestbox(callbackString) {
